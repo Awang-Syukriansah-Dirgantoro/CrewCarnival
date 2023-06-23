@@ -21,7 +21,6 @@
 /* Begin PBXFileReference section */
 		0B0B77752A4535AE00B10F99 /* ProgressBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressBar.swift; sourceTree = "<group>"; };
 		0B0B77782A453A1700B10F99 /* Krub-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Krub-Regular.ttf"; sourceTree = "<group>"; };
-		0B0B777A2A453BFF00B10F99 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		0B228A252A42A04A0078D22A /* HelmsmanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelmsmanView.swift; sourceTree = "<group>"; };
 		59117DDC2A414F2600701627 /* CrewCarnival.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CrewCarnival.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		59117DDF2A414F2600701627 /* CrewCarnivalApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrewCarnivalApp.swift; sourceTree = "<group>"; };
@@ -30,7 +29,6 @@
 		59117DE62A414F2700701627 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		59117DED2A43E87600701627 /* LookoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LookoutView.swift; sourceTree = "<group>"; };
 		59117DEF2A45397600701627 /* GasoekOne-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "GasoekOne-Regular.ttf"; sourceTree = "<group>"; };
-		59117DF12A453C4700701627 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -87,7 +85,6 @@
 		59117DDE2A414F2600701627 /* CrewCarnival */ = {
 			isa = PBXGroup;
 			children = (
-				0B0B777A2A453BFF00B10F99 /* Info.plist */,
 				0B0B77772A4535B100B10F99 /* Component */,
 				0B228A242A429FE50078D22A /* ViewController */,
 				0B228A232A429F3C0078D22A /* View */,
