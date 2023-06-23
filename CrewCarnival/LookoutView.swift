@@ -129,7 +129,7 @@ struct LookoutView: View {
                     .clipped()
                     )
                     Text("You are looking at: Left Direction")
-                    .font(Font.custom("Krub", size: 20))
+                    .font(Font.custom("Krub-Regular", size: 20))
                     .multilineTextAlignment(.center)
                     .foregroundColor(.white).frame(width: 247, height: 66)
                 }
