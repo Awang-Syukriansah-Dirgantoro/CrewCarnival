@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ContentView: View {
+struct LivesView: View {
     @State var lives = 2
     @State var isShowingRedScreen = false
     var body: some View {
@@ -25,24 +25,24 @@ struct ContentView: View {
             }
             HStack {
                 if lives == 3 {
-                    Text("❤️")
-                    Text("❤️")
-                    Text("❤️")
-                }else if lives == 2{
-                    Text("❤️")
-                    Text("❤️")
-                    Text("🤍")
-                }else if lives == 1{
-                    Text("❤️")
-                    Text("🤍")
-                    Text("🤍")
-                }else{
-                    Text("🤍")
-                    Text("🤍")
-                    Text("🤍")
+                    Image("livesfill")
+                    Image("livesfill")
+                    Image("livesfill")
                 }
-                Button("gas"){
-                    redFlash()
+                if lives == 2 {
+                    Image("livesfill")
+                    Image("livesfill")
+                    Image("lives")
+                }
+                if lives == 1 {
+                    Image("livesfill")
+                    Image("lives")
+                    Image("lives")
+                }
+                if lives == 0 {
+                    Image("lives")
+                    Image("lives")
+                    Image("lives")
                 }
             }
             .padding()
@@ -56,8 +56,8 @@ struct ContentView: View {
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
+struct LivesView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        LivesView()
     }
 }

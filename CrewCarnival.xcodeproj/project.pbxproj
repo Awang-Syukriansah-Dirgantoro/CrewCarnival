@@ -11,7 +11,7 @@
 		0B0B77792A453A1700B10F99 /* Krub-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0B0B77782A453A1700B10F99 /* Krub-Regular.ttf */; };
 		0B228A262A42A04A0078D22A /* HelmsmanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B228A252A42A04A0078D22A /* HelmsmanView.swift */; };
 		59117DE02A414F2600701627 /* CrewCarnivalApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59117DDF2A414F2600701627 /* CrewCarnivalApp.swift */; };
-		59117DE22A414F2600701627 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59117DE12A414F2600701627 /* ContentView.swift */; };
+		59117DE22A414F2600701627 /* LivesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59117DE12A414F2600701627 /* LivesView.swift */; };
 		59117DE42A414F2700701627 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 59117DE32A414F2700701627 /* Assets.xcassets */; };
 		59117DE72A414F2700701627 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 59117DE62A414F2700701627 /* Preview Assets.xcassets */; };
 		59117DEE2A43E87600701627 /* LookoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59117DED2A43E87600701627 /* LookoutView.swift */; };
@@ -25,7 +25,7 @@
 		0B228A252A42A04A0078D22A /* HelmsmanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelmsmanView.swift; sourceTree = "<group>"; };
 		59117DDC2A414F2600701627 /* CrewCarnival.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CrewCarnival.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		59117DDF2A414F2600701627 /* CrewCarnivalApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrewCarnivalApp.swift; sourceTree = "<group>"; };
-		59117DE12A414F2600701627 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		59117DE12A414F2600701627 /* LivesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LivesView.swift; sourceTree = "<group>"; };
 		59117DE32A414F2700701627 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		59117DE62A414F2700701627 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		59117DED2A43E87600701627 /* LookoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LookoutView.swift; sourceTree = "<group>"; };
@@ -92,7 +92,7 @@
 				0B228A242A429FE50078D22A /* ViewController */,
 				0B228A232A429F3C0078D22A /* View */,
 				59117DDF2A414F2600701627 /* CrewCarnivalApp.swift */,
-				59117DE12A414F2600701627 /* ContentView.swift */,
+				59117DE12A414F2600701627 /* LivesView.swift */,
 				59117DE32A414F2700701627 /* Assets.xcassets */,
 				59117DE52A414F2700701627 /* Preview Content */,
 				59117DED2A43E87600701627 /* LookoutView.swift */,
@@ -181,6 +181,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				59117DE22A414F2600701627 /* LivesView.swift in Sources */,
 				0B228A262A42A04A0078D22A /* HelmsmanView.swift in Sources */,
 				59117DE22A414F2600701627 /* ContentView.swift in Sources */,
 				0B0B77762A4535AE00B10F99 /* ProgressBar.swift in Sources */,
