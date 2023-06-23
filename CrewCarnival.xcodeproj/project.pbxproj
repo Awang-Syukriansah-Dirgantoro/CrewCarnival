@@ -12,6 +12,7 @@
 		59117DE42A414F2700701627 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 59117DE32A414F2700701627 /* Assets.xcassets */; };
 		59117DE72A414F2700701627 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 59117DE62A414F2700701627 /* Preview Assets.xcassets */; };
 		59117DEE2A43E87600701627 /* LookoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59117DED2A43E87600701627 /* LookoutView.swift */; };
+		59117DF02A45397600701627 /* GasoekOne-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 59117DEF2A45397600701627 /* GasoekOne-Regular.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -21,6 +22,8 @@
 		59117DE32A414F2700701627 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		59117DE62A414F2700701627 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		59117DED2A43E87600701627 /* LookoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LookoutView.swift; sourceTree = "<group>"; };
+		59117DEF2A45397600701627 /* GasoekOne-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "GasoekOne-Regular.ttf"; sourceTree = "<group>"; };
+		59117DF12A453C4700701627 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,11 +56,13 @@
 		59117DDE2A414F2600701627 /* CrewCarnival */ = {
 			isa = PBXGroup;
 			children = (
+				59117DF12A453C4700701627 /* Info.plist */,
 				59117DDF2A414F2600701627 /* CrewCarnivalApp.swift */,
 				59117DE12A414F2600701627 /* ContentView.swift */,
 				59117DE32A414F2700701627 /* Assets.xcassets */,
 				59117DE52A414F2700701627 /* Preview Content */,
 				59117DED2A43E87600701627 /* LookoutView.swift */,
+				59117DEF2A45397600701627 /* GasoekOne-Regular.ttf */,
 			);
 			path = CrewCarnival;
 			sourceTree = "<group>";
@@ -128,6 +133,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				59117DF02A45397600701627 /* GasoekOne-Regular.ttf in Resources */,
 				59117DE72A414F2700701627 /* Preview Assets.xcassets in Resources */,
 				59117DE42A414F2700701627 /* Assets.xcassets in Resources */,
 			);
@@ -273,6 +279,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"CrewCarnival/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = CrewCarnival/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -301,6 +308,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"CrewCarnival/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = CrewCarnival/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
