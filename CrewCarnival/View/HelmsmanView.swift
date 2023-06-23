@@ -22,7 +22,7 @@ struct HelmsmanView: View {
         )
         NavigationStack{
             ZStack {
-                Image("BackgroundHelmsman").resizable().scaledToFill().ignoresSafeArea(.all)
+                Image("ShipHelmsman").resizable().scaledToFill().ignoresSafeArea(.all)
                 VStack{
                     HStack{
                         Text("Helmsman")
@@ -111,7 +111,7 @@ struct HelmsmanView: View {
                         ProgressBar(progress: 100)
                     }
                 }
-            }
+            }.background(Image("BgHelmsman").resizable().scaledToFit())
         }
     }
 }
