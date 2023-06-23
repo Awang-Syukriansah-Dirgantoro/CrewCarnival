@@ -4,7 +4,11 @@
 <dict>
 	<key>UIAppFonts</key>
 	<array>
+<<<<<<< HEAD
 		<string>GasoekOne-Regular.ttf</string>
+=======
+		<string>Krub-Regular.ttf</string>
+>>>>>>> main
 	</array>
 </dict>
 </plist>
