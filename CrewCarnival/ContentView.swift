@@ -8,14 +8,51 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State var lives = 2
+    @State var isShowingRedScreen = false
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundColor(.accentColor)
-            Text("Hello, world!")
+        ZStack{
+            
+            Image("back").edgesIgnoringSafeArea(.all)
+            if isShowingRedScreen{
+                Color.red.edgesIgnoringSafeArea(.all).opacity(isShowingRedScreen ? 0.8 : 0.0).onAppear{
+                    withAnimation(Animation.spring().speed(0.2)){
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2){
+                            isShowingRedScreen = false
+                        }
+                    }
+                }
+            }
+            HStack {
+                if lives == 3 {
+                    Text("❤️")
+                    Text("❤️")
+                    Text("❤️")
+                }else if lives == 2{
+                    Text("❤️")
+                    Text("❤️")
+                    Text("🤍")
+                }else if lives == 1{
+                    Text("❤️")
+                    Text("🤍")
+                    Text("🤍")
+                }else{
+                    Text("🤍")
+                    Text("🤍")
+                    Text("🤍")
+                }
+                Button("gas"){
+                    redFlash()
+                }
+            }
+            .padding()
+            
         }
-        .padding()
+        
+    }
+    
+    func redFlash(){
+        isShowingRedScreen = true
     }
 }
 
