@@ -9,6 +9,9 @@ import SwiftUI
 
 struct SailingMasterView: View {
     @State private var downloadAmount = 80.0
+    @State private var progressInstruction = 0.0
+    let timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
+    
     @State private var gradient = LinearGradient(
         gradient: Gradient(colors: [Color(red: 0, green: 0.82, blue: 0.23)]),
         startPoint: .topLeading,
@@ -21,7 +24,6 @@ struct SailingMasterView: View {
             caption: ""
         )
         ZStack{
-            Image("Sail").resizable().scaledToFill().ignoresSafeArea(.all)
             VStack{
                 HStack{
                     Text("Sailing Master")
@@ -60,7 +62,8 @@ struct SailingMasterView: View {
                                     .clipped()
                             )
                     }
-                }.padding(.top, 40).padding(.horizontal,30)
+                }.padding(.horizontal, 30)
+                    .padding(.top, 10)
                 ZStack{
                     Rectangle()
                         .foregroundColor(.clear)
@@ -74,18 +77,45 @@ struct SailingMasterView: View {
                         )
                     ProgressView("", value: downloadAmount, total: 100).progressViewStyle(gradientStyle).padding(.horizontal,9)
                 }.padding(.bottom,20).padding(.horizontal,30)
-                ZStack{
-                    Rectangle().frame(height: 60).opacity(0.5)
+                VStack{
                     Text("There are obstacles nearby!")
                         .font(Font.custom("Gasoek One", size: 20))
                         .multilineTextAlignment(.center)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 20)
                         .foregroundColor(Color(red: 0.95, green: 0.74, blue: 0))
-                    Rectangle()
-                        .frame(height: 5)
-                        .offset(y: 30)
-                        .foregroundColor(Color(red: 0, green: 0.82, blue: 0.23))
+                        .background(
+                            Rectangle()
+                                .opacity(0.5))
+                    ProgressView("", value: progressInstruction, total: 100)
+                        .onReceive(timer) { _ in
+                            if progressInstruction < 100 {
+                                progressInstruction += 0.5
+                            }
+                        }
+                        .progressViewStyle(LinearProgressViewStyle(tint: Color(red: 0, green: 0.82, blue: 0.23)))
+                        .padding(.top, -30)
                 }
-                Spacer()
+                ZStack{
+                    VStack{
+                        Image("Sail")
+                            .resizable()
+                            .frame(maxWidth: 350, maxHeight: 123)
+                            .padding(.vertical, -5)
+                        Image("Sail")
+                            .resizable()
+                            .frame(maxWidth: 440, maxHeight: 160)
+                            .padding(.bottom, -5)
+                        Image("Sail")
+                            .resizable()
+                            .frame(maxWidth: 590, maxHeight: 260)
+                            .padding(.bottom, 20)
+                    }
+                    Image("NoSail")
+                        .resizable()
+                        .scaledToFill()
+                        .padding(-35)
+                }
             }
         }.background(Image("BgSailingMaster").resizable().scaledToFill())
     }
