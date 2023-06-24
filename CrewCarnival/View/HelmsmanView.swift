@@ -70,7 +70,7 @@ struct HelmsmanView: View {
                                 )
                         }
                     }.padding(.horizontal, 30)
-                        .padding(.top, 30)
+                        .padding(.top, 10)
                     ZStack{
                         Rectangle()
                             .foregroundColor(.clear)
@@ -85,24 +85,25 @@ struct HelmsmanView: View {
                         ProgressView("", value: downloadAmount, total: 100).progressViewStyle(gradientStyle).padding(.horizontal,9)
                     }.padding(.bottom,20).padding(.horizontal,30)
                     
-                    ZStack{
-                        Rectangle()
-                            .frame(height: 75)
-                            .opacity(0.5)
+                    VStack{
                         Text("The Ship Is Tilting, Slow\nDown 10 Knots!")
                             .font(Font.custom("Gasoek One", size: 20))
                             .multilineTextAlignment(.center)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 20)
                             .foregroundColor(Color(red: 0.95, green: 0.74, blue: 0))
+                            .background(
+                                Rectangle()
+                                    .opacity(0.5))
                         ProgressView("", value: progressInstruction, total: 100)
-                            .offset(y: 30)
                             .onReceive(timer) { _ in
                                 if progressInstruction < 100 {
                                     progressInstruction += 0.5
                                 }
                             }
                             .progressViewStyle(LinearProgressViewStyle(tint: Color(red: 0, green: 0.82, blue: 0.23)))
+                            .padding(.top, -30)
                     }
-                    
                     Image("StearingWheel")
                         .resizable()
                         .scaledToFill()
