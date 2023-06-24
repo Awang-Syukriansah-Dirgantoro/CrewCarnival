@@ -12,6 +12,7 @@
 		0B0B777E2A454AE200B10F99 /* GradientProgressStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B0B777D2A454AE200B10F99 /* GradientProgressStyle.swift */; };
 		0B0B77802A455D8600B10F99 /* SailingMasterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B0B777F2A455D8600B10F99 /* SailingMasterView.swift */; };
 		0B228A262A42A04A0078D22A /* HelmsmanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B228A252A42A04A0078D22A /* HelmsmanView.swift */; };
+		0B267A002A47482700CE2AD8 /* BlacksmithView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B2679FF2A47482700CE2AD8 /* BlacksmithView.swift */; };
 		59117DE02A414F2600701627 /* CrewCarnivalApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59117DDF2A414F2600701627 /* CrewCarnivalApp.swift */; };
 		59117DE22A414F2600701627 /* LivesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59117DE12A414F2600701627 /* LivesView.swift */; };
 		59117DE42A414F2700701627 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 59117DE32A414F2700701627 /* Assets.xcassets */; };
@@ -27,6 +28,7 @@
 		0B0B777D2A454AE200B10F99 /* GradientProgressStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientProgressStyle.swift; sourceTree = "<group>"; };
 		0B0B777F2A455D8600B10F99 /* SailingMasterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SailingMasterView.swift; sourceTree = "<group>"; };
 		0B228A252A42A04A0078D22A /* HelmsmanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelmsmanView.swift; sourceTree = "<group>"; };
+		0B2679FF2A47482700CE2AD8 /* BlacksmithView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlacksmithView.swift; sourceTree = "<group>"; };
 		59117DDC2A414F2600701627 /* CrewCarnival.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CrewCarnival.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		59117DDF2A414F2600701627 /* CrewCarnivalApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrewCarnivalApp.swift; sourceTree = "<group>"; };
 		59117DE12A414F2600701627 /* LivesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LivesView.swift; sourceTree = "<group>"; };
@@ -72,6 +74,7 @@
 				59117DED2A43E87600701627 /* LookoutView.swift */,
 				0B228A252A42A04A0078D22A /* HelmsmanView.swift */,
 				0B0B777F2A455D8600B10F99 /* SailingMasterView.swift */,
+				0B2679FF2A47482700CE2AD8 /* BlacksmithView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -199,6 +202,7 @@
 				0B228A262A42A04A0078D22A /* HelmsmanView.swift in Sources */,
 				0B0B777E2A454AE200B10F99 /* GradientProgressStyle.swift in Sources */,
 				59117DE22A414F2600701627 /* LivesView.swift in Sources */,
+				0B267A002A47482700CE2AD8 /* BlacksmithView.swift in Sources */,
 				0B0B77762A4535AE00B10F99 /* ProgressBar.swift in Sources */,
 				59117DE02A414F2600701627 /* CrewCarnivalApp.swift in Sources */,
 				59117DEE2A43E87600701627 /* LookoutView.swift in Sources */,
