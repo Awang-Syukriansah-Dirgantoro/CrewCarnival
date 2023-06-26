@@ -7,32 +7,29 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4C1CDCAC2A471F97009D702D /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C1CDCAB2A471F97009D702D /* MenuView.swift */; };
-		4CF9D7092A4298CA008A61A6 /* MCSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF9D7082A4298CA008A61A6 /* MCSession.swift */; };
-		4CF9D70B2A429EE6008A61A6 /* PartyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF9D70A2A429EE6008A61A6 /* PartyView.swift */; };
-		4CF9D70E2A42A1C6008A61A6 /* Party.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF9D70D2A42A1C6008A61A6 /* Party.swift */; };
-		4CF9D7102A42B528008A61A6 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF9D70F2A42B528008A61A6 /* Player.swift */; };
-		4CF9D7132A42B8B7008A61A6 /* PartyCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF9D7122A42B8B7008A61A6 /* PartyCard.swift */; };
-		4CF9D7152A43DB32008A61A6 /* ReadyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF9D7142A43DB32008A61A6 /* ReadyView.swift */; };
+		0B0B77762A4535AE00B10F99 /* ProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B0B77752A4535AE00B10F99 /* ProgressBar.swift */; };
+		0B0B77792A453A1700B10F99 /* Krub-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0B0B77782A453A1700B10F99 /* Krub-Regular.ttf */; };
+		0B228A262A42A04A0078D22A /* HelmsmanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B228A252A42A04A0078D22A /* HelmsmanView.swift */; };
 		59117DE02A414F2600701627 /* CrewCarnivalApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59117DDF2A414F2600701627 /* CrewCarnivalApp.swift */; };
-		59117DE22A414F2600701627 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59117DE12A414F2600701627 /* ContentView.swift */; };
+		59117DE22A414F2600701627 /* LivesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59117DE12A414F2600701627 /* LivesView.swift */; };
 		59117DE42A414F2700701627 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 59117DE32A414F2700701627 /* Assets.xcassets */; };
 		59117DE72A414F2700701627 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 59117DE62A414F2700701627 /* Preview Assets.xcassets */; };
+		59117DEE2A43E87600701627 /* LookoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59117DED2A43E87600701627 /* LookoutView.swift */; };
+		59117DF02A45397600701627 /* GasoekOne-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 59117DEF2A45397600701627 /* GasoekOne-Regular.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		4C1CDCAB2A471F97009D702D /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
-		4CF9D7082A4298CA008A61A6 /* MCSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCSession.swift; sourceTree = "<group>"; };
-		4CF9D70A2A429EE6008A61A6 /* PartyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartyView.swift; sourceTree = "<group>"; };
-		4CF9D70D2A42A1C6008A61A6 /* Party.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Party.swift; sourceTree = "<group>"; };
-		4CF9D70F2A42B528008A61A6 /* Player.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
-		4CF9D7122A42B8B7008A61A6 /* PartyCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartyCard.swift; sourceTree = "<group>"; };
-		4CF9D7142A43DB32008A61A6 /* ReadyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadyView.swift; sourceTree = "<group>"; };
+		0B0B77752A4535AE00B10F99 /* ProgressBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressBar.swift; sourceTree = "<group>"; };
+		0B0B77782A453A1700B10F99 /* Krub-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Krub-Regular.ttf"; sourceTree = "<group>"; };
+		0B0B777A2A453BFF00B10F99 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		0B228A252A42A04A0078D22A /* HelmsmanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelmsmanView.swift; sourceTree = "<group>"; };
 		59117DDC2A414F2600701627 /* CrewCarnival.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CrewCarnival.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		59117DDF2A414F2600701627 /* CrewCarnivalApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrewCarnivalApp.swift; sourceTree = "<group>"; };
-		59117DE12A414F2600701627 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		59117DE12A414F2600701627 /* LivesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LivesView.swift; sourceTree = "<group>"; };
 		59117DE32A414F2700701627 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		59117DE62A414F2700701627 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		59117DED2A43E87600701627 /* LookoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LookoutView.swift; sourceTree = "<group>"; };
+		59117DEF2A45397600701627 /* GasoekOne-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "GasoekOne-Regular.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -46,39 +43,38 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		4CCEFEED2A491C81003584A9 /* View */ = {
+		0B0B77772A4535B100B10F99 /* Component */ = {
 			isa = PBXGroup;
 			children = (
-				4CF9D70A2A429EE6008A61A6 /* PartyView.swift */,
-				4CF9D7142A43DB32008A61A6 /* ReadyView.swift */,
-				4C1CDCAB2A471F97009D702D /* MenuView.swift */,
+				0B0B77752A4535AE00B10F99 /* ProgressBar.swift */,
+			);
+			path = Component;
+			sourceTree = "<group>";
+		};
+		0B0B777C2A4542CF00B10F99 /* Font */ = {
+			isa = PBXGroup;
+			children = (
+				59117DEF2A45397600701627 /* GasoekOne-Regular.ttf */,
+				0B0B77782A453A1700B10F99 /* Krub-Regular.ttf */,
+			);
+			path = Font;
+			sourceTree = "<group>";
+		};
+		0B228A232A429F3C0078D22A /* View */ = {
+			isa = PBXGroup;
+			children = (
+				59117DE12A414F2600701627 /* LivesView.swift */,
+				59117DED2A43E87600701627 /* LookoutView.swift */,
+				0B228A252A42A04A0078D22A /* HelmsmanView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
 		};
-		4CCEFEEE2A491CC9003584A9 /* Helper */ = {
+		0B228A242A429FE50078D22A /* ViewController */ = {
 			isa = PBXGroup;
 			children = (
-				4CF9D7082A4298CA008A61A6 /* MCSession.swift */,
 			);
-			path = Helper;
-			sourceTree = "<group>";
-		};
-		4CF9D70C2A42A1B7008A61A6 /* Model */ = {
-			isa = PBXGroup;
-			children = (
-				4CF9D70D2A42A1C6008A61A6 /* Party.swift */,
-				4CF9D70F2A42B528008A61A6 /* Player.swift */,
-			);
-			path = Model;
-			sourceTree = "<group>";
-		};
-		4CF9D7112A42B723008A61A6 /* Component */ = {
-			isa = PBXGroup;
-			children = (
-				4CF9D7122A42B8B7008A61A6 /* PartyCard.swift */,
-			);
-			path = Component;
+			path = ViewController;
 			sourceTree = "<group>";
 		};
 		59117DD32A414F2500701627 = {
@@ -100,12 +96,12 @@
 		59117DDE2A414F2600701627 /* CrewCarnival */ = {
 			isa = PBXGroup;
 			children = (
-				4CCEFEEE2A491CC9003584A9 /* Helper */,
-				4CCEFEED2A491C81003584A9 /* View */,
-				4CF9D7112A42B723008A61A6 /* Component */,
-				4CF9D70C2A42A1B7008A61A6 /* Model */,
+				0B0B777C2A4542CF00B10F99 /* Font */,
+				0B0B777A2A453BFF00B10F99 /* Info.plist */,
+				0B0B77772A4535B100B10F99 /* Component */,
+				0B228A242A429FE50078D22A /* ViewController */,
+				0B228A232A429F3C0078D22A /* View */,
 				59117DDF2A414F2600701627 /* CrewCarnivalApp.swift */,
-				59117DE12A414F2600701627 /* ContentView.swift */,
 				59117DE32A414F2700701627 /* Assets.xcassets */,
 				59117DE52A414F2700701627 /* Preview Content */,
 			);
@@ -178,8 +174,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				59117DF02A45397600701627 /* GasoekOne-Regular.ttf in Resources */,
 				59117DE72A414F2700701627 /* Preview Assets.xcassets in Resources */,
 				59117DE42A414F2700701627 /* Assets.xcassets in Resources */,
+				0B0B77792A453A1700B10F99 /* Krub-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -190,15 +188,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4CF9D70B2A429EE6008A61A6 /* PartyView.swift in Sources */,
-				4CF9D70E2A42A1C6008A61A6 /* Party.swift in Sources */,
-				4CF9D7152A43DB32008A61A6 /* ReadyView.swift in Sources */,
-				59117DE22A414F2600701627 /* ContentView.swift in Sources */,
-				4C1CDCAC2A471F97009D702D /* MenuView.swift in Sources */,
-				4CF9D7092A4298CA008A61A6 /* MCSession.swift in Sources */,
-				4CF9D7102A42B528008A61A6 /* Player.swift in Sources */,
-				4CF9D7132A42B8B7008A61A6 /* PartyCard.swift in Sources */,
+				59117DE22A414F2600701627 /* LivesView.swift in Sources */,
+				0B228A262A42A04A0078D22A /* HelmsmanView.swift in Sources */,
+				59117DE22A414F2600701627 /* LivesView.swift in Sources */,
+				0B0B77762A4535AE00B10F99 /* ProgressBar.swift in Sources */,
 				59117DE02A414F2600701627 /* CrewCarnivalApp.swift in Sources */,
+				59117DEE2A43E87600701627 /* LookoutView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -329,6 +324,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"CrewCarnival/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = CrewCarnival/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -357,6 +353,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"CrewCarnival/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = CrewCarnival/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
