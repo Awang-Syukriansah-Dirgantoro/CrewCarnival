@@ -9,33 +9,42 @@ import SwiftUI
 
 struct ProgressBar: View {
     var progress: CGFloat
+    @State private var gradient = LinearGradient(
+        gradient: Gradient(colors: [Color(red: 0.88, green: 0.68, blue: 0)]),
+        startPoint: .topLeading,
+        endPoint: .bottomTrailing
+    )
     
     var body: some View {
+        let gradientStyle = GradientProgressStyle(
+            stroke: .clear,
+            fill: gradient,
+            caption: ""
+        )
         HStack{
-            Spacer()
-                .frame(width: 30)
             ZStack(alignment: .leading){
                 Rectangle()
                     .foregroundColor(.clear)
-                    .frame(width: 273.50601, height: 15)
+                    .frame(height: 15)
                     .background(Color(red: 0.9, green: 0.9, blue: 0.9))
                     .cornerRadius(13)
                     .background(RoundedRectangle(cornerRadius: 13, style: .continuous)
                         .stroke(Color(red: 0.5, green: 0.5, blue: 0.5), lineWidth: 5))
-                
-                Rectangle()
-                    .foregroundColor(.clear)
-                    .frame(width: progress, height: 15)
-                    .background(Color(red: 0.88, green: 0.68, blue: 0))
-                    .cornerRadius(13)
-                
+                    .padding(.horizontal, 20)
+//                Rectangle()
+//                    .foregroundColor(.clear)
+//                    .frame(width: 100, height: 15)
+//                    .background(Color(red: 0.88, green: 0.68, blue: 0))
+//                    .cornerRadius(13)
+//                    .padding(.horizontal, 20)
+                ProgressView("", value: progress, total: 300)
+                    .padding(.horizontal, 20)
+                    .progressViewStyle(gradientStyle)
                 Image("ImageProgressBar")
-                    .background(Rectangle()
-                        .foregroundColor(.clear)
-                        .frame(width: 50, height: 50)
-                        .background(Color(red: 0.85, green: 0.85, blue: 0.85))
-                        .cornerRadius(42)).offset(x: -40)
+                    .resizable()
+                    .frame(width: 45, height: 45)
             }
+            .padding(.horizontal, 20)
         }
         
     }
@@ -46,4 +55,3 @@ struct ProgressBar_Previews: PreviewProvider {
         ProgressBar(progress: 10)
     }
 }
-
