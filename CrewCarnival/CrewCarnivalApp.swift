@@ -12,8 +12,7 @@ struct CrewCarnivalApp: App {
     @StateObject var gameService = GameService()
     var body: some Scene {
         WindowGroup {
-            ContentView()
-                .environmentObject(gameService)
+            HelmsmanView()
         }
     }
 }
