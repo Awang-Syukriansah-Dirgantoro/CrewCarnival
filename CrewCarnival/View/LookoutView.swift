@@ -90,7 +90,6 @@ struct LookoutView: View {
                             }
                         }
                 }.padding(.bottom,20).padding(.horizontal,30)
-                VStack {
                     ZStack{
                         Rectangle().frame(height: 60).opacity(0.5)
                         ForEach(Array(gameService.parties.enumerated()), id: \.offset) { index, party in
@@ -105,14 +104,13 @@ struct LookoutView: View {
                                 }
                             }
                         }
+                        ProgressView("", value: instructionProgress, total: instructionProgressMax).progressViewStyle(gradientStyle).padding(.horizontal,9)
+                            .onReceive(timer) { _ in
+                                if instructionProgress > 0 {
+                                    instructionProgress -= 0.1
+                                }
+                            }.frame(width: 400 ,height: 60,alignment:.bottom).ignoresSafeArea(.all)
                     }
-                    ProgressView("", value: instructionProgress, total: instructionProgressMax).progressViewStyle(gradientStyle).padding(.horizontal,9)
-                        .onReceive(timer) { _ in
-                            if instructionProgress > 0 {
-                                instructionProgress -= 0.1
-                            }
-                        }
-                }
                 Spacer()
                 ZStack{
                     Rectangle()
@@ -137,12 +135,16 @@ struct LookoutView: View {
                         isLeftAble = false
                         isRightAble = false
                         withAnimation (Animation.easeOut (duration: 10)){
-                        xOffset = xOffset + 393
+                            xOffset = xOffset + 393
                         }
                         if xOffset == 0 {
                             direction = "Forward"
+                            isLeftAble = true
+                            isRightAble = true
                         } else {
                             direction = "Left"
+                            isLeftAble = false
+                            isRightAble = true
                         }
                     } label: {
                         Rectangle()
@@ -162,12 +164,16 @@ struct LookoutView: View {
                         isLeftAble = false
                         isRightAble = false
                         withAnimation (Animation.easeOut (duration: 10)){
-                        xOffset = xOffset - 393
+                            xOffset = xOffset - 393
                         }
                         if xOffset == 0 {
                             direction = "Forward"
+                            isLeftAble = true
+                            isRightAble = true
                         } else {
                             direction = "Right"
+                            isLeftAble = true
+                            isRightAble = false
                         }
                     } label: {
                         Rectangle()
@@ -205,5 +211,6 @@ struct LookoutView: View {
 struct LookoutView_Previews: PreviewProvider {
     static var previews: some View {
         LookoutView(partyId: UUID())
+            .environmentObject(GameService())
     }
 }
