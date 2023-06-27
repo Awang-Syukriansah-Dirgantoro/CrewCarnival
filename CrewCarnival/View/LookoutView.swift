@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct LookoutView: View {
-    @State private var downloadAmount = 80.0
-    @State private var progressInstruction = 0.0
-    let timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
+    @State private var partyProgress = 0.0
+    @State private var instructionProgress = 100.0
+    @State private var instructionProgressMax = 100.0
     @State private var gradient = LinearGradient(
         gradient: Gradient(colors: [Color(red: 0, green: 0.82, blue: 0.23)]),
         startPoint: .topLeading,
@@ -21,6 +21,10 @@ struct LookoutView: View {
     @State private var direction = "Forward"
     @State private var isLeftAble = true
     @State private var isRightAble = true
+    @EnvironmentObject var gameService: GameService
+    var partyId: UUID
+    let timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
+    
     var body: some View {
         let gradientStyle = GradientProgressStyle(
             stroke: .clear,
@@ -79,35 +83,35 @@ struct LookoutView: View {
                                 .frame(width: 334, height: 27)
                                 .clipped()
                         )
-                    ProgressView("", value: downloadAmount, total: 100).progressViewStyle(gradientStyle).padding(.horizontal,9)
-                }.padding(.bottom,20).padding(.horizontal,30)
-                ZStack{
-                    Rectangle().frame(height: 60).opacity(0.5)
-                    Text("There are obstacles nearby!")
-                        .font(Font.custom("Gasoek One", size: 20))
-                        .multilineTextAlignment(.center)
-                        .foregroundColor(Color(red: 0.95, green: 0.74, blue: 0))
-                    ProgressView("", value: progressInstruction, total: 100)
+                    ProgressView("", value: partyProgress, total: 100).progressViewStyle(gradientStyle).padding(.horizontal,9)
                         .onReceive(timer) { _ in
-                            if progressInstruction < 100 && isMove{
-                                progressInstruction += 1
+                            if partyProgress < 100 {
+                                partyProgress += 2
                             }
-                            if progressInstruction == 100 {
-                                isMove = false
-                                progressInstruction = 0
-                                if xOffset == 393 {
-                                    isLeftAble = false
-                                    isRightAble = true
-                                } else if xOffset == -393 {
-                                    isLeftAble = true
-                                    isRightAble = false
-                                } else {
-                                    isLeftAble = true
-                                    isRightAble = true
+                        }
+                }.padding(.bottom,20).padding(.horizontal,30)
+                VStack {
+                    ZStack{
+                        Rectangle().frame(height: 60).opacity(0.5)
+                        ForEach(Array(gameService.parties.enumerated()), id: \.offset) { index, party in
+                            if party.id == partyId {
+                                ForEach(Array(party.players.enumerated()), id: \.offset) { index2, player in
+                                    if gameService.currentPlayer.id == player.id {
+                                        Text("\(gameService.parties[index].players[index2].event.instruction)")
+                                            .font(Font.custom("Gasoek One", size: 20))
+                                            .multilineTextAlignment(.center)
+                                            .foregroundColor(Color(red: 0.95, green: 0.74, blue: 0))
+                                    }
                                 }
                             }
                         }
-                        .progressViewStyle(LinearProgressViewStyle(tint: Color(red: 0, green: 0.82, blue: 0.23))).frame(height: 60, alignment:.bottom)
+                    }
+                    ProgressView("", value: instructionProgress, total: instructionProgressMax).progressViewStyle(gradientStyle).padding(.horizontal,9)
+                        .onReceive(timer) { _ in
+                            if instructionProgress > 0 {
+                                instructionProgress -= 0.1
+                            }
+                        }
                 }
                 Spacer()
                 ZStack{
@@ -182,11 +186,24 @@ struct LookoutView: View {
             }
             .padding(.vertical,50)
         }
+        .onAppear {
+            for (index, party) in gameService.parties.enumerated() {
+                if party.id == partyId {
+                    gameService.parties[index].generateLookoutEvent()
+                    for (index2, player) in gameService.parties[index].players.enumerated() {
+                        if player.role == Role.lookout {
+                            instructionProgress = gameService.parties[index].players[index2].event.duration
+                            instructionProgressMax = gameService.parties[index].players[index2].event.duration
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
 struct LookoutView_Previews: PreviewProvider {
     static var previews: some View {
-        LookoutView()
+        LookoutView(partyId: UUID())
     }
 }
