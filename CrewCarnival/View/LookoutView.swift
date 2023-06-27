@@ -127,27 +127,35 @@ struct LookoutView: View {
                 }
                 HStack{
                     Spacer()
-                    Rectangle()
-                        .foregroundColor(.clear)
-                        .frame(width: 125.51723, height: 129.99998)
-                        .background(
-                            Image("ButtonLeft")
-                                .resizable()
-                                .aspectRatio(contentMode: .fill)
-                                .frame(width: 125.5172348022461, height: 129.99998474121094)
-                                .clipped()
-                        )
+                    Button{
+                        
+                    } label: {
+                        Rectangle()
+                            .foregroundColor(.clear)
+                            .frame(width: 125.51723, height: 129.99998)
+                            .background(
+                                Image("ButtonLeft")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width: 125.5172348022461, height: 129.99998474121094)
+                                    .clipped()
+                            )
+                    }
                     Spacer()
-                    Rectangle()
-                        .foregroundColor(.clear)
-                        .frame(width: 125.51723, height: 129.99998)
-                        .background(
-                            Image("ButtonRight")
-                                .resizable()
-                                .aspectRatio(contentMode: .fill)
-                                .frame(width: 125.5172348022461, height: 129.99998474121094)
-                                .clipped()
-                        )
+                    Button{
+                        
+                    } label: {
+                        Rectangle()
+                            .foregroundColor(.clear)
+                            .frame(width: 125.51723, height: 129.99998)
+                            .background(
+                                Image("ButtonRight")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width: 125.5172348022461, height: 129.99998474121094)
+                                    .clipped()
+                            )
+                    }
                     Spacer()
                 }
             }
