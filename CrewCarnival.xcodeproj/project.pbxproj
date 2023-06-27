@@ -27,6 +27,7 @@
 		4E3F47122A4A737900915B7F /* CarouselBodyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E3F470F2A4A737900915B7F /* CarouselBodyView.swift */; };
 		4E3F47132A4A737900915B7F /* AllRole.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E3F47102A4A737900915B7F /* AllRole.swift */; };
 		4E3F47142A4A737900915B7F /* ScrollViewOffsetModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E3F47112A4A737900915B7F /* ScrollViewOffsetModifier.swift */; };
+		4E3F47162A4A890600915B7F /* CobaRecapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E3F47152A4A890600915B7F /* CobaRecapView.swift */; };
 		59117DE02A414F2600701627 /* CrewCarnivalApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59117DDF2A414F2600701627 /* CrewCarnivalApp.swift */; };
 		59117DE22A414F2600701627 /* LivesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59117DE12A414F2600701627 /* LivesView.swift */; };
 		59117DE42A414F2700701627 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 59117DE32A414F2700701627 /* Assets.xcassets */; };
@@ -57,6 +58,7 @@
 		4E3F470F2A4A737900915B7F /* CarouselBodyView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CarouselBodyView.swift; sourceTree = "<group>"; };
 		4E3F47102A4A737900915B7F /* AllRole.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AllRole.swift; sourceTree = "<group>"; };
 		4E3F47112A4A737900915B7F /* ScrollViewOffsetModifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScrollViewOffsetModifier.swift; sourceTree = "<group>"; };
+		4E3F47152A4A890600915B7F /* CobaRecapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CobaRecapView.swift; sourceTree = "<group>"; };
 		59117DDC2A414F2600701627 /* CrewCarnival.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CrewCarnival.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		59117DDF2A414F2600701627 /* CrewCarnivalApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrewCarnivalApp.swift; sourceTree = "<group>"; };
 		59117DE12A414F2600701627 /* LivesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LivesView.swift; sourceTree = "<group>"; };
@@ -106,6 +108,7 @@
 				59117DE12A414F2600701627 /* LivesView.swift */,
 				59117DED2A43E87600701627 /* LookoutView.swift */,
 				0B228A252A42A04A0078D22A /* HelmsmanView.swift */,
+				4E3F47152A4A890600915B7F /* CobaRecapView.swift */,
 				4E14C5822A47479C005BB798 /* RecapSceneView.swift */,
 				0B0B777F2A455D8600B10F99 /* SailingMasterView.swift */,
 				0B2679FF2A47482700CE2AD8 /* BlacksmithView.swift */,
@@ -274,6 +277,7 @@
 				4C7234082A49218C00F371E7 /* PartyView.swift in Sources */,
 				4C2509172A4946D000721A03 /* GameView.swift in Sources */,
 				0B0B77762A4535AE00B10F99 /* ProgressBar.swift in Sources */,
+				4E3F47162A4A890600915B7F /* CobaRecapView.swift in Sources */,
 				4C72340C2A4921D600F371E7 /* ContentView.swift in Sources */,
 				59117DE02A414F2600701627 /* CrewCarnivalApp.swift in Sources */,
 				59117DEE2A43E87600701627 /* LookoutView.swift in Sources */,
