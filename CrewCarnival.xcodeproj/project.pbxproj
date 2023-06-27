@@ -13,6 +13,8 @@
 		0B0B77802A455D8600B10F99 /* SailingMasterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B0B777F2A455D8600B10F99 /* SailingMasterView.swift */; };
 		0B228A262A42A04A0078D22A /* HelmsmanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B228A252A42A04A0078D22A /* HelmsmanView.swift */; };
 		0B267A002A47482700CE2AD8 /* BlacksmithView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B2679FF2A47482700CE2AD8 /* BlacksmithView.swift */; };
+		4C2509172A4946D000721A03 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C2509162A4946D000721A03 /* GameView.swift */; };
+		4C25091B2A496C7400721A03 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C25091A2A496C7400721A03 /* Event.swift */; };
 		4C7234072A49218C00F371E7 /* ReadyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C7234052A49218C00F371E7 /* ReadyView.swift */; };
 		4C7234082A49218C00F371E7 /* PartyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C7234062A49218C00F371E7 /* PartyView.swift */; };
 		4C72340A2A49219A00F371E7 /* PartyCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C7234092A49219A00F371E7 /* PartyCard.swift */; };
@@ -37,6 +39,8 @@
 		0B0B777F2A455D8600B10F99 /* SailingMasterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SailingMasterView.swift; sourceTree = "<group>"; };
 		0B228A252A42A04A0078D22A /* HelmsmanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelmsmanView.swift; sourceTree = "<group>"; };
 		0B2679FF2A47482700CE2AD8 /* BlacksmithView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlacksmithView.swift; sourceTree = "<group>"; };
+		4C2509162A4946D000721A03 /* GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
+		4C25091A2A496C7400721A03 /* Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 		4C7234052A49218C00F371E7 /* ReadyView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReadyView.swift; sourceTree = "<group>"; };
 		4C7234062A49218C00F371E7 /* PartyView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PartyView.swift; sourceTree = "<group>"; };
 		4C7234092A49219A00F371E7 /* PartyCard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PartyCard.swift; sourceTree = "<group>"; };
@@ -95,6 +99,7 @@
 				0B228A252A42A04A0078D22A /* HelmsmanView.swift */,
 				0B0B777F2A455D8600B10F99 /* SailingMasterView.swift */,
 				0B2679FF2A47482700CE2AD8 /* BlacksmithView.swift */,
+				4C2509162A4946D000721A03 /* GameView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -112,6 +117,7 @@
 			children = (
 				4C72341D2A49270E00F371E7 /* Party.swift */,
 				4C72341E2A49270E00F371E7 /* Player.swift */,
+				4C25091A2A496C7400721A03 /* Event.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -241,10 +247,12 @@
 				4C72341F2A49270E00F371E7 /* Party.swift in Sources */,
 				4C7234072A49218C00F371E7 /* ReadyView.swift in Sources */,
 				4C7234082A49218C00F371E7 /* PartyView.swift in Sources */,
+				4C2509172A4946D000721A03 /* GameView.swift in Sources */,
 				0B0B77762A4535AE00B10F99 /* ProgressBar.swift in Sources */,
 				4C72340C2A4921D600F371E7 /* ContentView.swift in Sources */,
 				59117DE02A414F2600701627 /* CrewCarnivalApp.swift in Sources */,
 				59117DEE2A43E87600701627 /* LookoutView.swift in Sources */,
+				4C25091B2A496C7400721A03 /* Event.swift in Sources */,
 				4C7234202A49270E00F371E7 /* Player.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

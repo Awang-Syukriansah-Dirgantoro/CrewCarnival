@@ -14,11 +14,9 @@ struct ReadyView: View {
     @State var isStartGame = false
     
     var body: some View {
-        ScrollView {
+        VStack {
             if isStartGame {
-                VStack {
-                    Text("Game Start")
-                }
+                GameView(partyId: partyId)
             } else {
                 VStack() {
                     HStack(alignment: .top) {
@@ -98,6 +96,9 @@ struct ReadyView: View {
                     for (index, party) in gameService.parties.enumerated() {
                         if party.id == partyId {
                             self.partyIndex = index
+                            gameService.parties[index].assignRoles()
+                            
+                            self.gameService.send(parties: gameService.parties)
                         }
                     }
                 }
