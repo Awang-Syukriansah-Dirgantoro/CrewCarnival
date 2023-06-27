@@ -20,7 +20,7 @@ class GameService : NSObject, ObservableObject {
     @Published var parties: [Party]
     @Published var currentPlayer: Player
 
-    private let ColorServiceType = "example-color"
+    private let GameServiceType = "crew-carnival"
 
     private let myPeerId = MCPeerID(displayName: UIDevice.current.name)
     private let serviceAdvertiser : MCNearbyServiceAdvertiser
@@ -38,8 +38,8 @@ class GameService : NSObject, ObservableObject {
         self.parties = [Party]()
         self.currentPlayer = Player(name: "")
         
-        self.serviceAdvertiser = MCNearbyServiceAdvertiser(peer: myPeerId, discoveryInfo: nil, serviceType: ColorServiceType)
-        self.serviceBrowser = MCNearbyServiceBrowser(peer: myPeerId, serviceType: ColorServiceType)
+        self.serviceAdvertiser = MCNearbyServiceAdvertiser(peer: myPeerId, discoveryInfo: nil, serviceType: GameServiceType)
+        self.serviceBrowser = MCNearbyServiceBrowser(peer: myPeerId, serviceType: GameServiceType)
 
         super.init()
 
