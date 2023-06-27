@@ -29,6 +29,9 @@ extension ContentView : GameServiceDelegate {
     
     func connectedDevicesChanged(manager: GameService, connectedDevices: [String]) {
         OperationQueue.main.addOperation {
+            if self.gameService.parties.count != 0 {
+                self.gameService.send(parties: self.gameService.parties)
+            }
         }
     }
     
@@ -40,7 +43,6 @@ extension ContentView : GameServiceDelegate {
                 print("Error decoding: \(error)")
             }
             self.gameService.parties = gameService.parties
-            print("cek2:\(self.gameService.parties)")
         }
     }
 }
