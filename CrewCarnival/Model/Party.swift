@@ -44,10 +44,10 @@ struct Party: Codable, Identifiable, Equatable {
                     players[index].role = Role.lookout
                     break
                 case 1:
-                    players[index].role = Role.helmsman
+                    players[index].role = Role.lookout
                     break
                 case 2:
-                    players[index].role = Role.sailingMaster
+                    players[index].role = Role.lookout
                     break
                 case 3:
                     players[index].role = Role.lookout

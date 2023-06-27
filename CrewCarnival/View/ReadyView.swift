@@ -22,7 +22,7 @@ struct ReadyView: View {
                     HStack(alignment: .top) {
                         ForEach(Array(gameService.parties.enumerated()), id: \.offset) { index, party in
                             if party.id == partyId {
-                                ForEach(Array(party.players.enumerated()), id: \.offset) { index, player in
+                                ForEach(Array(party.players.enumerated()), id: \.offset) { index2, player in
                                     VStack {
                                         Text("\(player.name )")
                                             .multilineTextAlignment(.leading)

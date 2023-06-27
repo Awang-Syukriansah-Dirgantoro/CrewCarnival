@@ -9,7 +9,7 @@ import Foundation
 
 struct Event: Codable, Equatable {
     var id = UUID()
-    var duration: Int
+    var duration: Double
     var instruction: String
     var objective: Objective
 }
