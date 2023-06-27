@@ -1,13 +1,13 @@
 //
-//  LookoutView.swift
+//  SailingMasterView.swift
 //  CrewCarnival
 //
-//  Created by Awang Syukriansah Dirgantoro on 22/06/23.
+//  Created by Aiffah Kiysa Waafi on 23/06/23.
 //
 
 import SwiftUI
 
-struct LookoutView: View {
+struct SailingMasterView: View {
     @State private var downloadAmount = 80.0
     @State private var gradient = LinearGradient(
         gradient: Gradient(colors: [Color(red: 0, green: 0.82, blue: 0.23)]),
@@ -21,10 +21,10 @@ struct LookoutView: View {
             caption: ""
         )
         ZStack{
-            Image("LookoutBack").resizable().scaledToFill().ignoresSafeArea(.all)
+            Image("Sail").resizable().scaledToFill().ignoresSafeArea(.all)
             VStack{
                 HStack{
-                    Text("Lookout")
+                    Text("Sailing Master")
                         .font(.custom("Gasoek One", size: 24))
                         .foregroundColor(.white)
                     Spacer()
@@ -60,7 +60,7 @@ struct LookoutView: View {
                                     .clipped()
                             )
                     }
-                }.padding(.bottom).padding(.horizontal,30)
+                }.padding(.top, 40).padding(.horizontal,30)
                 ZStack{
                     Rectangle()
                         .foregroundColor(.clear)
@@ -80,65 +80,19 @@ struct LookoutView: View {
                         .font(Font.custom("Gasoek One", size: 20))
                         .multilineTextAlignment(.center)
                         .foregroundColor(Color(red: 0.95, green: 0.74, blue: 0))
+                    Rectangle()
+                        .frame(height: 5)
+                        .offset(y: 30)
+                        .foregroundColor(Color(red: 0, green: 0.82, blue: 0.23))
                 }
                 Spacer()
-                ZStack{
-                    Rectangle()
-                        .foregroundColor(.clear)
-                        .frame(width: 247, height: 66)
-                        .background(
-                            Image("InfoBox")
-                                .resizable()
-                                .aspectRatio(contentMode: .fill)
-                                .frame(width: 247, height: 66)
-                                .clipped()
-                        )
-                    Text("You are looking at: Left Direction")
-                        .font(Font.custom("Krub-Regular", size: 20))
-                        .multilineTextAlignment(.center)
-                        .foregroundColor(.white).frame(width: 247, height: 66)
-                }
-                HStack{
-                    Spacer()
-                    Button{
-                        
-                    } label: {
-                        Rectangle()
-                            .foregroundColor(.clear)
-                            .frame(width: 125.51723, height: 129.99998)
-                            .background(
-                                Image("ButtonLeft")
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fill)
-                                    .frame(width: 125.5172348022461, height: 129.99998474121094)
-                                    .clipped()
-                            )
-                    }
-                    Spacer()
-                    Button{
-                        
-                    } label: {
-                        Rectangle()
-                            .foregroundColor(.clear)
-                            .frame(width: 125.51723, height: 129.99998)
-                            .background(
-                                Image("ButtonRight")
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fill)
-                                    .frame(width: 125.5172348022461, height: 129.99998474121094)
-                                    .clipped()
-                            )
-                    }
-                    Spacer()
-                }
             }
-            .padding(.vertical,50)
-        }
+        }.background(Image("BgSailingMaster").resizable().scaledToFill())
     }
 }
 
-struct LookoutView_Previews: PreviewProvider {
+struct SailingMasterView_Previews: PreviewProvider {
     static var previews: some View {
-        LookoutView()
+        SailingMasterView()
     }
 }

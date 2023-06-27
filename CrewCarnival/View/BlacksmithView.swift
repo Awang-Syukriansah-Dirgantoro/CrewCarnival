@@ -1,14 +1,17 @@
 //
-//  LookoutView.swift
+//  BlacksmithView.swift
 //  CrewCarnival
 //
-//  Created by Awang Syukriansah Dirgantoro on 22/06/23.
+//  Created by Aiffah Kiysa Waafi on 24/06/23.
 //
 
 import SwiftUI
 
-struct LookoutView: View {
+struct BlacksmithView: View {
     @State private var downloadAmount = 80.0
+    @State private var progressInstruction = 0.0
+    let timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
+    
     @State private var gradient = LinearGradient(
         gradient: Gradient(colors: [Color(red: 0, green: 0.82, blue: 0.23)]),
         startPoint: .topLeading,
@@ -21,10 +24,13 @@ struct LookoutView: View {
             caption: ""
         )
         ZStack{
-            Image("LookoutBack").resizable().scaledToFill().ignoresSafeArea(.all)
+            Image("BgBlacksmith")
+                .resizable()
+                .scaledToFill()
+                .ignoresSafeArea(.all)
             VStack{
                 HStack{
-                    Text("Lookout")
+                    Text("Blacksmith")
                         .font(.custom("Gasoek One", size: 24))
                         .foregroundColor(.white)
                     Spacer()
@@ -60,7 +66,8 @@ struct LookoutView: View {
                                     .clipped()
                             )
                     }
-                }.padding(.bottom).padding(.horizontal,30)
+                }.padding(.horizontal, 30)
+                    .padding(.top, 30)
                 ZStack{
                     Rectangle()
                         .foregroundColor(.clear)
@@ -74,71 +81,33 @@ struct LookoutView: View {
                         )
                     ProgressView("", value: downloadAmount, total: 100).progressViewStyle(gradientStyle).padding(.horizontal,9)
                 }.padding(.bottom,20).padding(.horizontal,30)
-                ZStack{
-                    Rectangle().frame(height: 60).opacity(0.5)
+                VStack{
                     Text("There are obstacles nearby!")
                         .font(Font.custom("Gasoek One", size: 20))
                         .multilineTextAlignment(.center)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 20)
                         .foregroundColor(Color(red: 0.95, green: 0.74, blue: 0))
+                        .background(
+                            Rectangle()
+                                .opacity(0.5))
+                    ProgressView("", value: progressInstruction, total: 100)
+                        .onReceive(timer) { _ in
+                            if progressInstruction < 100 {
+                                progressInstruction += 0.5
+                            }
+                        }
+                        .progressViewStyle(LinearProgressViewStyle(tint: Color(red: 0, green: 0.82, blue: 0.23)))
+                        .padding(.top, -30)
                 }
                 Spacer()
-                ZStack{
-                    Rectangle()
-                        .foregroundColor(.clear)
-                        .frame(width: 247, height: 66)
-                        .background(
-                            Image("InfoBox")
-                                .resizable()
-                                .aspectRatio(contentMode: .fill)
-                                .frame(width: 247, height: 66)
-                                .clipped()
-                        )
-                    Text("You are looking at: Left Direction")
-                        .font(Font.custom("Krub-Regular", size: 20))
-                        .multilineTextAlignment(.center)
-                        .foregroundColor(.white).frame(width: 247, height: 66)
-                }
-                HStack{
-                    Spacer()
-                    Button{
-                        
-                    } label: {
-                        Rectangle()
-                            .foregroundColor(.clear)
-                            .frame(width: 125.51723, height: 129.99998)
-                            .background(
-                                Image("ButtonLeft")
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fill)
-                                    .frame(width: 125.5172348022461, height: 129.99998474121094)
-                                    .clipped()
-                            )
-                    }
-                    Spacer()
-                    Button{
-                        
-                    } label: {
-                        Rectangle()
-                            .foregroundColor(.clear)
-                            .frame(width: 125.51723, height: 129.99998)
-                            .background(
-                                Image("ButtonRight")
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fill)
-                                    .frame(width: 125.5172348022461, height: 129.99998474121094)
-                                    .clipped()
-                            )
-                    }
-                    Spacer()
-                }
             }
-            .padding(.vertical,50)
         }
     }
 }
 
-struct LookoutView_Previews: PreviewProvider {
+struct BlacksmithView_Previews: PreviewProvider {
     static var previews: some View {
-        LookoutView()
+        BlacksmithView()
     }
 }
