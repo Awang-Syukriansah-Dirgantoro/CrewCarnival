@@ -7,8 +7,6 @@
 		<string>_crew-carnival._tcp</string>
 		<string>_crew-carnival._udp</string>
 	</array>
-	<key>NSLocalNetworkUsageDescription</key>
-	<string>hello</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Krub-Regular.ttf</string>
