@@ -14,17 +14,15 @@ struct ReadyView: View {
     @State var isStartGame = false
     
     var body: some View {
-        ScrollView {
+        VStack {
             if isStartGame {
-                VStack {
-                    Text("Game Start")
-                }
+                GameView(partyId: partyId)
             } else {
                 VStack() {
                     HStack(alignment: .top) {
                         ForEach(Array(gameService.parties.enumerated()), id: \.offset) { index, party in
                             if party.id == partyId {
-                                ForEach(Array(party.players.enumerated()), id: \.offset) { index, player in
+                                ForEach(Array(party.players.enumerated()), id: \.offset) { index2, player in
                                     VStack {
                                         Text("\(player.name )")
                                             .multilineTextAlignment(.leading)
@@ -98,6 +96,9 @@ struct ReadyView: View {
                     for (index, party) in gameService.parties.enumerated() {
                         if party.id == partyId {
                             self.partyIndex = index
+                            gameService.parties[index].assignRoles()
+                            
+                            self.gameService.send(parties: gameService.parties)
                         }
                     }
                 }
