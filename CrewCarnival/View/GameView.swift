@@ -26,7 +26,7 @@ struct GameView: View {
                             } else if player.role == Role.cabinBoy  {
                                 
                             } else {
-                                
+                                BlacksmithView()
                             }
                         }
                     }
