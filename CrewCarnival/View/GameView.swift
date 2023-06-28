@@ -20,7 +20,7 @@ struct GameView: View {
                             if player.role == Role.lookout {
                                 LookoutView(partyId: partyId)
                             } else if player.role == Role.helmsman  {
-                               HelmsmanView()
+                                HelmsmanView()
                             } else if player.role == Role.sailingMaster  {
                                 SailingMasterView()
                             } else if player.role == Role.cabinBoy  {

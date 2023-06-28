@@ -134,7 +134,7 @@ struct LookoutView: View {
                         isMove = true
                         isLeftAble = false
                         isRightAble = false
-                        withAnimation (Animation.easeOut (duration: 10)){
+                        withAnimation (Animation.easeOut (duration: 3)){
                             xOffset = xOffset + 393
                         }
                         if xOffset == 0 {
@@ -163,7 +163,7 @@ struct LookoutView: View {
                         isMove = true
                         isLeftAble = false
                         isRightAble = false
-                        withAnimation (Animation.easeOut (duration: 10)){
+                        withAnimation (Animation.easeOut (duration: 3)){
                             xOffset = xOffset - 393
                         }
                         if xOffset == 0 {
@@ -200,6 +200,30 @@ struct LookoutView: View {
                         if player.role == Role.lookout {
                             instructionProgress = gameService.parties[index].players[index2].event.duration
                             instructionProgressMax = gameService.parties[index].players[index2].event.duration
+                        }
+                    }
+                }
+            }
+        }
+        .onChange(of: direction) { newDirection in
+            for (index, party) in gameService.parties.enumerated() {
+                if party.id == partyId {
+                    gameService.parties[index].generateLookoutEvent()
+                    for (index2, player) in gameService.parties[index].players.enumerated() {
+                        if player.role == Role.lookout {
+                            if player.event.objective == Objective.lookLeft {
+                                if newDirection == "Left" {
+                                    gameService.parties[index].players[index2].event.instruction = "Our Left is Clear!\nQuickly Turn the Ship!"
+                                }
+                            } else if player.event.objective == Objective.lookRight {
+                                if newDirection == "Right" {
+                                    gameService.parties[index].players[index2].event.instruction = "Our Right is Clear!\nQuickly Turn the Ship!"
+                                }
+                            } else {
+                                if newDirection == "Front" {
+                                    gameService.parties[index].players[index2].event.instruction = "Our Front is Clear!\nQuickly Turn the Ship!"
+                                }
+                            }
                         }
                     }
                 }

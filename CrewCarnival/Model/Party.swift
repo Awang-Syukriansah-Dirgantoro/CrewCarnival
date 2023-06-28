@@ -20,7 +20,7 @@ struct Party: Codable, Identifiable, Equatable {
     mutating func generateLookoutEvent() {
         for (index, player) in players.enumerated() {
             if player.role == Role.lookout {
-                players[index].event = Event(duration: 10, instruction: "There are obstacles nearby!", objective: Objective.turnLeft)
+                players[index].event = Event(duration: 10, instruction: "There are obstacles nearby!", objective: Objective.lookLeft)
                 break
             }
         }
@@ -44,16 +44,16 @@ struct Party: Codable, Identifiable, Equatable {
                     players[index].role = Role.lookout
                     break
                 case 1:
-                    players[index].role = Role.lookout
+                    players[index].role = Role.helmsman
                     break
                 case 2:
-                    players[index].role = Role.lookout
+                    players[index].role = Role.sailingMaster
                     break
                 case 3:
-                    players[index].role = Role.lookout
+                    players[index].role = Role.cabinBoy
                     break
                 default:
-                    players[index].role = Role.lookout
+                    players[index].role = Role.blackSmith
                 }
                 
                 var isRoleTaken = false
