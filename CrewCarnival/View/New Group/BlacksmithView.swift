@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct BlacksmithView: View {
+    @StateObject var vm = PuzzleViewModel()
     @State private var downloadAmount = 80.0
     @State private var progressInstruction = 0.0
     let timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
@@ -24,6 +25,7 @@ struct BlacksmithView: View {
             caption: ""
         )
         ZStack{
+            
             Image("BgBlacksmith")
                 .resizable()
                 .scaledToFill()
@@ -100,6 +102,20 @@ struct BlacksmithView: View {
                         .progressViewStyle(LinearProgressViewStyle(tint: Color(red: 0, green: 0.82, blue: 0.23)))
                         .padding(.top, -30)
                 }
+                ZStack {
+                    VStack(alignment: .center, spacing: 30) {
+                        Drop(vm: vm)
+                            .padding(.vertical,30)
+                        Drag(vm: vm)
+                    }
+                    .padding(.top,30)
+                }
+                .padding()
+                .onAppear {
+                    vm.shuffleArray()
+                }
+                .offset(x: vm.animateWrong ? -30 : 0)
+                .environmentObject(vm)
                 Spacer()
             }
         }

@@ -41,19 +41,19 @@ struct Party: Codable, Identifiable, Equatable {
                 
                 switch randomInt {
                 case 0:
-                    players[index].role = Role.lookout
+                    players[index].role = Role.blackSmith
                     break
                 case 1:
-                    players[index].role = Role.lookout
+                    players[index].role = Role.blackSmith
                     break
                 case 2:
-                    players[index].role = Role.lookout
+                    players[index].role = Role.blackSmith
                     break
                 case 3:
-                    players[index].role = Role.lookout
+                    players[index].role = Role.blackSmith
                     break
                 default:
-                    players[index].role = Role.lookout
+                    players[index].role = Role.blackSmith
                 }
                 
                 var isRoleTaken = false
