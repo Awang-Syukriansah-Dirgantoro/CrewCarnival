@@ -21,6 +21,8 @@ struct CabinBoyView: View {
     @State private var direction = "Forward"
     @State private var isLeftAble = true
     @State private var isRightAble = true
+    @State private var choose = "helmsman"
+    @State var showingPopup = false
     @EnvironmentObject var gameService: GameService
     var partyId: UUID
     let timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
@@ -32,6 +34,79 @@ struct CabinBoyView: View {
         )
         ZStack{
             Image("CabinBoyBack").resizable().scaledToFill().ignoresSafeArea(.all).offset(x:xOffset)
+            Button{
+                showingPopup = true
+                choose = "helmsman"
+            } label: {
+                Rectangle()
+                    .foregroundColor(.clear)
+                    .frame(width: 174, height: 237)
+                    .background(
+                        Image("CharHelmsman")
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(width: 174, height: 237)
+                            .clipped()
+                    )
+            }.offset(x:-50,y:-60).disabled(showingPopup)
+            Rectangle()
+                .foregroundColor(.clear)
+                .frame(width: 335, height: 262)
+                .background(
+                    Image("CabinBoyStair")
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(width: 335, height: 262)
+                        .clipped()
+                ).offset(y:92)
+            Button{
+                showingPopup = true
+                choose = "blacksmith"
+            } label: {
+                Rectangle()
+                    .foregroundColor(.clear)
+                    .frame(width: 101, height: 252)
+                    .background(
+                        Image("CharBlacksmith")
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(width: 101, height: 252)
+                            .clipped()
+                    )
+            }.offset(y:140).disabled(showingPopup)
+            Button{
+                showingPopup = true
+                choose = "sailingmaster"
+            } label: {
+                Rectangle()
+                    .foregroundColor(.clear)
+                    .frame(width: 110, height: 247)
+                    .background(
+                        Image("CharSailingMaster")
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(width: 110, height: 247)
+                            .clipped()
+                    )
+            }.offset(x:-130,y:190).disabled(showingPopup)
+            Button{
+                showingPopup = true
+                choose = "lookout"
+            } label: {
+                Rectangle()
+                    .foregroundColor(.clear)
+                    .frame(width: 121, height: 216)
+                    .background(
+                        Image("CharLookout")
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(width: 121, height: 216)
+                            .clipped()
+                    )
+            }.offset(x:130,y:240).disabled(showingPopup)
+            if showingPopup {
+                popUpView
+            }
             VStack{
                 HStack{
                     Text("Cabin Boy")
@@ -114,73 +189,6 @@ struct CabinBoyView: View {
                 Spacer()
             }
             .padding(.vertical,50)
-            Button{
-                
-            } label: {
-                Rectangle()
-                    .foregroundColor(.clear)
-                    .frame(width: 174, height: 237)
-                    .background(
-                        Image("CharHelmsman")
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
-                            .frame(width: 174, height: 237)
-                            .clipped()
-                    )
-            }.offset(x:-50,y:-60)
-            Rectangle()
-                .foregroundColor(.clear)
-                .frame(width: 335, height: 262)
-                .background(
-                    Image("CabinBoyStair")
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .frame(width: 335, height: 262)
-                        .clipped()
-                ).offset(y:92)
-            
-            Button{
-                
-            } label: {
-                Rectangle()
-                    .foregroundColor(.clear)
-                    .frame(width: 101, height: 252)
-                    .background(
-                        Image("CharBlacksmith")
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
-                            .frame(width: 101, height: 252)
-                            .clipped()
-                    )
-            }.offset(y:140)
-            Button{
-                
-            } label: {
-                Rectangle()
-                    .foregroundColor(.clear)
-                    .frame(width: 110, height: 247)
-                    .background(
-                        Image("CharSailingMaster")
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
-                            .frame(width: 110, height: 247)
-                            .clipped()
-                    )
-            }.offset(x:-130,y:190)
-            Button{
-                
-            } label: {
-                Rectangle()
-                    .foregroundColor(.clear)
-                    .frame(width: 121, height: 216)
-                    .background(
-                        Image("CharLookout")
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
-                            .frame(width: 121, height: 216)
-                            .clipped()
-                    )
-            }.offset(x:130,y:240)
         }
         .onAppear {
             for (index, party) in gameService.parties.enumerated() {
@@ -194,6 +202,312 @@ struct CabinBoyView: View {
                     }
                 }
             }
+        }
+    }
+    
+    var popUpView: some View {
+        ZStack{
+            Rectangle().opacity(0.5).ignoresSafeArea()
+            switch choose {
+            case "sailingmaster":
+                Rectangle()
+                    .foregroundColor(.clear)
+                    .frame(width: 348, height: 514)
+                    .background(
+                        Image("VerticalMap")
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(width: 348, height: 514)
+                            .clipped()
+                    ).offset(y:70)
+                Button{
+                    
+                } label: {
+                    Rectangle()
+                        .foregroundColor(.clear)
+                        .frame(width: 224.93666, height: 57.58378)
+                        .background(
+                            ZStack{
+                                Image("InfoBox")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width: 224.93666076660156, height: 57.58378219604492)
+                                    .clipped()
+                                Text("Fix Sail 1")
+                                    .font(
+                                        Font.custom("Krub-Regular", size: 24)
+                                            .weight(.semibold)
+                                    )
+                                    .multilineTextAlignment(.center)
+                                    .foregroundColor(.white)
+                                    .frame(width: 127.11892, height: 35.85405, alignment: .top)
+                            }
+                        )
+                }.offset(y:-30)
+                Button{
+                    
+                } label: {
+                    Rectangle()
+                        .foregroundColor(.clear)
+                        .frame(width: 224.93666, height: 57.58378)
+                        .background(
+                            ZStack{
+                                Image("InfoBox")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width: 224.93666076660156, height: 57.58378219604492)
+                                    .clipped()
+                                Text("Fix Sail 2")
+                                    .font(
+                                        Font.custom("Krub-Regular", size: 24)
+                                            .weight(.semibold)
+                                    )
+                                    .multilineTextAlignment(.center)
+                                    .foregroundColor(.white)
+                                    .frame(width: 127.11892, height: 35.85405, alignment: .top)
+                            }
+                        )
+                }.offset(y:50)
+                Button{
+                    
+                } label: {
+                    Rectangle()
+                        .foregroundColor(.clear)
+                        .frame(width: 224.93666, height: 57.58378)
+                        .background(
+                            ZStack{
+                                Image("InfoBox")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width: 224.93666076660156, height: 57.58378219604492)
+                                    .clipped()
+                                Text("Fix Sail 3")
+                                    .font(
+                                        Font.custom("Krub-Regular", size: 24)
+                                            .weight(.semibold)
+                                    )
+                                    .multilineTextAlignment(.center)
+                                    .foregroundColor(.white)
+                                    .frame(width: 127.11892, height: 35.85405, alignment: .top)
+                            }
+                        )
+                }.offset(y:130)
+                
+            case "helmsman":
+                Button{
+                    
+                } label: {
+                    ZStack{
+                        Rectangle()
+                            .foregroundColor(.clear)
+                            .frame(width: 165, height: 171)
+                            .background(
+                                Image("Box")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width: 165, height: 171)
+                                    .clipped()
+                            )
+                    }
+                }.offset(x:-100)
+                Button{
+                    
+                } label: {
+                    ZStack{
+                        Rectangle()
+                            .foregroundColor(.clear)
+                            .frame(width: 165, height: 171)
+                            .background(
+                                Image("Box")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width: 165, height: 171)
+                                    .clipped()
+                            )
+                    }
+                }.offset(x:100)
+                Button{
+                    
+                } label: {
+                    ZStack{
+                        Rectangle()
+                            .foregroundColor(.clear)
+                            .frame(width: 165, height: 171)
+                            .background(
+                                Image("Box")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width: 165, height: 171)
+                                    .clipped()
+                            )
+                    }
+                }.offset(x:-100,y:200)
+                Button{
+                    
+                } label: {
+                    ZStack{
+                        Rectangle()
+                            .foregroundColor(.clear)
+                            .frame(width: 165, height: 171)
+                            .background(
+                                Image("Box")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width: 165, height: 171)
+                                    .clipped()
+                            )
+                    }
+                }.offset(x:100,y:200)
+                
+            case "blacksmith":
+                Button{
+                    
+                } label: {
+                    ZStack{
+                        Rectangle()
+                            .foregroundColor(.clear)
+                            .frame(width: 165, height: 171)
+                            .background(
+                                Image("Box")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width: 165, height: 171)
+                                    .clipped()
+                            )
+                    }
+                }.offset(x:-100)
+                Button{
+                    
+                } label: {
+                    ZStack{
+                        Rectangle()
+                            .foregroundColor(.clear)
+                            .frame(width: 165, height: 171)
+                            .background(
+                                Image("Box")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width: 165, height: 171)
+                                    .clipped()
+                            )
+                    }
+                }.offset(x:100)
+                Button{
+                    
+                } label: {
+                    ZStack{
+                        Rectangle()
+                            .foregroundColor(.clear)
+                            .frame(width: 165, height: 171)
+                            .background(
+                                Image("Box")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width: 165, height: 171)
+                                    .clipped()
+                            )
+                    }
+                }.offset(x:-100,y:200)
+                Button{
+                    
+                } label: {
+                    ZStack{
+                        Rectangle()
+                            .foregroundColor(.clear)
+                            .frame(width: 165, height: 171)
+                            .background(
+                                Image("Box")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width: 165, height: 171)
+                                    .clipped()
+                            )
+                    }
+                }.offset(x:100,y:200)
+                
+            case "lookput":
+                Button{
+                    
+                } label: {
+                    ZStack{
+                        Rectangle()
+                            .foregroundColor(.clear)
+                            .frame(width: 165, height: 171)
+                            .background(
+                                Image("Box")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width: 165, height: 171)
+                                    .clipped()
+                            )
+                    }
+                }.offset(x:-100)
+                Button{
+                    
+                } label: {
+                    ZStack{
+                        Rectangle()
+                            .foregroundColor(.clear)
+                            .frame(width: 165, height: 171)
+                            .background(
+                                Image("Box")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width: 165, height: 171)
+                                    .clipped()
+                            )
+                    }
+                }.offset(x:100)
+                Button{
+                    
+                } label: {
+                    ZStack{
+                        Rectangle()
+                            .foregroundColor(.clear)
+                            .frame(width: 165, height: 171)
+                            .background(
+                                Image("Box")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width: 165, height: 171)
+                                    .clipped()
+                            )
+                    }
+                }.offset(x:-100,y:200)
+                Button{
+                    
+                } label: {
+                    ZStack{
+                        Rectangle()
+                            .foregroundColor(.clear)
+                            .frame(width: 165, height: 171)
+                            .background(
+                                Image("Box")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width: 165, height: 171)
+                                    .clipped()
+                            )
+                    }
+                }.offset(x:100,y:200)
+                
+            default:
+                Rectangle().opacity(0.5).ignoresSafeArea()
+            }
+            Button{
+                showingPopup = false
+            } label: {
+                Rectangle()
+                    .foregroundColor(.clear)
+                    .frame(width: 45, height: 42)
+                    .background(
+                        Image("CloseButton")
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(width: 45, height: 42)
+                            .clipped()
+                    )
+            }.offset(x:90,y:-150)
         }
     }
 }
