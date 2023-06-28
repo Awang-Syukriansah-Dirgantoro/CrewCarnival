@@ -31,62 +31,18 @@ struct PartyView: View {
     ]
     
     var body: some View {
-        if gameService.currentPlayer.name == "" {
-            VStack {
-                Spacer()
-                TextField("Enter your name", text: $name)
-                    .textFieldStyle(.plain)
-                    .font(.system(size: 20))
-                    .padding(20)
-                Button {
-                    gameService.currentPlayer.name = name
-                } label: {
-                    Text("Submit")
-                        .foregroundColor(.yellow)
-                        .fontWeight(.bold)
-                        .frame(
-                            minWidth: 0,
-                            maxWidth: .infinity
-                        )
-                        .padding()
-                        .background(RoundedRectangle(cornerRadius: 15)
-                            .fill(Color.black))
-                        .padding(.horizontal)
-                }
-                Spacer()
-            }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
+        NavigationStack {
+            if gameService.currentPlayer.name == "" {
+                VStack {
+                    Spacer()
+                    TextField("Enter your name", text: $name)
+                        .textFieldStyle(.plain)
+                        .font(.system(size: 20))
+                        .padding(20)
                     Button {
-                        menu = -1
+                        gameService.currentPlayer.name = name
                     } label: {
-                        HStack {
-                            Image(systemName: "chevron.backward")
-                            Text("Back")
-                        }
-                    }
-                }
-            }
-        } else {
-            ScrollView{
-                VStack{
-                    if gameService.parties.count > 0 {
-                        LazyVGrid(columns: columns, spacing: 20) {
-                            ForEach(Array(gameService.parties.enumerated()), id: \.offset) { index, party in
-                                PartyCard(partyIndex: index, party: party, name: $name)
-                            }
-                        }
-                        .padding(.horizontal)
-                    } else {
-                        Text("No party available, create a party!")
-                            .foregroundColor(.gray)
-                            .padding()
-                    }
-                    
-                    NavigationLink {
-                        ReadyView(partyId: partyId)
-                    } label: {
-                        Text("Create Party")
+                        Text("Submit")
                             .foregroundColor(.yellow)
                             .fontWeight(.bold)
                             .frame(
@@ -96,22 +52,68 @@ struct PartyView: View {
                             .padding()
                             .background(RoundedRectangle(cornerRadius: 15)
                                 .fill(Color.black))
-                            .padding()
+                            .padding(.horizontal)
                     }
-                    .simultaneousGesture(TapGesture().onEnded {
-                        self.createParty()
-                        self.gameService.send(parties: gameService.parties)
-                    })
+                    Spacer()
                 }
-            }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button {
-                        gameService.currentPlayer.name = ""
-                    } label: {
-                        HStack {
-                            Image(systemName: "chevron.backward")
-                            Text("Back")
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        Button {
+                            menu = -1
+                        } label: {
+                            HStack {
+                                Image(systemName: "chevron.backward")
+                                Text("Back")
+                            }
+                        }
+                    }
+                }
+            } else {
+                ScrollView{
+                    VStack{
+                        if gameService.parties.count > 0 {
+                            LazyVGrid(columns: columns, spacing: 20) {
+                                ForEach(Array(gameService.parties.enumerated()), id: \.offset) { index, party in
+                                    PartyCard(partyIndex: index, party: party, name: $name)
+                                }
+                            }
+                            .padding(.horizontal)
+                        } else {
+                            Text("No party available, create a party!")
+                                .foregroundColor(.gray)
+                                .padding()
+                        }
+                        
+                        NavigationLink {
+                            ReadyView(partyId: partyId)
+                        } label: {
+                            Text("Create Party")
+                                .foregroundColor(.yellow)
+                                .fontWeight(.bold)
+                                .frame(
+                                    minWidth: 0,
+                                    maxWidth: .infinity
+                                )
+                                .padding()
+                                .background(RoundedRectangle(cornerRadius: 15)
+                                    .fill(Color.black))
+                                .padding()
+                        }
+                        .simultaneousGesture(TapGesture().onEnded {
+                            self.createParty()
+                            self.gameService.send(parties: gameService.parties)
+                        })
+                    }
+                }
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        Button {
+                            gameService.currentPlayer.name = ""
+                        } label: {
+                            HStack {
+                                Image(systemName: "chevron.backward")
+                                Text("Back")
+                            }
                         }
                     }
                 }

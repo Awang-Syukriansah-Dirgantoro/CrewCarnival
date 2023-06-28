@@ -1,133 +1,148 @@
 //
-//  MCSession.swift
-//  CrewCarnival
+//  RPSMultipeerSession.swift
+//  RPS
 //
-//  Created by Yap Justin on 21/06/23.
+//  Created by Joe Diragi on 7/28/22.
 //
 
-import Foundation
 import MultipeerConnectivity
+import os
 
-protocol GameServiceDelegate {
-
-    func connectedDevicesChanged(manager : GameService, connectedDevices: [String])
-    func partiesChanged(manager : GameService, data: Data)
-
-}
-
-class GameService : NSObject, ObservableObject {
+class GameService: NSObject, ObservableObject {
+    private let serviceType = "crew-carnival"
+    private var myPeerID: MCPeerID
+    
+    public let serviceAdvertiser: MCNearbyServiceAdvertiser
+    public let serviceBrowser: MCNearbyServiceBrowser
+    public let session: MCSession
+        
+    private let log = Logger()
     
     @Published var parties: [Party]
     @Published var currentPlayer: Player
-
-    private let GameServiceType = "crew-carnival"
-
-    private let myPeerId = MCPeerID(displayName: UIDevice.current.name)
-    private let serviceAdvertiser : MCNearbyServiceAdvertiser
-    private let serviceBrowser : MCNearbyServiceBrowser
-
-    var delegate : GameServiceDelegate?
-
-    lazy var session : MCSession = {
-        let session = MCSession(peer: self.myPeerId, securityIdentity: nil, encryptionPreference: .required)
-        session.delegate = self
-        return session
-    }()
-
+    @Published var availablePeers: [MCPeerID] = []
+    @Published var recvdInvite: Bool = false
+    @Published var recvdInviteFrom: MCPeerID? = nil
+    @Published var paired: Bool = false
+    @Published var invitationHandler: ((Bool, MCSession?) -> Void)?
+    
     override init() {
         self.parties = [Party]()
         self.currentPlayer = Player(name: "")
+        let peerID = MCPeerID(displayName: UIDevice.current.name)
+        self.myPeerID = peerID
         
-        self.serviceAdvertiser = MCNearbyServiceAdvertiser(peer: myPeerId, discoveryInfo: nil, serviceType: GameServiceType)
-        self.serviceBrowser = MCNearbyServiceBrowser(peer: myPeerId, serviceType: GameServiceType)
-
+        session = MCSession(peer: peerID, securityIdentity: nil, encryptionPreference: .none)
+        serviceAdvertiser = MCNearbyServiceAdvertiser(peer: peerID, discoveryInfo: nil, serviceType: serviceType)
+        serviceBrowser = MCNearbyServiceBrowser(peer: peerID, serviceType: serviceType)
         super.init()
-
-        self.serviceAdvertiser.delegate = self
-        self.serviceAdvertiser.startAdvertisingPeer()
-
-        self.serviceBrowser.delegate = self
-        self.serviceBrowser.startBrowsingForPeers()
+        
+        session.delegate = self
+        serviceAdvertiser.delegate = self
+        serviceBrowser.delegate = self
+                
+        serviceAdvertiser.startAdvertisingPeer()
+        serviceBrowser.startBrowsingForPeers()
     }
-
+    
     deinit {
-        self.serviceAdvertiser.stopAdvertisingPeer()
-        self.serviceBrowser.stopBrowsingForPeers()
+        serviceAdvertiser.stopAdvertisingPeer()
+        serviceBrowser.stopBrowsingForPeers()
     }
+    
+    func send(parties: [Party]) {
+        print("b")
+        if !session.connectedPeers.isEmpty {
+            print("a")
+            do {
+                let data = try JSONEncoder().encode(parties)
+                
+                NSLog("%@", "sendParties: \(parties) to \(session.connectedPeers.count) peers,\(session.connectedPeers.self)")
 
-    func send(parties : [Party]) {
-        do {
-            let data = try JSONEncoder().encode(parties)
-            
-            NSLog("%@", "sendParties: \(parties) to \(session.connectedPeers.count) peers,\(session.connectedPeers.self)")
-
-            if session.connectedPeers.count > 0 {
-                do {
-                    try self.session.send(data, toPeers: session.connectedPeers, with: .reliable)
+                if session.connectedPeers.count > 0 {
+                    do {
+                        try self.session.send(data, toPeers: session.connectedPeers, with: .reliable)
+                    }
+                    catch let error {
+                        NSLog("%@", "Error for sending: \(error)")
+                    }
                 }
-                catch let error {
-                    NSLog("%@", "Error for sending: \(error)")
-                }
+            } catch let error {
+                print("Error encoding: \(error)")
             }
-        } catch let error {
-            print("Error encoding: \(error)")
         }
     }
 }
 
-extension GameService : MCNearbyServiceAdvertiserDelegate {
-
+extension GameService: MCNearbyServiceAdvertiserDelegate {
     func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didNotStartAdvertisingPeer error: Error) {
-        NSLog("%@", "didNotStartAdvertisingPeer: \(error)")
+        //TODO: Inform the user something went wrong and try again
+        log.error("ServiceAdvertiser didNotStartAdvertisingPeer: \(String(describing: error))")
     }
-
+    
     func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didReceiveInvitationFromPeer peerID: MCPeerID, withContext context: Data?, invitationHandler: @escaping (Bool, MCSession?) -> Void) {
-        NSLog("%@", "didReceiveInvitationFromPeer \(peerID)")
-        invitationHandler(true, self.session)
+        log.info("didReceiveInvitationFromPeer \(peerID)")
+        
+        DispatchQueue.main.async {
+            invitationHandler(true, self.session)
+        }
     }
-
 }
 
-extension GameService : MCNearbyServiceBrowserDelegate {
-
+extension GameService: MCNearbyServiceBrowserDelegate {
     func browser(_ browser: MCNearbyServiceBrowser, didNotStartBrowsingForPeers error: Error) {
-        NSLog("%@", "didNotStartBrowsingForPeers: \(error)")
+        //TODO: Tell the user something went wrong and try again
+        log.error("ServiceBroser didNotStartBrowsingForPeers: \(String(describing: error))")
     }
-
+    
     func browser(_ browser: MCNearbyServiceBrowser, foundPeer peerID: MCPeerID, withDiscoveryInfo info: [String : String]?) {
-        NSLog("%@", "foundPeer: \(peerID)")
-        NSLog("%@", "invitePeer: \(peerID)")
-        browser.invitePeer(peerID, to: self.session, withContext: nil, timeout: 10)
+        log.info("ServiceBrowser found peer: \(peerID)")
+        // Add the peer to the list of available peers
+        DispatchQueue.main.async {
+            self.availablePeers.append(peerID)
+        }
+        browser.invitePeer(peerID, to: self.session, withContext: nil, timeout: 30)
     }
-
+    
     func browser(_ browser: MCNearbyServiceBrowser, lostPeer peerID: MCPeerID) {
-        NSLog("%@", "lostPeer: \(peerID)")
+        log.info("ServiceBrowser lost peer: \(peerID)")
+        // Remove lost peer from list of available peers
+        DispatchQueue.main.async {
+            self.availablePeers.removeAll(where: {
+                $0 == peerID
+            })
+        }
     }
-
 }
 
-extension GameService : MCSessionDelegate {
-
+extension GameService: MCSessionDelegate {
     func session(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState) {
-        NSLog("%@", "peer \(peerID) didChangeState: \(state.rawValue)")
-        self.delegate?.connectedDevicesChanged(manager: self, connectedDevices:
-            session.connectedPeers.map{$0.displayName})
+        log.info("peer \(peerID) didChangeState: \(state.rawValue)")
     }
-
+    
     func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID) {
-        NSLog("%@", "didReceiveData: \(data)")
-        self.delegate?.partiesChanged(manager: self, data: data)
+        DispatchQueue.main.async {
+            do {
+                self.parties = try JSONDecoder().decode([Party].self, from: data)
+            } catch let error {
+                print("Error decoding: \(error)")
+            }
+        }
     }
-
-    func session(_ session: MCSession, didReceive stream: InputStream, withName streamName: String, fromPeer peerID: MCPeerID) {
-        NSLog("%@", "didReceiveStream")
+    
+    public func session(_ session: MCSession, didReceive stream: InputStream, withName streamName: String, fromPeer peerID: MCPeerID) {
+        log.error("Receiving streams is not supported")
     }
-
-    func session(_ session: MCSession, didStartReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, with progress: Progress) {
-        NSLog("%@", "didStartReceivingResourceWithName")
+    
+    public func session(_ session: MCSession, didStartReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, with progress: Progress) {
+        log.error("Receiving resources is not supported")
     }
-
-    func session(_ session: MCSession, didFinishReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, at localURL: URL?, withError error: Error?) {
-        NSLog("%@", "didFinishReceivingResourceWithName")
+    
+    public func session(_ session: MCSession, didFinishReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, at localURL: URL?, withError error: Error?) {
+        log.error("Receiving resources is not supported")
+    }
+    
+    public func session(_ session: MCSession, didReceiveCertificate certificate: [Any]?, fromPeer peerID: MCPeerID, certificateHandler: @escaping (Bool) -> Void) {
+        certificateHandler(true)
     }
 }
