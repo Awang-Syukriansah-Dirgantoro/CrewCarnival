@@ -14,7 +14,7 @@ struct RecapSceneView: View {
     var body: some View {
         ZStack{
             if show {
-                Color.black.opacity(show ? 0.5 : 0).animation(.easeInOut(duration: 1.0))
+                Color.black.opacity(show ? 0.5 : 0).animation(.easeInOut(duration: 1.0)).edgesIgnoringSafeArea(.all)
                 if lives > 0 {
                     Image("scenewin").resizable().frame(width: 310,height: 480).opacity(isAnimate ? 1.0 : 0.0).animation(.easeInOut(duration: 1.0))
                     HStack{
@@ -46,7 +46,7 @@ struct RecapSceneView: View {
                 }.offset(y: 155)
             }
             
-        }.edgesIgnoringSafeArea(.all).onAppear {
+        }.onAppear {
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
                 withAnimation {
                     isAnimate = true
