@@ -56,4 +56,8 @@ struct RecapSceneView: View {
     }
 }
 
-
+struct RecapSceneView_Previews: PreviewProvider {
+    static var previews: some View {
+        RecapSceneView(show: false)
+    }
+}
