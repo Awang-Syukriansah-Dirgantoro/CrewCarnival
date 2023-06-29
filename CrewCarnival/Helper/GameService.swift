@@ -118,6 +118,9 @@ extension GameService: MCNearbyServiceBrowserDelegate {
 extension GameService: MCSessionDelegate {
     func session(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState) {
         log.info("peer \(peerID) didChangeState: \(state.rawValue)")
+        if self.parties.count != 0 {
+            self.send(parties: self.parties)
+        }
     }
     
     func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID) {
