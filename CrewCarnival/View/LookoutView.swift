@@ -16,11 +16,13 @@ struct LookoutView: View {
         startPoint: .topLeading,
         endPoint: .bottomTrailing
     )
-    @State private var xOffset:CGFloat = 0
+    @State private var xOffset:CGFloat = -391
     @State private var isMove = false
     @State private var direction = "Forward"
     @State private var isLeftAble = true
     @State private var isRightAble = true
+    @State private var listView = ["ViewRight","ViewForward","ViewLeft"]
+    @State private var views = ""
     @EnvironmentObject var gameService: GameService
     var partyId: UUID
     let timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
@@ -32,7 +34,9 @@ struct LookoutView: View {
             caption: ""
         )
         ZStack{
-            Image("LookoutBack").resizable().scaledToFill().ignoresSafeArea(.all).offset(x:xOffset)
+            GeometryReader { geometry in
+                Image(views).resizable().scaledToFill().ignoresSafeArea(.all).offset(x:xOffset)
+            }
             VStack{
                 HStack{
                     Text("Lookout")
@@ -90,27 +94,27 @@ struct LookoutView: View {
                             }
                         }
                 }.padding(.bottom,20).padding(.horizontal,30)
-                    ZStack{
-                        Rectangle().frame(height: 60).opacity(0.5)
-                        ForEach(Array(gameService.parties.enumerated()), id: \.offset) { index, party in
-                            if party.id == partyId {
-                                ForEach(Array(party.players.enumerated()), id: \.offset) { index2, player in
-                                    if gameService.currentPlayer.id == player.id {
-                                        Text("\(gameService.parties[index].players[index2].event.instruction)")
-                                            .font(Font.custom("Gasoek One", size: 20))
-                                            .multilineTextAlignment(.center)
-                                            .foregroundColor(Color(red: 0.95, green: 0.74, blue: 0))
-                                    }
+                ZStack{
+                    Rectangle().frame(height: 60).opacity(0.5)
+                    ForEach(Array(gameService.parties.enumerated()), id: \.offset) { index, party in
+                        if party.id == partyId {
+                            ForEach(Array(party.players.enumerated()), id: \.offset) { index2, player in
+                                if gameService.currentPlayer.id == player.id {
+                                    Text("\(gameService.parties[index].players[index2].event.instruction)")
+                                        .font(Font.custom("Gasoek One", size: 20))
+                                        .multilineTextAlignment(.center)
+                                        .foregroundColor(Color(red: 0.95, green: 0.74, blue: 0))
                                 }
                             }
                         }
-                        ProgressView("", value: instructionProgress, total: instructionProgressMax).progressViewStyle(gradientStyle).padding(.horizontal,9)
-                            .onReceive(timer) { _ in
-                                if instructionProgress > 0 {
-                                    instructionProgress -= 0.1
-                                }
-                            }.frame(width: 400 ,height: 60,alignment:.bottom).ignoresSafeArea(.all)
                     }
+                    ProgressView("", value: instructionProgress, total: instructionProgressMax).progressViewStyle(gradientStyle).padding(.horizontal,9)
+                        .onReceive(timer) { _ in
+                            if instructionProgress > 0 {
+                                instructionProgress -= 0.1
+                            }
+                        }.frame(width: 400 ,height: 60,alignment:.bottom).ignoresSafeArea(.all)
+                }
                 Spacer()
                 ZStack{
                     Rectangle()
@@ -135,9 +139,9 @@ struct LookoutView: View {
                         isLeftAble = false
                         isRightAble = false
                         withAnimation (Animation.easeOut (duration: 10)){
-                            xOffset = xOffset + 393
+                            xOffset = xOffset + 391
                         }
-                        if xOffset == 0 {
+                        if xOffset == -391 {
                             direction = "Forward"
                             isLeftAble = true
                             isRightAble = true
@@ -164,9 +168,9 @@ struct LookoutView: View {
                         isLeftAble = false
                         isRightAble = false
                         withAnimation (Animation.easeOut (duration: 10)){
-                            xOffset = xOffset - 393
+                            xOffset = xOffset - 391
                         }
-                        if xOffset == 0 {
+                        if xOffset == -391 {
                             direction = "Forward"
                             isLeftAble = true
                             isRightAble = true
@@ -193,6 +197,7 @@ struct LookoutView: View {
             .padding(.vertical,50)
         }
         .onAppear {
+            views = listView.randomElement()!
             for (index, party) in gameService.parties.enumerated() {
                 if party.id == partyId {
                     gameService.parties[index].generateLookoutEvent()
