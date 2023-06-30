@@ -10,6 +10,14 @@ import SwiftUI
 struct SailingMasterView: View {
     @State private var downloadAmount = 80.0
     @State private var progressInstruction = 0.0
+    @State private var angle1: CGFloat = 0
+    @State private var lastAngle1: CGFloat = 0
+    @State private var length : CGFloat = 400
+    @State private var angle2: CGFloat = 0
+    @State private var lastAngle2: CGFloat = 0
+    @State private var angle3: CGFloat = 0
+    @State private var lastAngle3: CGFloat = 0
+    
     let timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
     
     @State private var gradient = LinearGradient(
@@ -114,7 +122,76 @@ struct SailingMasterView: View {
                     Image("NoSail")
                         .resizable()
                         .scaledToFill()
-                        .padding(-35)
+                        .padding(-38)
+                    VStack{
+                        Spacer()
+                            .frame(height: 50)
+                        ZStack{
+                            Image("Tuas2")
+                                .resizable()
+                                .frame(width: 60, height: 60)
+                            Image("Tuas1")
+                                .resizable()
+                                .frame(width: 24, height: 63)
+                                .padding(.bottom, 50)
+                                .rotationEffect(.degrees(Double(self.angle1)))
+                                .gesture(DragGesture()
+                                    .onChanged{ v in
+                                        var theta = (atan2(v.location.x - self.length / 2, self.length / 2 - v.location.y) - atan2(v.startLocation.x - self.length / 2, self.length / 2 - v.startLocation.y)) * 180 / .pi
+                                        if (theta < 0) { theta += 360 }
+                                        self.angle1 = theta + self.lastAngle1
+                                    }
+                                    .onEnded { v in
+                                        self.lastAngle1 = self.angle1
+                                    }
+                                )
+                        }
+                        Spacer()
+                            .frame(height: 80)
+                        ZStack{
+                            Image("Tuas2")
+                                .resizable()
+                                .frame(width: 60, height: 60)
+                            Image("Tuas1")
+                                .resizable()
+                                .frame(width: 24, height: 63)
+                                .padding(.bottom, 50)
+                                .rotationEffect(.degrees(Double(self.angle2)))
+                                .gesture(DragGesture()
+                                    .onChanged{ v in
+                                        var theta = (atan2(v.location.x - self.length / 2, self.length / 2 - v.location.y) - atan2(v.startLocation.x - self.length / 2, self.length / 2 - v.startLocation.y)) * 180 / .pi
+                                        if (theta < 0) { theta += 360 }
+                                        self.angle2 = theta + self.lastAngle2
+                                    }
+                                    .onEnded { v in
+                                        self.lastAngle2 = self.angle2
+                                    }
+                                )
+                        }
+                        Spacer()
+                            .frame(height: 120)
+                        ZStack{
+                            Image("Tuas2")
+                                .resizable()
+                                .frame(width: 60, height: 60)
+                            Image("Tuas1")
+                                .resizable()
+                                .frame(width: 24, height: 63)
+                                .padding(.bottom, 50)
+                                .rotationEffect(.degrees(Double(self.angle3)))
+                                .gesture(DragGesture()
+                                    .onChanged{ v in
+                                        var theta = (atan2(v.location.x - self.length / 2, self.length / 2 - v.location.y) - atan2(v.startLocation.x - self.length / 2, self.length / 2 - v.startLocation.y)) * 180 / .pi
+                                        if (theta < 0) { theta += 360 }
+                                        self.angle3 = theta + self.lastAngle3
+                                    }
+                                    .onEnded { v in
+                                        self.lastAngle3 = self.angle3
+                                    }
+                                )
+                        }
+                    }.padding(.trailing, 10)
+                    
                 }
             }
         }.background(Image("BgSailingMaster").resizable().scaledToFill())
