@@ -16,39 +16,69 @@ struct MenuView: View {
         } else if menu == 1 {
             
         } else {
-            VStack {
-                Spacer()
-                Button {
-                    menu = 0
-                } label: {
-                    Text("Play")
-                        .foregroundColor(.yellow)
-                        .fontWeight(.bold)
-                        .frame(
-                            minWidth: 0,
-                            maxWidth: .infinity
+            ZStack{
+                Image("MenuBackground").resizable().scaledToFill().ignoresSafeArea()
+                VStack {
+                    Spacer()
+                    Spacer()
+                    Button {
+                        menu = 0
+                    } label: {
+                        Rectangle()
+                        .foregroundColor(.clear)
+                        .frame(width: 246.45351, height: 94.54269)
+                        .background(
+                        Image("ButtonMenuCreate")
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(width: 246.45350646972656, height: 94.54268646240234)
+                        .clipped()
                         )
-                        .padding()
-                        .background(RoundedRectangle(cornerRadius: 15)
-                            .fill(Color.black))
-                        .padding(.horizontal)
-                }
-                Button {
-                    menu = 1
-                } label: {
-                    Text("Tutorial")
-                        .foregroundColor(.yellow)
-                        .fontWeight(.bold)
-                        .frame(
-                            minWidth: 0,
-                            maxWidth: .infinity
+                    }
+                    Button {
+                        menu = 1
+                    } label: {
+                        Rectangle()
+                        .foregroundColor(.clear)
+                        .frame(width: 246.45351, height: 94.54269)
+                        .background(
+                        Image("ButtonMenuJoin")
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(width: 246.45350646972656, height: 94.54268646240234)
+                        .clipped()
                         )
-                        .padding()
-                        .background(RoundedRectangle(cornerRadius: 15)
-                            .fill(Color.black))
-                        .padding(.horizontal)
+                    }
+                    Button {
+                        menu = 1
+                    } label: {
+                        Rectangle()
+                        .foregroundColor(.clear)
+                        .frame(width: 246.45351, height: 94.54269)
+                        .background(
+                        Image("ButtonMenuRoles")
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(width: 246.45350646972656, height: 94.54268646240234)
+                        .clipped()
+                        )
+                    }
+                    Button {
+                        menu = 1
+                    } label: {
+                        Rectangle()
+                        .foregroundColor(.clear)
+                        .frame(width: 246.45351, height: 94.54269)
+                        .background(
+                        Image("ButtonMenuHowToPlay")
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(width: 246.45350646972656, height: 94.54268646240234)
+                        .clipped()
+                        )
+                    }
+                    Spacer()
                 }
-                Spacer()
             }
         }
     }
