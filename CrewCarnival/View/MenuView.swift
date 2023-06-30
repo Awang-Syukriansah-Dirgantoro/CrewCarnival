@@ -13,50 +13,78 @@ struct MenuView: View {
     @State var menu = -1
     
     var body: some View {
-        VStack {
-            if menu == 0 {
-                PartyView(menu: $menu)
-            } else if menu == 1 {
-                
-            } else {
+        if menu == 0 {
+            PartyView(menu: $menu)
+        } else if menu == 1 {
+            
+        } else {
+            ZStack{
+                Image("MenuBackground").resizable().scaledToFill().ignoresSafeArea()
                 VStack {
+                    Spacer()
                     Spacer()
                     Button {
                         menu = 0
                     } label: {
-                        Text("Play")
-                            .foregroundColor(.yellow)
-                            .fontWeight(.bold)
-                            .frame(
-                                minWidth: 0,
-                                maxWidth: .infinity
-                            )
-                            .padding()
-                            .background(RoundedRectangle(cornerRadius: 15)
-                                .fill(Color.black))
-                            .padding(.horizontal)
+                        Rectangle()
+                        .foregroundColor(.clear)
+                        .frame(width: 246.45351, height: 94.54269)
+                        .background(
+                        Image("ButtonMenuCreate")
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(width: 246.45350646972656, height: 94.54268646240234)
+                        .clipped()
+                        )
                     }
                     Button {
                         menu = 1
                     } label: {
-                        Text("Tutorial")
-                            .foregroundColor(.yellow)
-                            .fontWeight(.bold)
-                            .frame(
-                                minWidth: 0,
-                                maxWidth: .infinity
-                            )
-                            .padding()
-                            .background(RoundedRectangle(cornerRadius: 15)
-                                .fill(Color.black))
-                            .padding(.horizontal)
+                        Rectangle()
+                        .foregroundColor(.clear)
+                        .frame(width: 246.45351, height: 94.54269)
+                        .background(
+                        Image("ButtonMenuJoin")
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(width: 246.45350646972656, height: 94.54268646240234)
+                        .clipped()
+                        )
+                    }
+                    Button {
+                        menu = 1
+                    } label: {
+                        Rectangle()
+                        .foregroundColor(.clear)
+                        .frame(width: 246.45351, height: 94.54269)
+                        .background(
+                        Image("ButtonMenuRoles")
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(width: 246.45350646972656, height: 94.54268646240234)
+                        .clipped()
+                        )
+                    }
+                    Button {
+                        menu = 1
+                    } label: {
+                        Rectangle()
+                        .foregroundColor(.clear)
+                        .frame(width: 246.45351, height: 94.54269)
+                        .background(
+                        Image("ButtonMenuHowToPlay")
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(width: 246.45350646972656, height: 94.54268646240234)
+                        .clipped()
+                        )
                     }
                     Spacer()
                 }
             }
-        }
-        .onAppear{
+          .onAppear{
             vm.playSound(url: "menu")
+          }
         }
     }
 }
