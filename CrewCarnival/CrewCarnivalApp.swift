@@ -9,9 +9,11 @@ import SwiftUI
 
 @main
 struct CrewCarnivalApp: App {
+    @StateObject var gameService = GameService()
     var body: some Scene {
         WindowGroup {
-            LivesView()
+            ContentView()
+                .environmentObject(gameService)
         }
     }
 }
