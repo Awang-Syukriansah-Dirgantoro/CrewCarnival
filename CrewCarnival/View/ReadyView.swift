@@ -50,7 +50,6 @@ struct ReadyView: View {
                                 }
                             }
                         }
-                        
                         self.gameService.send(parties: gameService.parties)
                     } label: {
                         Text("Ready")
