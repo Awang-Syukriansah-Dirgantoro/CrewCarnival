@@ -126,12 +126,12 @@ struct HelmsmanView: View {
                                 if (self.angle > 300){
                                     self.angle = 300
                                     self.progress = self.angle
-                                    isTurnProgressCompleted = Objective.turnLeft
+                                    isTurnProgressCompleted = Objective.turnRight
                                 } else if (self.angle < 0){
                                     if (self.angle < -300){
                                         self.angle = -300
                                         self.progress = 300
-                                        isTurnProgressCompleted = Objective.turnRight
+                                        isTurnProgressCompleted = Objective.turnLeft
                                     } else {
                                         self.progress = self.angle * (-1)
                                     }
@@ -184,8 +184,30 @@ struct HelmsmanView: View {
                 if party.id == partyId {
                     if gameService.parties[index].lives <= 0 {
                         gameService.parties[index].reset()
-                        gameService.send(parties: gameService.parties)
                         isStartGame = false
+                        gameService.send(parties: gameService.parties)
+                    }
+                    
+                    var allEventsCompleted = true
+                    for (_, player) in party.players.enumerated() {
+                        if !player.event.isCompleted {
+                            allEventsCompleted = false
+                        }
+                    }
+                    
+                    if allEventsCompleted {
+                        gameService.parties[index].generateLHSEvent()
+                        for (index2, player) in gameService.parties[index].players.enumerated() {
+                            if player.role == Role.helmsman {
+                                instructionProgress = gameService.parties[index].players[index2].event.duration
+                                instructionProgressMax = gameService.parties[index].players[index2].event.duration
+                            }
+                        }
+                        progress = 0
+                        angle = 0
+                        lastAngle = 0
+                        isTurnProgressCompleted = nil
+                        gameService.send(parties: gameService.parties)
                     }
                 }
             }
@@ -210,15 +232,26 @@ struct HelmsmanView: View {
                             if player.role == Role.helmsman {
                                 if player.event.objective == Objective.turnLeft {
                                     if isTurnProgressCompleted == Objective.turnLeft {
-                                        gameService.parties[index].players[index2].event.instruction = "Our Left is Clear!\nQuickly Turn the Ship!"
-                                        gameService.parties[index].triggerSailingMasterEvent()
+                                        for (_, player2) in gameService.parties[index].players.enumerated() {
+                                            if player2.role == Role.sailingMaster {
+                                                if player2.event.objective == Objective.slow10 {
+                                                    gameService.parties[index].players[index2].event.instruction = "The Ship is Tilting,\nSlow Down 10 Knots!"
+                                                } else if player2.event.objective == Objective.slow20 {
+                                                    gameService.parties[index].players[index2].event.instruction = "The Ship is Tilting,\nSlow Down 20 Knots!"
+                                                } else {
+                                                    gameService.parties[index].players[index2].event.instruction = "The Ship is Tilting,\nSlow Down 30 Knots!"
+                                                }
+                                            }
+                                        }
+//                                        gameService.parties[index].triggerSailingMasterInstruction()
                                     }
                                 } else {
                                     if isTurnProgressCompleted == Objective.turnRight {
-                                        gameService.parties[index].players[index2].event.instruction = "Our Front is Clear!\nQuickly Turn the Ship!"
-                                        gameService.parties[index].triggerSailingMasterEvent()
+                                        gameService.parties[index].players[index2].event.instruction = "The Ship is Tilting,\nSlow Down 10 Knots!"
+//                                        gameService.parties[index].triggerSailingMasterInstruction()
                                     }
                                 }
+                                gameService.parties[index].setEventCompleted(role: Role.lookout)
                                 gameService.send(parties: gameService.parties)
                             }
                         }

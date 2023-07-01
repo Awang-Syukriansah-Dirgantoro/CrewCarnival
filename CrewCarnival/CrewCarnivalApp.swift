@@ -16,9 +16,9 @@ struct CrewCarnivalApp: App {
         WindowGroup {
             ContentView()
                 .environmentObject(gameService)
-//                .onReceive(timer) { time in
-//                    gameService.send(parties: gameService.parties)
-//                }
+                .onReceive(timer) { time in
+                    gameService.send(parties: gameService.parties)
+                }
         }
     }
 }

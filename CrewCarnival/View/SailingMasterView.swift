@@ -101,6 +101,90 @@ struct SailingMasterView: View {
                         .progressViewStyle(LinearProgressViewStyle(tint: Color(red: 0, green: 0.82, blue: 0.23)))
                         .padding(.top, -30)
                 }
+                Button {
+                    for (index, party) in gameService.parties.enumerated() {
+                        if party.id == partyId {
+                            for (_, player) in gameService.parties[index].players.enumerated() {
+                                if player.role == Role.sailingMaster {
+                                    if player.event.objective == Objective.slow10 {
+                                        gameService.parties[index].setEventCompleted(role: Role.helmsman)
+                                        gameService.parties[index].setEventCompleted(role: Role.sailingMaster)
+                                        gameService.send(parties: gameService.parties)
+                                        print("cccc \(   gameService.parties[index])")
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } label: {
+                    Text("Slow 10 Knots")
+                        .foregroundColor(.yellow)
+                        .fontWeight(.bold)
+                        .frame(
+                            minWidth: 0,
+                            maxWidth: .infinity
+                        )
+                        .padding()
+                        .background(RoundedRectangle(cornerRadius: 15)
+                            .fill(Color.black))
+                        .padding(.horizontal)
+                }
+                Button {
+                    for (index, party) in gameService.parties.enumerated() {
+                        if party.id == partyId {
+                            for (_, player) in gameService.parties[index].players.enumerated() {
+                                if player.role == Role.sailingMaster {
+                                    if player.event.objective == Objective.slow20 {
+                                        gameService.parties[index].setEventCompleted(role: Role.helmsman)
+                                        gameService.parties[index].setEventCompleted(role: Role.sailingMaster)
+                                        gameService.send(parties: gameService.parties)
+                                        print("cccc \(   gameService.parties[index])")
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } label: {
+                    Text("Slow 20 Knots")
+                        .foregroundColor(.yellow)
+                        .fontWeight(.bold)
+                        .frame(
+                            minWidth: 0,
+                            maxWidth: .infinity
+                        )
+                        .padding()
+                        .background(RoundedRectangle(cornerRadius: 15)
+                            .fill(Color.black))
+                        .padding(.horizontal)
+                }
+                Button {
+                    for (index, party) in gameService.parties.enumerated() {
+                        if party.id == partyId {
+                            for (_, player) in gameService.parties[index].players.enumerated() {
+                                if player.role == Role.sailingMaster {
+                                    if player.event.objective == Objective.slow30 {
+                                        gameService.parties[index].setEventCompleted(role: Role.helmsman)
+                                        gameService.parties[index].setEventCompleted(role: Role.sailingMaster)
+                                        gameService.send(parties: gameService.parties)
+                                        print("cccc \(   gameService.parties[index])")
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } label: {
+                    Text("Slow 30 Knots")
+                        .foregroundColor(.yellow)
+                        .fontWeight(.bold)
+                        .frame(
+                            minWidth: 0,
+                            maxWidth: .infinity
+                        )
+                        .padding()
+                        .background(RoundedRectangle(cornerRadius: 15)
+                            .fill(Color.black))
+                        .padding(.horizontal)
+                }
                 Spacer()
             }
         }.background(Image("BgSailingMaster").resizable().scaledToFill())
@@ -121,8 +205,26 @@ struct SailingMasterView: View {
                     if party.id == partyId {
                         if gameService.parties[index].lives <= 0 {
                             gameService.parties[index].reset()
-                            gameService.send(parties: gameService.parties)
                             isStartGame = false
+                            gameService.send(parties: gameService.parties)
+                        }
+                        
+                        var allEventsCompleted = true
+                        for (_, player) in party.players.enumerated() {
+                            if !player.event.isCompleted {
+                                allEventsCompleted = false
+                            }
+                        }
+                        
+                        if allEventsCompleted {
+                            gameService.parties[index].generateLHSEvent()
+                            for (index2, player) in gameService.parties[index].players.enumerated() {
+                                if player.role == Role.sailingMaster {
+                                    instructionProgress = gameService.parties[index].players[index2].event.duration
+                                    instructionProgressMax = gameService.parties[index].players[index2].event.duration
+                                }
+                            }
+                            gameService.send(parties: gameService.parties)
                         }
                     }
                 }
@@ -147,12 +249,12 @@ struct SailingMasterView: View {
         //                                if player.event.objective == Objective.turnLeft {
         //                                    if newValue < -100 {
         //                                        gameService.parties[index].players[index2].event.instruction = "Our Left is Clear!\nQuickly Turn the Ship!"
-        //                                        gameService.parties[index].triggerSailingMasterEvent()
+        //                                        gameService.parties[index].triggerSailingMasterInstruction()
         //                                    }
         //                                } else {
         //                                    if newValue > 100 {
         //                                        gameService.parties[index].players[index2].event.instruction = "Our Front is Clear!\nQuickly Turn the Ship!"
-        //                                        gameService.parties[index].triggerSailingMasterEvent()
+        //                                        gameService.parties[index].triggerSailingMasterInstruction()
         //                                    }
         //                                }
         //                            }
