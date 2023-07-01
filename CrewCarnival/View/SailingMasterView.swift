@@ -24,7 +24,6 @@ struct SailingMasterView: View {
     @State private var partyProgress = 0.0
     @State private var instructionProgress = 100.0
     @State private var instructionProgressMax = 100.0
-    
     @State private var gradient = LinearGradient(
         gradient: Gradient(colors: [Color(red: 0, green: 0.82, blue: 0.23)]),
         startPoint: .topLeading,
@@ -108,7 +107,8 @@ struct SailingMasterView: View {
                     ProgressView("", value: instructionProgress, total: instructionProgressMax)
                         .onReceive(timer) { _ in
                             if instructionProgress > 0 {
-                                instructionProgress -= 0.1                            }
+                                instructionProgress -= 0.1
+                            }
                         }
                         .progressViewStyle(LinearProgressViewStyle(tint: Color(red: 0, green: 0.82, blue: 0.23)))
                         .padding(.top, -30)
