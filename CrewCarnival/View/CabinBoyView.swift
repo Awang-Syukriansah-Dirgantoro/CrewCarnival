@@ -193,7 +193,6 @@ struct CabinBoyView: View {
         .onAppear {
             for (index, party) in gameService.parties.enumerated() {
                 if party.id == partyId {
-                    gameService.parties[index].generateLookoutEvent()
                     for (index2, player) in gameService.parties[index].players.enumerated() {
                         if player.role == Role.lookout {
                             instructionProgress = gameService.parties[index].players[index2].event.duration

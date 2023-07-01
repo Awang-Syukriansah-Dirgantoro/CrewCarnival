@@ -8,8 +8,13 @@
 import SwiftUI
 
 struct HelmsmanView: View {
-    @State private var downloadAmount = 80.0
-    @State private var progressInstruction = 0.0
+    @State private var partyProgress = 0.0
+    @State private var instructionProgress = 100.0
+    @State private var instructionProgressMax = 100.0
+    @State private var isTurnProgressCompleted: Objective?
+    @EnvironmentObject var gameService: GameService
+    var partyId: UUID
+    
     let timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
 
     @State private var gradient = LinearGradient(
@@ -38,36 +43,24 @@ struct HelmsmanView: View {
                             .foregroundColor(.white)
                         Spacer()
                         HStack {
-                            Rectangle()
-                                .foregroundColor(.clear)
-                                .frame(width: 25, height: 19)
-                                .background(
-                                    Image("Heart")
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fill)
-                                        .frame(width: 25, height: 19)
-                                        .clipped()
-                                )
-                            Rectangle()
-                                .foregroundColor(.clear)
-                                .frame(width: 25, height: 19)
-                                .background(
-                                    Image("Heart")
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fill)
-                                        .frame(width: 25, height: 19)
-                                        .clipped()
-                                )
-                            Rectangle()
-                                .foregroundColor(.clear)
-                                .frame(width: 25, height: 19)
-                                .background(
-                                    Image("Heart")
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fill)
-                                        .frame(width: 25, height: 19)
-                                        .clipped()
-                                )
+                            ForEach(Array(gameService.parties.enumerated()), id: \.offset) { index, party in
+                                if party.id == partyId {
+                                    if party.lives > 0 {
+                                        ForEach((0...party.lives - 1), id: \.self) { _ in
+                                            Rectangle()
+                                                .foregroundColor(.clear)
+                                                .frame(width: 25, height: 19)
+                                                .background(
+                                                    Image("Heart")
+                                                        .resizable()
+                                                        .aspectRatio(contentMode: .fill)
+                                                        .frame(width: 25, height: 19)
+                                                        .clipped()
+                                                )
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }.padding(.horizontal, 30)
                         .padding(.top, 10)
@@ -82,23 +75,36 @@ struct HelmsmanView: View {
                                     .frame(width: 334, height: 27)
                                     .clipped()
                             )
-                        ProgressView("", value: downloadAmount, total: 100).progressViewStyle(gradientStyle).padding(.horizontal,9)
+                        ProgressView("", value: partyProgress, total: 100).progressViewStyle(gradientStyle).padding(.horizontal,9)
+                            .onReceive(timer) { _ in
+                                if partyProgress < 100 {
+                                    partyProgress += 0.1
+                                }
+                            }
                     }.padding(.bottom,20).padding(.horizontal,30)
                     
                     VStack{
-                        Text("The Ship Is Tilting, Slow\nDown 10 Knots!")
-                            .font(Font.custom("Gasoek One", size: 20))
-                            .multilineTextAlignment(.center)
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 20)
-                            .foregroundColor(Color(red: 0.95, green: 0.74, blue: 0))
-                            .background(
-                                Rectangle()
-                                    .opacity(0.5))
-                        ProgressView("", value: progressInstruction, total: 100)
+                        ForEach(Array(gameService.parties.enumerated()), id: \.offset) { index, party in
+                            if party.id == partyId {
+                                ForEach(Array(party.players.enumerated()), id: \.offset) { index2, player in
+                                    if gameService.currentPlayer.id == player.id {
+                                        Text("\(player.event.instruction)")
+                                            .font(Font.custom("Gasoek One", size: 20))
+                                            .multilineTextAlignment(.center)
+                                            .frame(maxWidth: .infinity)
+                                            .padding(.vertical, 20)
+                                            .foregroundColor(Color(red: 0.95, green: 0.74, blue: 0))
+                                            .background(
+                                                Rectangle()
+                                                    .opacity(0.5))
+                                    }
+                                }
+                            }
+                        }
+                        ProgressView("", value: instructionProgress, total: instructionProgressMax)
                             .onReceive(timer) { _ in
-                                if progressInstruction < 100 {
-                                    progressInstruction += 0.5
+                                if instructionProgress > 0 {
+                                    instructionProgress -= 0.1
                                 }
                             }
                             .progressViewStyle(LinearProgressViewStyle(tint: Color(red: 0, green: 0.82, blue: 0.23)))
@@ -119,10 +125,12 @@ struct HelmsmanView: View {
                                 if (self.angle > 300){
                                     self.angle = 300
                                     self.progress = self.angle
+                                    isTurnProgressCompleted = Objective.turnLeft
                                 } else if (self.angle < 0){
                                     if (self.angle < -300){
                                         self.angle = -300
                                         self.progress = 300
+                                        isTurnProgressCompleted = Objective.turnRight
                                     } else {
                                         self.progress = self.angle * (-1)
                                     }
@@ -158,11 +166,59 @@ struct HelmsmanView: View {
                 }
             }.background(Image("BgHelmsman").resizable().scaledToFit())
         }
+        .onAppear {
+            for (index, party) in gameService.parties.enumerated() {
+                if party.id == partyId {
+                    for (index2, player) in gameService.parties[index].players.enumerated() {
+                        if player.role == Role.helmsman {
+                            instructionProgress = gameService.parties[index].players[index2].event.duration
+                            instructionProgressMax = gameService.parties[index].players[index2].event.duration
+                        }
+                    }
+                }
+            }
+        }
+        .onChange(of: instructionProgress, perform: { newValue in
+            if instructionProgress <= 0 {
+                for (index, party) in gameService.parties.enumerated() {
+                    if party.id == partyId {
+                        for (index2, _) in gameService.parties[index].players.enumerated() {
+                            instructionProgress = gameService.parties[index].players[index2].event.duration
+                        }
+                    }
+                }
+            }
+        })
+        .onChange(of: isTurnProgressCompleted) { newValue in
+            print(progress)
+            if (isTurnProgressCompleted != nil) {
+                for (index, party) in gameService.parties.enumerated() {
+                    if party.id == partyId {
+                        for (index2, player) in gameService.parties[index].players.enumerated() {
+                            if player.role == Role.helmsman {
+                                if player.event.objective == Objective.turnLeft {
+                                    if isTurnProgressCompleted == Objective.turnLeft {
+                                        gameService.parties[index].players[index2].event.instruction = "Our Left is Clear!\nQuickly Turn the Ship!"
+                                        gameService.parties[index].triggerSailingMasterEvent()
+                                    }
+                                } else {
+                                    if isTurnProgressCompleted == Objective.turnRight {
+                                        gameService.parties[index].players[index2].event.instruction = "Our Front is Clear!\nQuickly Turn the Ship!"
+                                        gameService.parties[index].triggerSailingMasterEvent()
+                                    }
+                                }
+                                gameService.send(parties: gameService.parties)
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
 struct HelmsmanView_Previews: PreviewProvider {
     static var previews: some View {
-        HelmsmanView()
+        HelmsmanView(partyId: UUID())
     }
 }
