@@ -24,6 +24,7 @@ struct LookoutView: View {
     @State private var listView = ["ViewRight","ViewForward","ViewLeft"]
     @State private var views = ""
     @EnvironmentObject var gameService: GameService
+    @Binding var isStartGame: Bool
     var partyId: UUID
     let timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
     
@@ -212,6 +213,11 @@ struct LookoutView: View {
                             gameService.parties[index].lives -= 1
                         }
                         gameService.send(parties: gameService.parties)
+                        if gameService.parties[index].lives <= 0 {
+                            gameService.parties[index].reset()
+                            gameService.send(parties: gameService.parties)
+                            isStartGame = false
+                        }
                         
                         for (index2, _) in gameService.parties[index].players.enumerated() {
                             instructionProgress = gameService.parties[index].players[index2].event.duration
@@ -252,7 +258,7 @@ struct LookoutView: View {
 
 struct LookoutView_Previews: PreviewProvider {
     static var previews: some View {
-        LookoutView(partyId: UUID())
+        LookoutView(isStartGame: .constant(false), partyId: UUID())
             .environmentObject(GameService())
     }
 }

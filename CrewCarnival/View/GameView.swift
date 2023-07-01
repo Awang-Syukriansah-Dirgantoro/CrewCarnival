@@ -11,6 +11,7 @@ import AVKit
 struct GameView: View {
     @EnvironmentObject var gameService: GameService
     var partyId: UUID
+    @Binding var isStartGame: Bool
     
     var body: some View {
         VStack {
@@ -19,11 +20,11 @@ struct GameView: View {
                     ForEach(Array(party.players.enumerated()), id: \.offset) { index, player in
                         if player.id == gameService.currentPlayer.id {
                             if player.role == Role.lookout {
-                                LookoutView(partyId: partyId)
+                                LookoutView(isStartGame: $isStartGame, partyId: partyId)
                             } else if player.role == Role.helmsman  {
-                                HelmsmanView(partyId: partyId)
+                                HelmsmanView(partyId: partyId, isStartGame: $isStartGame)
                             } else if player.role == Role.sailingMaster  {
-                                SailingMasterView(partyId: partyId)
+                                SailingMasterView(isStartGame: $isStartGame, partyId: partyId)
                             } else if player.role == Role.cabinBoy  {
                                 Text("cabin")
                             } else {
@@ -48,6 +49,6 @@ struct GameView: View {
 
 struct GameView_Previews: PreviewProvider {
     static var previews: some View {
-        GameView(partyId: UUID())
+        GameView(partyId: UUID(), isStartGame: .constant(false))
     }
 }

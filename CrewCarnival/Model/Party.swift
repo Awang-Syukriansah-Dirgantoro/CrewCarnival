@@ -62,12 +62,9 @@ struct Party: Codable, Identifiable, Equatable {
                     randomInt = Int.random(in: 0...4)
                 }
                 
-                print("random: \(randomInt)")
-                print("players: \(players.count)")
-                
                 switch randomInt {
                 case 0:
-                    players[index].role = Role.blackSmith
+                    players[index].role = Role.lookout
                     break
                 case 1:
                     players[index].role = Role.helmsman
@@ -96,5 +93,17 @@ struct Party: Codable, Identifiable, Equatable {
                 }
             }
         }
+    }
+    
+    mutating func reset() {
+        self.isPlaying = false
+        self.lives = 3
+        
+        for (index, _) in self.players.enumerated() {
+            self.players[index].isReady = false
+            self.players[index].role = nil
+        }
+        
+        assignRoles()
     }
 }

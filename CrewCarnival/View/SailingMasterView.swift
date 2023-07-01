@@ -17,6 +17,7 @@ struct SailingMasterView: View {
         endPoint: .bottomTrailing
     )
     @EnvironmentObject var gameService: GameService
+    @Binding var isStartGame: Bool
     var partyId: UUID
     let timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
     
@@ -115,6 +116,17 @@ struct SailingMasterView: View {
                     }
                 }
             }
+            .onChange(of: gameService.parties, perform: { newValue in
+                for (index, party) in gameService.parties.enumerated() {
+                    if party.id == partyId {
+                        if gameService.parties[index].lives <= 0 {
+                            gameService.parties[index].reset()
+                            gameService.send(parties: gameService.parties)
+                            isStartGame = false
+                        }
+                    }
+                }
+            })
             .onChange(of: instructionProgress, perform: { newValue in
                 if instructionProgress <= 0 {
                     for (index, party) in gameService.parties.enumerated() {
@@ -153,6 +165,6 @@ struct SailingMasterView: View {
 
 struct SailingMasterView_Previews: PreviewProvider {
     static var previews: some View {
-        SailingMasterView(partyId: UUID())
+        SailingMasterView(isStartGame: .constant(false), partyId: UUID())
     }
 }

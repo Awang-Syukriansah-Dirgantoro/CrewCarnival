@@ -16,7 +16,7 @@ struct ReadyView: View {
     var body: some View {
         VStack {
             if isStartGame {
-                GameView(partyId: partyId)
+                GameView(partyId: partyId, isStartGame: $isStartGame)
             } else {
                 VStack() {
                     HStack(alignment: .top) {

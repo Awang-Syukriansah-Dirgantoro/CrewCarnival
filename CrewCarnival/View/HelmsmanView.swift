@@ -26,6 +26,7 @@ struct HelmsmanView: View {
     @State private var angle: CGFloat = 0
     @State private var lastAngle: CGFloat = 0
     @State private var length : CGFloat = 400
+    @Binding var isStartGame: Bool
     
     var body: some View {
         let gradientStyle = GradientProgressStyle(
@@ -178,6 +179,17 @@ struct HelmsmanView: View {
                 }
             }
         }
+        .onChange(of: gameService.parties, perform: { newValue in
+            for (index, party) in gameService.parties.enumerated() {
+                if party.id == partyId {
+                    if gameService.parties[index].lives <= 0 {
+                        gameService.parties[index].reset()
+                        gameService.send(parties: gameService.parties)
+                        isStartGame = false
+                    }
+                }
+            }
+        })
         .onChange(of: instructionProgress, perform: { newValue in
             if instructionProgress <= 0 {
                 for (index, party) in gameService.parties.enumerated() {
@@ -219,6 +231,6 @@ struct HelmsmanView: View {
 
 struct HelmsmanView_Previews: PreviewProvider {
     static var previews: some View {
-        HelmsmanView(partyId: UUID())
+        HelmsmanView(partyId: UUID(), isStartGame: .constant(false))
     }
 }
