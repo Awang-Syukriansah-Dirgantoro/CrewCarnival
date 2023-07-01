@@ -264,6 +264,6 @@ struct SailingMasterView: View {
 
 struct SailingMasterView_Previews: PreviewProvider {
     static var previews: some View {
-        SailingMasterView(isStartGame: .constant(false), partyId: UUID()).environmentObject(GameService())
+        SailingMasterView(isStartGame: .constant(false), partyId: UUID())
     }
 }
