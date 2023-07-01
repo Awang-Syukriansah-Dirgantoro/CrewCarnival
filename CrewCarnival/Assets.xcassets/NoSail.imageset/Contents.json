@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "Asset 54@4x.png",
+      "filename" : "NoSail.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "Asset 54@4x 1.png",
+      "filename" : "NoSail 1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "Asset 54@4x 2.png",
+      "filename" : "NoSail 2.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
