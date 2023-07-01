@@ -32,7 +32,7 @@
 		4C72340E2A4921FB00F371E7 /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C72340D2A4921FB00F371E7 /* MenuView.swift */; };
 		4C72341F2A49270E00F371E7 /* Party.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C72341D2A49270E00F371E7 /* Party.swift */; };
 		4C7234202A49270E00F371E7 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C72341E2A49270E00F371E7 /* Player.swift */; };
-		4C7234222A49274700F371E7 /* MCSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C7234212A49274700F371E7 /* MCSession.swift */; };
+		4C7234222A49274700F371E7 /* GameService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C7234212A49274700F371E7 /* GameService.swift */; };
 		4E14C5832A47479C005BB798 /* RecapSceneView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E14C5822A47479C005BB798 /* RecapSceneView.swift */; };
 		4E3F47122A4A737900915B7F /* CarouselBodyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E3F470F2A4A737900915B7F /* CarouselBodyView.swift */; };
 		4E3F47132A4A737900915B7F /* AllRole.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E3F47102A4A737900915B7F /* AllRole.swift */; };
@@ -75,7 +75,7 @@
 		4C72340D2A4921FB00F371E7 /* MenuView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
 		4C72341D2A49270E00F371E7 /* Party.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Party.swift; sourceTree = "<group>"; };
 		4C72341E2A49270E00F371E7 /* Player.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
-		4C7234212A49274700F371E7 /* MCSession.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MCSession.swift; sourceTree = "<group>"; };
+		4C7234212A49274700F371E7 /* GameService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameService.swift; sourceTree = "<group>"; };
 		4E14C5822A47479C005BB798 /* RecapSceneView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecapSceneView.swift; sourceTree = "<group>"; };
 		4E3F470F2A4A737900915B7F /* CarouselBodyView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CarouselBodyView.swift; sourceTree = "<group>"; };
 		4E3F47102A4A737900915B7F /* AllRole.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AllRole.swift; sourceTree = "<group>"; };
@@ -177,7 +177,7 @@
 		4C7234132A49222E00F371E7 /* Helper */ = {
 			isa = PBXGroup;
 			children = (
-				4C7234212A49274700F371E7 /* MCSession.swift */,
+				4C7234212A49274700F371E7 /* GameService.swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -329,7 +329,7 @@
 				0B228A262A42A04A0078D22A /* HelmsmanView.swift in Sources */,
 				4E3F47132A4A737900915B7F /* AllRole.swift in Sources */,
 				0B0B777E2A454AE200B10F99 /* GradientProgressStyle.swift in Sources */,
-				4C7234222A49274700F371E7 /* MCSession.swift in Sources */,
+				4C7234222A49274700F371E7 /* GameService.swift in Sources */,
 				59ECAE502A4A7829008FE730 /* CabinBoyView.swift in Sources */,
 				4C72340A2A49219A00F371E7 /* PartyCard.swift in Sources */,
 				59117DE22A414F2600701627 /* LivesView.swift in Sources */,

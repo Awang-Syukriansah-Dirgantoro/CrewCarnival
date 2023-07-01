@@ -16,7 +16,7 @@ struct ReadyView: View {
     var body: some View {
         VStack {
             if isStartGame {
-                GameView(partyId: partyId)
+                GameView(partyId: partyId, isStartGame: $isStartGame)
             } else {
                 VStack() {
                     HStack(alignment: .top) {
@@ -32,6 +32,9 @@ struct ReadyView: View {
                                         if player.isReady {
                                             Image(systemName: "checkmark.circle.fill")
                                         }
+                                        Text("\(player.getStringRole() )")
+                                            .multilineTextAlignment(.leading)
+                                            .bold()
                                     }
                                     .frame(minWidth: 0, maxWidth: .infinity)
                                 }
@@ -91,6 +94,16 @@ struct ReadyView: View {
                         isStartGame = true
                     }
                 })
+                .onAppear {
+                    for (index, party) in gameService.parties.enumerated() {
+                        if party.id == partyId {
+                            self.partyIndex = index
+                            gameService.parties[index].assignRoles()
+                            
+                            self.gameService.send(parties: gameService.parties)
+                        }
+                    }
+                }
             }
         }
         .onDisappear {

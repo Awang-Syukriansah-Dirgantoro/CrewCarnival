@@ -31,7 +31,7 @@ struct PartyView: View {
     ]
     
     var body: some View {
-        VStack{
+        NavigationStack {
             if gameService.currentPlayer.name == "" {
                 VStack {
                     Spacer()
