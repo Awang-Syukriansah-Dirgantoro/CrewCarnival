@@ -18,6 +18,7 @@
 		0B4F5B0D2A4BD7DB00D55948 /* menu.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 0B4F5B0A2A4BD7DB00D55948 /* menu.mp3 */; };
 		0B4F5B0E2A4BD7DB00D55948 /* story.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 0B4F5B0B2A4BD7DB00D55948 /* story.mp3 */; };
 		0B4F5B112A4BD94100D55948 /* AudioViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4F5B102A4BD94100D55948 /* AudioViewModel.swift */; };
+		0B4F5B132A4EB34800D55948 /* FirstView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4F5B122A4EB34800D55948 /* FirstView.swift */; };
 		0B9EFFF42A4AA20E00BEF546 /* Puzzle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9EFFF32A4AA20E00BEF546 /* Puzzle.swift */; };
 		0B9EFFF72A4AA25200BEF546 /* PuzzleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9EFFF62A4AA25200BEF546 /* PuzzleViewModel.swift */; };
 		0B9EFFFA2A4AA2B300BEF546 /* Drag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9EFFF92A4AA2B300BEF546 /* Drag.swift */; };
@@ -60,6 +61,7 @@
 		0B4F5B0A2A4BD7DB00D55948 /* menu.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = menu.mp3; sourceTree = "<group>"; };
 		0B4F5B0B2A4BD7DB00D55948 /* story.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = story.mp3; sourceTree = "<group>"; };
 		0B4F5B102A4BD94100D55948 /* AudioViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioViewModel.swift; sourceTree = "<group>"; };
+		0B4F5B122A4EB34800D55948 /* FirstView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstView.swift; sourceTree = "<group>"; };
 		0B9EFFF32A4AA20E00BEF546 /* Puzzle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Puzzle.swift; sourceTree = "<group>"; };
 		0B9EFFF62A4AA25200BEF546 /* PuzzleViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuzzleViewModel.swift; sourceTree = "<group>"; };
 		0B9EFFF92A4AA2B300BEF546 /* Drag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Drag.swift; sourceTree = "<group>"; };
@@ -137,6 +139,7 @@
 				0B0B777F2A455D8600B10F99 /* SailingMasterView.swift */,
 				4C2509162A4946D000721A03 /* GameView.swift */,
 				59ECAE4F2A4A7829008FE730 /* CabinBoyView.swift */,
+				0B4F5B122A4EB34800D55948 /* FirstView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -333,6 +336,7 @@
 				4E3F47182A4A9ABF00915B7F /* PartyFrontEndView.swift in Sources */,
 				4E14C5832A47479C005BB798 /* RecapSceneView.swift in Sources */,
 				0B267A002A47482700CE2AD8 /* BlacksmithView.swift in Sources */,
+				0B4F5B132A4EB34800D55948 /* FirstView.swift in Sources */,
 				4C72340E2A4921FB00F371E7 /* MenuView.swift in Sources */,
 				4C72341F2A49270E00F371E7 /* Party.swift in Sources */,
 				4C7234072A49218C00F371E7 /* ReadyView.swift in Sources */,
