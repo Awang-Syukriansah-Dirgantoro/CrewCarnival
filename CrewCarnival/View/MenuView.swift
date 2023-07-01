@@ -9,7 +9,6 @@ import SwiftUI
 import AVKit
 
 struct MenuView: View {
-    @ObservedObject var vm = AudioViewModel()
     @State var menu = -1
     
     var body: some View {
@@ -82,9 +81,6 @@ struct MenuView: View {
                     Spacer()
                 }
             }
-          .onAppear{
-            vm.playSound(url: "menu")
-          }
         }
     }
 }

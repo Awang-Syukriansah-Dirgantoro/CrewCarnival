@@ -11,7 +11,7 @@ struct ContentView: View {
     @EnvironmentObject var gameService:GameService
     var body: some View {
         NavigationView {
-            MenuView()
+            FirstView()
                 .onAppear {
                     self.gameService.delegate = self
                 }
