@@ -51,9 +51,7 @@ class GameService: NSObject, ObservableObject {
     }
     
     func send(parties: [Party]) {
-        print("b")
         if !session.connectedPeers.isEmpty {
-            print("a")
             do {
                 let data = try JSONEncoder().encode(parties)
                 

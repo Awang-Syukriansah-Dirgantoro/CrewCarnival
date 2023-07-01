@@ -41,6 +41,14 @@ struct Party: Codable, Identifiable, Equatable {
         }
     }
     
+    mutating func triggerSailingMasterEvent() {
+        for (index, player) in players.enumerated() {
+            if player.role == Role.sailingMaster {
+                players[index].event.instruction = "dddd"
+            }
+        }
+    }
+    
     mutating func assignRoles() {
         for (index, _) in players.enumerated() {
             while true {

@@ -22,7 +22,7 @@ struct GameView: View {
                             } else if player.role == Role.helmsman  {
                                 HelmsmanView(partyId: partyId)
                             } else if player.role == Role.sailingMaster  {
-                                SailingMasterView()
+                                SailingMasterView(partyId: partyId)
                             } else if player.role == Role.cabinBoy  {
                                 Text("cabin")
                             } else {
@@ -37,6 +37,7 @@ struct GameView: View {
             for (index, party) in gameService.parties.enumerated() {
                 if party.id == partyId {
                     gameService.parties[index].generateLHSEvent()
+                    gameService.send(parties: gameService.parties)
                 }
             }
         }

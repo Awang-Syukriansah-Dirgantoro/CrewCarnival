@@ -40,36 +40,24 @@ struct LookoutView: View {
                         .foregroundColor(.white)
                     Spacer()
                     HStack {
-                        Rectangle()
-                            .foregroundColor(.clear)
-                            .frame(width: 25, height: 19)
-                            .background(
-                                Image("Heart")
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fill)
-                                    .frame(width: 25, height: 19)
-                                    .clipped()
-                            )
-                        Rectangle()
-                            .foregroundColor(.clear)
-                            .frame(width: 25, height: 19)
-                            .background(
-                                Image("Heart")
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fill)
-                                    .frame(width: 25, height: 19)
-                                    .clipped()
-                            )
-                        Rectangle()
-                            .foregroundColor(.clear)
-                            .frame(width: 25, height: 19)
-                            .background(
-                                Image("Heart")
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fill)
-                                    .frame(width: 25, height: 19)
-                                    .clipped()
-                            )
+                        ForEach(Array(gameService.parties.enumerated()), id: \.offset) { index, party in
+                            if party.id == partyId {
+                                if party.lives > 0 {
+                                    ForEach((0...party.lives - 1), id: \.self) { _ in
+                                        Rectangle()
+                                            .foregroundColor(.clear)
+                                            .frame(width: 25, height: 19)
+                                            .background(
+                                                Image("Heart")
+                                                    .resizable()
+                                                    .aspectRatio(contentMode: .fill)
+                                                    .frame(width: 25, height: 19)
+                                                    .clipped()
+                                            )
+                                    }
+                                }
+                            }
+                        }
                     }
                 }.padding(.bottom).padding(.horizontal,30)
                 ZStack{
@@ -86,31 +74,37 @@ struct LookoutView: View {
                     ProgressView("", value: partyProgress, total: 100).progressViewStyle(gradientStyle).padding(.horizontal,9)
                         .onReceive(timer) { _ in
                             if partyProgress < 100 {
-                                partyProgress += 2
+                                partyProgress += 0.1
                             }
                         }
                 }.padding(.bottom,20).padding(.horizontal,30)
-                    ZStack{
-                        Rectangle().frame(height: 60).opacity(0.5)
-                        ForEach(Array(gameService.parties.enumerated()), id: \.offset) { index, party in
-                            if party.id == partyId {
-                                ForEach(Array(party.players.enumerated()), id: \.offset) { index2, player in
-                                    if gameService.currentPlayer.id == player.id {
-                                        Text("\(gameService.parties[index].players[index2].event.instruction)")
-                                            .font(Font.custom("Gasoek One", size: 20))
-                                            .multilineTextAlignment(.center)
-                                            .foregroundColor(Color(red: 0.95, green: 0.74, blue: 0))
-                                    }
+                VStack{
+                    ForEach(Array(gameService.parties.enumerated()), id: \.offset) { index, party in
+                        if party.id == partyId {
+                            ForEach(Array(party.players.enumerated()), id: \.offset) { index2, player in
+                                if gameService.currentPlayer.id == player.id {
+                                    Text("\(player.event.instruction)")
+                                        .font(Font.custom("Gasoek One", size: 20))
+                                        .multilineTextAlignment(.center)
+                                        .frame(maxWidth: .infinity)
+                                        .padding(.vertical, 20)
+                                        .foregroundColor(Color(red: 0.95, green: 0.74, blue: 0))
+                                        .background(
+                                            Rectangle()
+                                                .opacity(0.5))
                                 }
                             }
                         }
-                        ProgressView("", value: instructionProgress, total: instructionProgressMax).progressViewStyle(gradientStyle).padding(.horizontal,9)
-                            .onReceive(timer) { _ in
-                                if instructionProgress > 0 {
-                                    instructionProgress -= 0.1
-                                }
-                            }.frame(width: 400 ,height: 60,alignment:.bottom).ignoresSafeArea(.all)
                     }
+                    ProgressView("", value: instructionProgress, total: instructionProgressMax)
+                        .onReceive(timer) { _ in
+                            if instructionProgress > 0 {
+                                instructionProgress -= 0.1
+                            }
+                        }
+                        .progressViewStyle(LinearProgressViewStyle(tint: Color(red: 0, green: 0.82, blue: 0.23)))
+                        .padding(.top, -30)
+                }
                 Spacer()
                 ZStack{
                     Rectangle()
@@ -197,7 +191,6 @@ struct LookoutView: View {
                 if party.id == partyId {
                     for (index2, player) in gameService.parties[index].players.enumerated() {
                         if player.role == Role.lookout {
-                            print("pr: \(player.event.instruction)")
                             instructionProgress = gameService.parties[index].players[index2].event.duration
                             instructionProgressMax = gameService.parties[index].players[index2].event.duration
                         }
@@ -205,29 +198,45 @@ struct LookoutView: View {
                 }
             }
         }
-        .onChange(of: gameService.parties) { newDirection in
-            print("ddd: \(gameService.parties)")
+        .onChange(of: instructionProgress, perform: { newValue in
+            if instructionProgress <= 0 {
+                for (index, party) in gameService.parties.enumerated() {
+                    if party.id == partyId {
+                        gameService.parties[index].generateLHSEvent()
+                        if party.lives > 0 {
+                            gameService.parties[index].lives -= 1
+                        }
+                        gameService.send(parties: gameService.parties)
+                        
+                        for (index2, _) in gameService.parties[index].players.enumerated() {
+                            instructionProgress = gameService.parties[index].players[index2].event.duration
+                        }
+                    }
+                }
+            }
+        })
+        .onChange(of: direction) { newDirection in
             for (index, party) in gameService.parties.enumerated() {
                 if party.id == partyId {
                     for (index2, player) in gameService.parties[index].players.enumerated() {
                         if player.role == Role.lookout {
-                            print("dddp: \(player)")
-//                            if player.event.objective == Objective.lookLeft {
-//                                if newDirection == "Left" {
-//                                    gameService.parties[index].players[index2].event.instruction = "Our Left is Clear!\nQuickly Turn the Ship!"
-//                                    gameService.parties[index].triggerHelmsmanEvent()
-//                                }
-//                            } else if player.event.objective == Objective.lookRight {
-//                                if newDirection == "Right" {
-//                                    gameService.parties[index].players[index2].event.instruction = "Our Right is Clear!\nQuickly Turn the Ship!"
-//                                    gameService.parties[index].triggerHelmsmanEvent()
-//                                }
-//                            } else {
-//                                if newDirection == "Front" {
-//                                    gameService.parties[index].players[index2].event.instruction = "Our Front is Clear!\nQuickly Turn the Ship!"
-//                                    gameService.parties[index].triggerHelmsmanEvent()
-//                                }
-//                            }
+                            if player.event.objective == Objective.lookLeft {
+                                if newDirection == "Left" {
+                                    gameService.parties[index].players[index2].event.instruction = "Our Left is Clear!\nQuickly Turn the Ship!"
+                                    gameService.parties[index].triggerHelmsmanEvent()
+                                }
+                            } else if player.event.objective == Objective.lookRight {
+                                if newDirection == "Right" {
+                                    gameService.parties[index].players[index2].event.instruction = "Our Right is Clear!\nQuickly Turn the Ship!"
+                                    gameService.parties[index].triggerHelmsmanEvent()
+                                }
+                            } else {
+                                if newDirection == "Front" {
+                                    gameService.parties[index].players[index2].event.instruction = "Our Front is Clear!\nQuickly Turn the Ship!"
+                                    gameService.parties[index].triggerHelmsmanEvent()
+                                }
+                            }
+                            gameService.send(parties: gameService.parties)
                         }
                     }
                 }
