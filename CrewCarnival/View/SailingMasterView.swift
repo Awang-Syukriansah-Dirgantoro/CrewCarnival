@@ -146,7 +146,7 @@ struct SailingMasterView: View {
                                 .rotationEffect(.degrees(Double(self.angle1)))
                                 .gesture(DragGesture()
                                     .onChanged{ v in
-                                        var theta = (atan2(v.location.x - self.length / 5, self.length / 5 - v.location.y) - atan2(v.startLocation.x - self.length / 5, self.length / 5 - v.startLocation.y)) * 360 / .pi
+                                        let theta = (atan2(v.location.x - self.length / 5, self.length / 5 - v.location.y) - atan2(v.startLocation.x - self.length / 5, self.length / 5 - v.startLocation.y)) * 360 / .pi
                                         print(self.angle1)
                                         self.angle1 = theta + self.lastAngle1
                                     }
