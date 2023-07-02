@@ -16,7 +16,7 @@ struct Player: Codable, Identifiable, Equatable {
     var name: String
     var role: Role?
     var isReady: Bool = false
-    var event = Event(duration: -1, instruction: "", objective: Objective.turnLeft)
+    var event = Event(duration: -1, instruction: "")
     
     func getStringRole() -> String {
         switch role {

@@ -204,6 +204,40 @@ struct LookoutView: View {
                 }
             }
         }
+        .onChange(of: gameService.parties, perform: { newValue in
+            for (index, party) in gameService.parties.enumerated() {
+                if party.id == partyId {
+                    if gameService.parties[index].lives <= 0 {
+                        gameService.parties[index].reset()
+                        isStartGame = false
+                        gameService.send(parties: gameService.parties)
+                    }
+                    
+                    var allEventsCompleted = true
+                    for (_, player) in party.players.enumerated() {
+                        if !player.event.isCompleted {
+                            allEventsCompleted = false
+                        }
+                    }
+                    
+                    if allEventsCompleted {
+                        gameService.parties[index].generateLHSEvent()
+                        for (index2, player) in gameService.parties[index].players.enumerated() {
+                            if player.role == Role.lookout {
+                                instructionProgress = gameService.parties[index].players[index2].event.duration
+                                instructionProgressMax = gameService.parties[index].players[index2].event.duration
+                            }
+                        }
+                        xOffset = -391
+                        isMove = false
+                        direction = "Forward"
+                        isLeftAble = true
+                        isRightAble = true
+                        gameService.send(parties: gameService.parties)
+                    }
+                }
+            }
+        })
         .onChange(of: instructionProgress, perform: { newValue in
             if instructionProgress <= 0 {
                 for (index, party) in gameService.parties.enumerated() {
@@ -234,17 +268,17 @@ struct LookoutView: View {
                             if player.event.objective == Objective.lookLeft {
                                 if newDirection == "Left" {
                                     gameService.parties[index].players[index2].event.instruction = "Our Left is Clear!\nQuickly Turn the Ship!"
-                                    gameService.parties[index].triggerHelmsmanEvent()
+//                                    gameService.parties[index].triggerHelmsmanInstruction()
                                 }
                             } else if player.event.objective == Objective.lookRight {
                                 if newDirection == "Right" {
                                     gameService.parties[index].players[index2].event.instruction = "Our Right is Clear!\nQuickly Turn the Ship!"
-                                    gameService.parties[index].triggerHelmsmanEvent()
+//                                    gameService.parties[index].triggerHelmsmanInstruction()
                                 }
                             } else {
                                 if newDirection == "Front" {
                                     gameService.parties[index].players[index2].event.instruction = "Our Front is Clear!\nQuickly Turn the Ship!"
-                                    gameService.parties[index].triggerHelmsmanEvent()
+//                                    gameService.parties[index].triggerHelmsmanInstruction()
                                 }
                             }
                             gameService.send(parties: gameService.parties)

@@ -11,7 +11,8 @@ struct Event: Codable, Equatable {
     var id = UUID()
     var duration: Double
     var instruction: String
-    var objective: Objective
+    var objective: Objective?
+    var isCompleted = false
 }
 
 enum Objective: Codable {

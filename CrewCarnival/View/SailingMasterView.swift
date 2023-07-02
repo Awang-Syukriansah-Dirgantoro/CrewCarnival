@@ -113,94 +113,179 @@ struct SailingMasterView: View {
                         .progressViewStyle(LinearProgressViewStyle(tint: Color(red: 0, green: 0.82, blue: 0.23)))
                         .padding(.top, -30)
                 }
-                ZStack{
-                    VStack{
-                        Image("Sail")
-                            .resizable()
-                            .frame(maxWidth: 350, maxHeight: self.angle1)
-                            .padding(.vertical, -5)
-                        Image("Sail")
-                            .resizable()
-                            .frame(maxWidth: 440, maxHeight: 160)
-                            .padding(.bottom, -5)
-                        Image("Sail")
-                            .resizable()
-                            .frame(maxWidth: 590, maxHeight: 260)
-                            .padding(.bottom, 20)
+                // ZStack{
+                //     VStack{
+                //         Image("Sail")
+                //             .resizable()
+                //             .frame(maxWidth: 350, maxHeight: self.angle1)
+                //             .padding(.vertical, -5)
+                //         Image("Sail")
+                //             .resizable()
+                //             .frame(maxWidth: 440, maxHeight: 160)
+                //             .padding(.bottom, -5)
+                //         Image("Sail")
+                //             .resizable()
+                //             .frame(maxWidth: 590, maxHeight: 260)
+                //             .padding(.bottom, 20)
+                //     }
+                //     Image("NoSail")
+                //         .resizable()
+                //         .scaledToFill()
+                //         .padding(-38)
+                //     VStack{
+                //         Spacer()
+                //             .frame(height: 50)
+                //         ZStack{
+                //             Image("Tuas2")
+                //                 .resizable()
+                //                 .frame(width: 60, height: 60)
+                //             Image("Tuas1")
+                //                 .resizable()
+                //                 .frame(width: 24, height: 63)
+                //                 .padding(.bottom, 50)
+                //                 .rotationEffect(.degrees(Double(self.angle1)))
+                //                 .gesture(DragGesture()
+                //                     .onChanged{ v in
+                //                         let theta = (atan2(v.location.x - self.length / 5, self.length / 5 - v.location.y) - atan2(v.startLocation.x - self.length / 5, self.length / 5 - v.startLocation.y)) * 360 / .pi
+                //                         print(self.angle1)
+                //                         self.angle1 = theta + self.lastAngle1
+                //                     }
+                //                     .onEnded { v in
+                //                         self.lastAngle1 = self.angle1
+                //                     }
+                //                 )
+                //         }
+                //         Spacer()
+                //             .frame(height: 80)
+                //         ZStack{
+                //             Image("Tuas2")
+                //                 .resizable()
+                //                 .frame(width: 60, height: 60)
+                //             Image("Tuas1")
+                //                 .resizable()
+                //                 .frame(width: 24, height: 63)
+                //                 .padding(.bottom, 50)
+                //                 .rotationEffect(.degrees(Double(self.angle2)))
+                //                 .gesture(DragGesture()
+                //                     .onChanged{ v in
+                //                         var theta = (atan2(v.location.x - self.length / 2, self.length / 2 - v.location.y) - atan2(v.startLocation.x - self.length / 2, self.length / 2 - v.startLocation.y)) * 180 / .pi
+                //                         if (theta < 0) { theta += 360 }
+                //                         self.angle2 = theta + self.lastAngle2
+                //                     }
+                //                     .onEnded { v in
+                //                         self.lastAngle2 = self.angle2
+                //                     }
+                //                 )
+                //         }
+                //         Spacer()
+                //             .frame(height: 120)
+                //         ZStack{
+                //             Image("Tuas2")
+                //                 .resizable()
+                //                 .frame(width: 60, height: 60)
+                //             Image("Tuas1")
+                //                 .resizable()
+                //                 .frame(width: 24, height: 63)
+                //                 .padding(.bottom, 50)
+                //                 .rotationEffect(.degrees(Double(self.angle3)))
+                //                 .gesture(DragGesture()
+                //                     .onChanged{ v in
+                //                         var theta = (atan2(v.location.x - self.length / 2, self.length / 2 - v.location.y) - atan2(v.startLocation.x - self.length / 2, self.length / 2 - v.startLocation.y)) * 180 / .pi
+                //                         if (theta < 0) { theta += 360 }
+                //                         self.angle3 = theta + self.lastAngle3
+                //                     }
+                //                     .onEnded { v in
+                //                         self.lastAngle3 = self.angle3
+                //                     }
+                //                 )
+                //         }
+                //     }.padding(.trailing, 10)
+                // }
+                Button {
+                    for (index, party) in gameService.parties.enumerated() {
+                        if party.id == partyId {
+                            for (_, player) in gameService.parties[index].players.enumerated() {
+                                if player.role == Role.sailingMaster {
+                                    if player.event.objective == Objective.slow10 {
+                                        gameService.parties[index].setEventCompleted(role: Role.helmsman)
+                                        gameService.parties[index].setEventCompleted(role: Role.sailingMaster)
+                                        gameService.send(parties: gameService.parties)
+                                        print("cccc \(   gameService.parties[index])")
+                                    }
+                                }
+                            }
+                        }
                     }
-                    Image("NoSail")
-                        .resizable()
-                        .scaledToFill()
-                        .padding(-38)
-                    VStack{
-                        Spacer()
-                            .frame(height: 50)
-                        ZStack{
-                            Image("Tuas2")
-                                .resizable()
-                                .frame(width: 60, height: 60)
-                            Image("Tuas1")
-                                .resizable()
-                                .frame(width: 24, height: 63)
-                                .padding(.bottom, 50)
-                                .rotationEffect(.degrees(Double(self.angle1)))
-                                .gesture(DragGesture()
-                                    .onChanged{ v in
-                                        let theta = (atan2(v.location.x - self.length / 5, self.length / 5 - v.location.y) - atan2(v.startLocation.x - self.length / 5, self.length / 5 - v.startLocation.y)) * 360 / .pi
-                                        print(self.angle1)
-                                        self.angle1 = theta + self.lastAngle1
-                                    }
-                                    .onEnded { v in
-                                        self.lastAngle1 = self.angle1
-                                    }
-                                )
-                        }
-                        Spacer()
-                            .frame(height: 80)
-                        ZStack{
-                            Image("Tuas2")
-                                .resizable()
-                                .frame(width: 60, height: 60)
-                            Image("Tuas1")
-                                .resizable()
-                                .frame(width: 24, height: 63)
-                                .padding(.bottom, 50)
-                                .rotationEffect(.degrees(Double(self.angle2)))
-                                .gesture(DragGesture()
-                                    .onChanged{ v in
-                                        var theta = (atan2(v.location.x - self.length / 2, self.length / 2 - v.location.y) - atan2(v.startLocation.x - self.length / 2, self.length / 2 - v.startLocation.y)) * 180 / .pi
-                                        if (theta < 0) { theta += 360 }
-                                        self.angle2 = theta + self.lastAngle2
-                                    }
-                                    .onEnded { v in
-                                        self.lastAngle2 = self.angle2
-                                    }
-                                )
-                        }
-                        Spacer()
-                            .frame(height: 120)
-                        ZStack{
-                            Image("Tuas2")
-                                .resizable()
-                                .frame(width: 60, height: 60)
-                            Image("Tuas1")
-                                .resizable()
-                                .frame(width: 24, height: 63)
-                                .padding(.bottom, 50)
-                                .rotationEffect(.degrees(Double(self.angle3)))
-                                .gesture(DragGesture()
-                                    .onChanged{ v in
-                                        var theta = (atan2(v.location.x - self.length / 2, self.length / 2 - v.location.y) - atan2(v.startLocation.x - self.length / 2, self.length / 2 - v.startLocation.y)) * 180 / .pi
-                                        if (theta < 0) { theta += 360 }
-                                        self.angle3 = theta + self.lastAngle3
-                                    }
-                                    .onEnded { v in
-                                        self.lastAngle3 = self.angle3
-                                    }
-                                )
-                        }
-                    }.padding(.trailing, 10)
+                } label: {
+                    Text("Slow 10 Knots")
+                        .foregroundColor(.yellow)
+                        .fontWeight(.bold)
+                        .frame(
+                            minWidth: 0,
+                            maxWidth: .infinity
+                        )
+                        .padding()
+                        .background(RoundedRectangle(cornerRadius: 15)
+                            .fill(Color.black))
+                        .padding(.horizontal)
                 }
+                Button {
+                    for (index, party) in gameService.parties.enumerated() {
+                        if party.id == partyId {
+                            for (_, player) in gameService.parties[index].players.enumerated() {
+                                if player.role == Role.sailingMaster {
+                                    if player.event.objective == Objective.slow20 {
+                                        gameService.parties[index].setEventCompleted(role: Role.helmsman)
+                                        gameService.parties[index].setEventCompleted(role: Role.sailingMaster)
+                                        gameService.send(parties: gameService.parties)
+                                        print("cccc \(   gameService.parties[index])")
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } label: {
+                    Text("Slow 20 Knots")
+                        .foregroundColor(.yellow)
+                        .fontWeight(.bold)
+                        .frame(
+                            minWidth: 0,
+                            maxWidth: .infinity
+                        )
+                        .padding()
+                        .background(RoundedRectangle(cornerRadius: 15)
+                            .fill(Color.black))
+                        .padding(.horizontal)
+                }
+                Button {
+                    for (index, party) in gameService.parties.enumerated() {
+                        if party.id == partyId {
+                            for (_, player) in gameService.parties[index].players.enumerated() {
+                                if player.role == Role.sailingMaster {
+                                    if player.event.objective == Objective.slow30 {
+                                        gameService.parties[index].setEventCompleted(role: Role.helmsman)
+                                        gameService.parties[index].setEventCompleted(role: Role.sailingMaster)
+                                        gameService.send(parties: gameService.parties)
+                                        print("cccc \(   gameService.parties[index])")
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } label: {
+                    Text("Slow 30 Knots")
+                        .foregroundColor(.yellow)
+                        .fontWeight(.bold)
+                        .frame(
+                            minWidth: 0,
+                            maxWidth: .infinity
+                        )
+                        .padding()
+                        .background(RoundedRectangle(cornerRadius: 15)
+                            .fill(Color.black))
+                        .padding(.horizontal)
+                }
+                Spacer()
             }
         }.background(Image("BgSailingMaster").resizable().scaledToFill())
             .onAppear {
@@ -220,8 +305,26 @@ struct SailingMasterView: View {
                     if party.id == partyId {
                         if gameService.parties[index].lives <= 0 {
                             gameService.parties[index].reset()
-                            gameService.send(parties: gameService.parties)
                             isStartGame = false
+                            gameService.send(parties: gameService.parties)
+                        }
+                        
+                        var allEventsCompleted = true
+                        for (_, player) in party.players.enumerated() {
+                            if !player.event.isCompleted {
+                                allEventsCompleted = false
+                            }
+                        }
+                        
+                        if allEventsCompleted {
+                            gameService.parties[index].generateLHSEvent()
+                            for (index2, player) in gameService.parties[index].players.enumerated() {
+                                if player.role == Role.sailingMaster {
+                                    instructionProgress = gameService.parties[index].players[index2].event.duration
+                                    instructionProgressMax = gameService.parties[index].players[index2].event.duration
+                                }
+                            }
+                            gameService.send(parties: gameService.parties)
                         }
                     }
                 }
@@ -246,12 +349,12 @@ struct SailingMasterView: View {
         //                                if player.event.objective == Objective.turnLeft {
         //                                    if newValue < -100 {
         //                                        gameService.parties[index].players[index2].event.instruction = "Our Left is Clear!\nQuickly Turn the Ship!"
-        //                                        gameService.parties[index].triggerSailingMasterEvent()
+        //                                        gameService.parties[index].triggerSailingMasterInstruction()
         //                                    }
         //                                } else {
         //                                    if newValue > 100 {
         //                                        gameService.parties[index].players[index2].event.instruction = "Our Front is Clear!\nQuickly Turn the Ship!"
-        //                                        gameService.parties[index].triggerSailingMasterEvent()
+        //                                        gameService.parties[index].triggerSailingMasterInstruction()
         //                                    }
         //                                }
         //                            }
