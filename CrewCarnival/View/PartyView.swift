@@ -25,7 +25,7 @@ struct PartyView: View {
         gameService.parties.append(party)
     }
     
-    let columns = [
+    let rows = [
         GridItem(.flexible()),
         GridItem(.flexible()),
     ]
@@ -78,53 +78,60 @@ struct PartyView: View {
                     }
                 }
             } else {
-                ScrollView{
-                    VStack{
-                        if gameService.parties.count > 0 {
-                            LazyVGrid(columns: columns, spacing: 20) {
-                                ForEach(Array(gameService.parties.enumerated()), id: \.offset) { index, party in
-                                    PartyCard(partyIndex: index, party: party, name: $name)
+                ZStack{
+                    Image("BackgroundSelect").resizable().scaledToFill().ignoresSafeArea()
+                    ScrollView{
+                        VStack{
+                            Image("SelectRoom")
+                                .resizable()
+                                .frame(width: 320, height: 105)
+                                .padding(.vertical, 50)
+                            if gameService.parties.count > 0 {
+                                LazyHGrid(rows: rows, spacing: 20) {
+                                    ForEach(Array(gameService.parties.enumerated()), id: \.offset) { index, party in
+                                        PartyCard(partyIndex: index, party: party, name: $name)
+                                    }
                                 }
+                                .padding(20)
+                            } else {
+                                Text("No party available, create a party!")
+                                    .foregroundColor(.gray)
+                                    .padding()
                             }
-                            .padding(.horizontal)
-                        } else {
-                            Text("No party available, create a party!")
-                                .foregroundColor(.gray)
-                                .padding()
-                        }
-                        
-                        NavigationLink {
-                            ReadyView(partyId: partyId)
-                        } label: {
-                            Text("Create Party")
-                                .foregroundColor(.yellow)
-                                .fontWeight(.bold)
-                                .frame(
-                                    minWidth: 0,
-                                    maxWidth: .infinity
-                                )
-                                .padding()
-                                .background(RoundedRectangle(cornerRadius: 15)
-                                    .fill(Color.black))
-                                .padding()
-                        }
-                        .simultaneousGesture(TapGesture().onEnded {
-                            self.createParty()
-                            self.gameService.send(parties: gameService.parties)
-                        })
-                    }
-                }
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarLeading) {
-                        Button {
-                            gameService.currentPlayer.name = ""
-                        } label: {
-                            HStack {
-                                Image(systemName: "chevron.backward")
-                                Text("Back")
+                            NavigationLink {
+                                ReadyView(partyId: partyId)
+                            } label: {
+                                Text("Create Party")
+                                    .foregroundColor(.yellow)
+                                    .fontWeight(.bold)
+                                    .frame(
+                                        minWidth: 0,
+                                        maxWidth: .infinity
+                                    )
+                                    .padding()
+                                    .background(RoundedRectangle(cornerRadius: 15)
+                                        .fill(Color.black))
+                                    .padding()
                             }
+                            .simultaneousGesture(TapGesture().onEnded {
+                                self.createParty()
+                                self.gameService.send(parties: gameService.parties)
+                            })
+                            .navigationBarBackButtonHidden(true)
                         }
                     }
+//                    .toolbar {
+//                        ToolbarItem(placement: .navigationBarLeading) {
+//                            Button {
+//                                gameService.currentPlayer.name = ""
+//                            } label: {
+//                                HStack {
+//                                    Image(systemName: "chevron.backward")
+//                                    Text("Back")
+//                                }
+//                            }
+//                        }
+//                    }
                 }
             }
         }
