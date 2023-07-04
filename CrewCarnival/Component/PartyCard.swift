@@ -82,13 +82,13 @@ struct PartyCard: View {
                     .environmentObject(self.gameService)
             } label: {
                 VStack {
-                    LazyVGrid(columns: columns, spacing: 20) {
+                    ZStack{
+                        Image("Room").resizable().frame(width: 280, height: 120).ignoresSafeArea()
                         ForEach(Array(party.players.enumerated()), id: \.offset) { index, player in
                             Text("\(player.name)")
                         }
                     }
                     .padding(16)
-                    .background(.white)
                     .cornerRadius(16)
                     .shadow(radius: 4)
                     Text(cardText)
