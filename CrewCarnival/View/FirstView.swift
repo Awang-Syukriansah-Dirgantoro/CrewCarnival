@@ -24,7 +24,7 @@ struct FirstView: View {
             }
             else {
                 ZStack{
-                    Image("BgHome")
+                    Image("BackgroundHome")
                         .resizable()
                         .scaledToFill()
                         .ignoresSafeArea()
