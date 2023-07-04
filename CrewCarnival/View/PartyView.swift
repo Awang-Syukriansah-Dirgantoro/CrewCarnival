@@ -33,37 +33,46 @@ struct PartyView: View {
     var body: some View {
         NavigationStack {
             if gameService.currentPlayer.name == "" {
-                VStack {
-                    Spacer()
-                    TextField("Enter your name", text: $name)
-                        .textFieldStyle(.plain)
-                        .font(.system(size: 20))
-                        .padding(20)
-                    Button {
-                        gameService.currentPlayer.name = name
-                    } label: {
-                        Text("Submit")
-                            .foregroundColor(.yellow)
-                            .fontWeight(.bold)
-                            .frame(
-                                minWidth: 0,
-                                maxWidth: .infinity
-                            )
-                            .padding()
-                            .background(RoundedRectangle(cornerRadius: 15)
-                                .fill(Color.black))
-                            .padding(.horizontal)
-                    }
-                    Spacer()
-                }
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarLeading) {
+                ZStack{
+                    Image("MenuBackground").resizable().scaledToFill().ignoresSafeArea()
+                    VStack {
+                        Spacer()
+                        Image("EnterName")
+                            .resizable()
+                            .frame(width: 305, height: 100)
+                        TextField("Enter your name", text: $name)
+                            .textFieldStyle(.plain)
+                            .font(.system(size: 20))
+                            .padding(10)
+                            .background(.white)
+                            .padding(20)
+                        Spacer()
+                            .frame(height: 80)
                         Button {
-                            menu = -1
+                            gameService.currentPlayer.name = name
                         } label: {
-                            HStack {
-                                Image(systemName: "chevron.backward")
-                                Text("Back")
+                            Rectangle()
+                              .foregroundColor(.clear)
+                              .frame(width: 218, height: 84)
+                              .background(
+                                Image("Submit")
+                                  .resizable()
+                                  .aspectRatio(contentMode: .fill)
+                                  .frame(width: 218, height: 84)
+                                  .clipped()
+                              )
+                        }
+                        Spacer()
+                    }
+                    .toolbar {
+                        ToolbarItem(placement: .navigationBarLeading) {
+                            Button {
+                                menu = -1
+                            } label: {
+                                HStack {
+                                    Image(systemName: "chevron.backward")
+                                    Text("Back")
+                                }
                             }
                         }
                     }
@@ -124,6 +133,6 @@ struct PartyView: View {
 
 struct PartyView_Previews: PreviewProvider {
     static var previews: some View {
-        PartyView(menu: .constant(0))
+        PartyView(menu: .constant(0)).environmentObject(GameService())
     }
 }
