@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0B0B0BE72A53D92A00406AA1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 59117DE32A414F2700701627 /* Assets.xcassets */; };
 		0B0B77762A4535AE00B10F99 /* ProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B0B77752A4535AE00B10F99 /* ProgressBar.swift */; };
 		0B0B77792A453A1700B10F99 /* Krub-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0B0B77782A453A1700B10F99 /* Krub-Regular.ttf */; };
 		0B0B777E2A454AE200B10F99 /* GradientProgressStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B0B777D2A454AE200B10F99 /* GradientProgressStyle.swift */; };
@@ -41,7 +42,6 @@
 		4E3F47182A4A9ABF00915B7F /* PartyFrontEndView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E3F47172A4A9ABF00915B7F /* PartyFrontEndView.swift */; };
 		59117DE02A414F2600701627 /* CrewCarnivalApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59117DDF2A414F2600701627 /* CrewCarnivalApp.swift */; };
 		59117DE22A414F2600701627 /* LivesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59117DE12A414F2600701627 /* LivesView.swift */; };
-		59117DE42A414F2700701627 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 59117DE32A414F2700701627 /* Assets.xcassets */; };
 		59117DE72A414F2700701627 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 59117DE62A414F2700701627 /* Preview Assets.xcassets */; };
 		59117DEE2A43E87600701627 /* LookoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59117DED2A43E87600701627 /* LookoutView.swift */; };
 		59117DF02A45397600701627 /* GasoekOne-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 59117DEF2A45397600701627 /* GasoekOne-Regular.ttf */; };
@@ -311,7 +311,7 @@
 				59117DF02A45397600701627 /* GasoekOne-Regular.ttf in Resources */,
 				0B4F5B0C2A4BD7DB00D55948 /* game.mp3 in Resources */,
 				59117DE72A414F2700701627 /* Preview Assets.xcassets in Resources */,
-				59117DE42A414F2700701627 /* Assets.xcassets in Resources */,
+				0B0B0BE72A53D92A00406AA1 /* Assets.xcassets in Resources */,
 				0B0B77792A453A1700B10F99 /* Krub-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
