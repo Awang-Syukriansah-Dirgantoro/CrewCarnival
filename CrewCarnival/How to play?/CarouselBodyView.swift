@@ -35,9 +35,4 @@ struct CarouselBodyView: View {
     }
 }
 
-struct CarouselBodyView_Previews: PreviewProvider {
-    static var previews: some View {
-       AllRole()
-    }
-}
 

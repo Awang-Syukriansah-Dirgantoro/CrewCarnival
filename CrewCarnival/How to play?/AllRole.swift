@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct AllRole: View {
+    @Binding var menu: Int
     @State var currentTab = "role1"
     @State var roles = [
         Roles(id: 0, image: "role1", description: "Lookout has the duty to monitor the surrounding conditions and provide information to the responsible authorities"),
@@ -17,18 +18,31 @@ struct AllRole: View {
         Roles(id: 4, image: "role5", description: "Blacksmith is in charge of making or repairing the necessary items"),
     ]
     var body: some View {
-        ZStack{
-            GeometryReader{proxy in
-                let size = proxy.size
+        NavigationStack {
+            ZStack{
+                GeometryReader{proxy in
+                    let size = proxy.size
+                    
+                    Image("backgroundhowtoplay").resizable().aspectRatio(contentMode: .fill).frame(width: size.width+1, height: size.height)
+                }.ignoresSafeArea()
                 
-                Image("backgroundhowtoplay").resizable().aspectRatio(contentMode: .fill).frame(width: size.width, height: size.height).cornerRadius(1)
-            }.ignoresSafeArea()
-            
-            TabView(selection: $currentTab){
-                ForEach(roles){role in
-                    CarouselBodyView(roleimage: role.image, roledesc: role.description)
+                TabView(selection: $currentTab){
+                    ForEach(roles){role in
+                        CarouselBodyView(roleimage: role.image, roledesc: role.description)
+                    }
+                }.tabViewStyle(PageTabViewStyle(indexDisplayMode: .never)).toolbar {
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        Button {
+                            menu = -1
+                        } label: {
+                            HStack {
+                                Image(systemName: "chevron.backward")
+                                Text("Back")
+                            }
+                        }
+                    }
                 }
-            }.tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
+            }
         }
     }
     
@@ -44,6 +58,6 @@ struct Roles : Identifiable {
 
 struct AllRole_Previews: PreviewProvider {
     static var previews: some View {
-       AllRole()
+       AllRole(menu: .constant(0)).environmentObject(GameService())
     }
 }

@@ -15,7 +15,7 @@ struct MenuView: View {
         if menu == 0 {
             PartyView(menu: $menu)
         } else if menu == 1 {
-            
+            AllRole(menu: $menu)
         } else {
             ZStack{
                 Image("MenuBackground").resizable().scaledToFill().ignoresSafeArea()
