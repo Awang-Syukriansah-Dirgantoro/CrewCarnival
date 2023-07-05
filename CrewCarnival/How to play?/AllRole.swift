@@ -26,6 +26,8 @@ struct AllRole: View {
                     Image("backgroundhowtoplay").resizable().aspectRatio(contentMode: .fill).frame(width: size.width+1, height: size.height)
                 }.ignoresSafeArea()
                 
+                Text("Swipe to see another roles").offset(y: -290).foregroundColor(.white)
+                
                 TabView(selection: $currentTab){
                     ForEach(roles){role in
                         CarouselBodyView(roleimage: role.image, roledesc: role.description)
