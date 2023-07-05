@@ -20,6 +20,7 @@
 		0B4F5B0E2A4BD7DB00D55948 /* story.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 0B4F5B0B2A4BD7DB00D55948 /* story.mp3 */; };
 		0B4F5B112A4BD94100D55948 /* AudioViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4F5B102A4BD94100D55948 /* AudioViewModel.swift */; };
 		0B4F5B132A4EB34800D55948 /* FirstView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4F5B122A4EB34800D55948 /* FirstView.swift */; };
+		0B6932C72A55495F00DA6321 /* Shake.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B6932C62A55495F00DA6321 /* Shake.swift */; };
 		0B9EFFF42A4AA20E00BEF546 /* Puzzle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9EFFF32A4AA20E00BEF546 /* Puzzle.swift */; };
 		0B9EFFF72A4AA25200BEF546 /* PuzzleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9EFFF62A4AA25200BEF546 /* PuzzleViewModel.swift */; };
 		0B9EFFFA2A4AA2B300BEF546 /* Drag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9EFFF92A4AA2B300BEF546 /* Drag.swift */; };
@@ -62,6 +63,7 @@
 		0B4F5B0B2A4BD7DB00D55948 /* story.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = story.mp3; sourceTree = "<group>"; };
 		0B4F5B102A4BD94100D55948 /* AudioViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioViewModel.swift; sourceTree = "<group>"; };
 		0B4F5B122A4EB34800D55948 /* FirstView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstView.swift; sourceTree = "<group>"; };
+		0B6932C62A55495F00DA6321 /* Shake.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shake.swift; sourceTree = "<group>"; };
 		0B9EFFF32A4AA20E00BEF546 /* Puzzle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Puzzle.swift; sourceTree = "<group>"; };
 		0B9EFFF62A4AA25200BEF546 /* PuzzleViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuzzleViewModel.swift; sourceTree = "<group>"; };
 		0B9EFFF92A4AA2B300BEF546 /* Drag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Drag.swift; sourceTree = "<group>"; };
@@ -106,6 +108,7 @@
 		0B0B77772A4535B100B10F99 /* Component */ = {
 			isa = PBXGroup;
 			children = (
+				0B6932C62A55495F00DA6321 /* Shake.swift */,
 				4C7234092A49219A00F371E7 /* PartyCard.swift */,
 				0B0B77752A4535AE00B10F99 /* ProgressBar.swift */,
 				0B0B777D2A454AE200B10F99 /* GradientProgressStyle.swift */,
@@ -337,6 +340,7 @@
 				4E14C5832A47479C005BB798 /* RecapSceneView.swift in Sources */,
 				0B267A002A47482700CE2AD8 /* BlacksmithView.swift in Sources */,
 				0B4F5B132A4EB34800D55948 /* FirstView.swift in Sources */,
+				0B6932C72A55495F00DA6321 /* Shake.swift in Sources */,
 				4C72340E2A4921FB00F371E7 /* MenuView.swift in Sources */,
 				4C72341F2A49270E00F371E7 /* Party.swift in Sources */,
 				4C7234072A49218C00F371E7 /* ReadyView.swift in Sources */,

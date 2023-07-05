@@ -120,6 +120,6 @@ struct ReadyView: View {
 
 struct ReadyView_Previews: PreviewProvider {
     static var previews: some View {
-        ReadyView(partyId: UUID())
+        ReadyView(partyId: UUID()).environmentObject(GameService())
     }
 }

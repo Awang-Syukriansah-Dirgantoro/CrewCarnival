@@ -27,6 +27,7 @@ struct HelmsmanView: View {
     @State private var lastAngle: CGFloat = 0
     @State private var length : CGFloat = 400
     @Binding var isStartGame: Bool
+    @State private var text = "Turn Progress"
     
     var body: some View {
         let gradientStyle = GradientProgressStyle(
@@ -150,6 +151,11 @@ struct HelmsmanView: View {
                     Spacer()
                         .frame(height: 180)
                     VStack{
+                        Text(text)
+                            .foregroundColor(.white)
+                            .onShake {
+                                text = "shaken at \(Date())"
+                            }
                         Text("Turn Progress")
                             .font(Font.custom("Krub-Regular", size: 14))
                             .multilineTextAlignment(.center)
@@ -162,6 +168,7 @@ struct HelmsmanView: View {
                                 .clipped())
                             .cornerRadius(15)
                             .padding(.bottom, -15)
+                            
                         ProgressBar(progress: self.progress)
                     }
                 }
@@ -264,6 +271,6 @@ struct HelmsmanView: View {
 
 struct HelmsmanView_Previews: PreviewProvider {
     static var previews: some View {
-        HelmsmanView(partyId: UUID(), isStartGame: .constant(false))
+        HelmsmanView(partyId: UUID(), isStartGame: .constant(false)).environmentObject(GameService())
     }
 }
