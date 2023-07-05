@@ -15,7 +15,12 @@ struct ReadyView: View {
     
     var body: some View {
         ZStack{
-            Image("backgroundroom").ignoresSafeArea()
+            GeometryReader{proxy in
+                let size = proxy.size
+                
+                Image("backgroundroom").resizable().aspectRatio(contentMode: .fill).frame(width: size.width, height: size.height)
+            }.ignoresSafeArea()
+            
             Text("Waiting For \n Players").font(.custom("Gasoek One", size: 30)).foregroundColor(.white).offset(y: -200).multilineTextAlignment(.center).shadow(color: .yellow, radius: 1)
             VStack {
                 if isStartGame {
