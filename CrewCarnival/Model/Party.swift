@@ -9,7 +9,7 @@ import Foundation
 
 struct Party: Codable, Identifiable, Equatable {
     static func == (lhs: Party, rhs: Party) -> Bool {
-        return lhs.players == rhs.players && lhs.isPlaying == rhs.isPlaying
+        return lhs.players == rhs.players && lhs.isPlaying == rhs.isPlaying && lhs.lives == rhs.lives
     }
     
     var id = UUID()

@@ -26,7 +26,9 @@ struct SailingMasterView: View {
     @State private var instructionProgress = 100.0
     @State private var instructionProgressMax = 100.0
     @State private var roleExplain = false
-    @State var timeExplain = 100
+    @State var timeExplain = 70
+    @State private var showPopUp: Bool = false
+    @State private var lives = 0
     @State private var gradient = LinearGradient(
         gradient: Gradient(colors: [Color(red: 0, green: 0.82, blue: 0.23)]),
         startPoint: .topLeading,
@@ -38,12 +40,16 @@ struct SailingMasterView: View {
     
     var body: some View {
         if roleExplain == false{
-            Image("sailingmasterExplain").edgesIgnoringSafeArea(.all).onReceive(timer) { _ in
-                timeExplain -= 1
-                if timeExplain == 0 {
-                    roleExplain = true
+            GeometryReader{proxy in
+                let size = proxy.size
+                
+                Image("sailingmasterExplain").resizable().aspectRatio(contentMode: .fill).frame(width: size.width, height: size.height).onReceive(timer) { _ in
+                    timeExplain -= 1
+                    if timeExplain == 0 {
+                        roleExplain = true
+                    }
                 }
-            }
+            }.ignoresSafeArea()
         }else{
             let gradientStyle = GradientProgressStyle(
                 stroke: .clear,
@@ -347,6 +353,7 @@ struct SailingMasterView: View {
                     Spacer()
                 }
                 .padding(.top,50)
+                RecapSceneView(lives: $lives, partyId: partyId, show: $showPopUp, isStartGame: $isStartGame)
             }
             .onAppear {
                 for (index, party) in gameService.parties.enumerated() {
@@ -364,9 +371,14 @@ struct SailingMasterView: View {
                 for (index, party) in gameService.parties.enumerated() {
                     if party.id == partyId {
                         if gameService.parties[index].lives <= 0 {
-                            gameService.parties[index].reset()
-                            isStartGame = false
-                            gameService.send(parties: gameService.parties)
+                            withAnimation(.linear(duration: 0.5)) {
+                                lives = gameService.parties[index].lives
+                                showPopUp = true
+                                
+                            }
+                            //                            gameService.parties[index].reset()
+                            //                            isStartGame = false
+                            //                            gameService.send(parties: gameService.parties)
                         }
                         
                         var allEventsCompleted = true
@@ -379,12 +391,24 @@ struct SailingMasterView: View {
                         if allEventsCompleted {
                             gameService.parties[index].generateLHSEvent()
                             for (index2, player) in gameService.parties[index].players.enumerated() {
-                                if player.role == Role.sailingMaster {
+                                if player.role == Role.helmsman {
                                     instructionProgress = gameService.parties[index].players[index2].event.duration
                                     instructionProgressMax = gameService.parties[index].players[index2].event.duration
                                 }
                             }
                             gameService.send(parties: gameService.parties)
+                        }
+                    }
+                }
+            })
+            .onChange(of: partyProgress, perform: { newValue in
+                if partyProgress >= 100{
+                    for (index, party) in gameService.parties.enumerated() {
+                        if party.id == partyId {
+                            withAnimation(.linear(duration: 0.5)) {
+                                lives = gameService.parties[index].lives
+                                showPopUp = true
+                            }
                         }
                     }
                 }

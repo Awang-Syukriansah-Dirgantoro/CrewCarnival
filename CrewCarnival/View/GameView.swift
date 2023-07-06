@@ -30,7 +30,7 @@ struct GameView: View {
                             } else if player.role == Role.cabinBoy  {
                                 Text("cabin")
                             } else {
-                                BlacksmithView()
+                                BlacksmithView(partyId: partyId, isStartGame: $isStartGame)
                             }
                         }
                     }

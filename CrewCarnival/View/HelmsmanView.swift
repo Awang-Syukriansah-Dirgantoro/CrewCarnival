@@ -13,7 +13,9 @@ struct HelmsmanView: View {
     @State private var instructionProgressMax = 100.0
     @State private var isTurnProgressCompleted: Objective?
     @State private var roleExplain = false
-    @State var timeExplain = 100
+    @State var timeExplain = 70
+    @State private var showPopUp: Bool = false
+    @State private var lives = 0
     @EnvironmentObject var gameService: GameService
     var partyId: UUID
     
@@ -33,12 +35,16 @@ struct HelmsmanView: View {
     
     var body: some View {
         if roleExplain == false{
-            Image("helmsmanExplain").edgesIgnoringSafeArea(.all).onReceive(timer) { _ in
-                timeExplain -= 1
-                if timeExplain == 0 {
-                    roleExplain = true
+            GeometryReader{proxy in
+                let size = proxy.size
+                
+                Image("helmsmanExplain").resizable().aspectRatio(contentMode: .fill).frame(width: size.width, height: size.height).onReceive(timer) { _ in
+                    timeExplain -= 1
+                    if timeExplain == 0 {
+                        roleExplain = true
+                    }
                 }
-            }
+            }.ignoresSafeArea()
         }else{
             let gradientStyle = GradientProgressStyle(
                 stroke: .clear,
@@ -49,6 +55,21 @@ struct HelmsmanView: View {
                 
                 ZStack {
                     Image("ShipHelmsman").resizable().scaledToFill().ignoresSafeArea(.all)
+                    Button(action: {
+                        for (index, party) in gameService.parties.enumerated() {
+                            if party.id == partyId {
+                                gameService.parties[index].lives -= 1
+                                gameService.send(parties: gameService.parties)
+                                
+                                break
+                            }
+                        }
+                    }) {
+                        Image(systemName: "minus.circle")
+                            .font(.system(size: 50))
+                            .foregroundColor(.red)
+                    }.offset(y:-100)
+                    
                     VStack{
                         HStack{
                             Text("Helmsman")
@@ -158,7 +179,7 @@ struct HelmsmanView: View {
                                 }
                             )
                             .offset(y: 150)
-            
+                        
                         Spacer()
                             .frame(height: 180)
                         VStack{
@@ -179,10 +200,12 @@ struct HelmsmanView: View {
                                     .clipped())
                                 .cornerRadius(15)
                                 .padding(.bottom, -15)
-                                
+                            
                             ProgressBar(progress: self.progress)
                         }
                     }
+                    
+                    RecapSceneView(lives: $lives, partyId: partyId, show: $showPopUp, isStartGame: $isStartGame)
                 }.background(Image("BgHelmsman").resizable().scaledToFit())
             }
             .onAppear {
@@ -201,9 +224,14 @@ struct HelmsmanView: View {
                 for (index, party) in gameService.parties.enumerated() {
                     if party.id == partyId {
                         if gameService.parties[index].lives <= 0 {
-                            gameService.parties[index].reset()
-                            isStartGame = false
-                            gameService.send(parties: gameService.parties)
+                            withAnimation(.linear(duration: 0.5)) {
+                                lives = gameService.parties[index].lives
+                                showPopUp = true
+                                
+                            }
+                            //                            gameService.parties[index].reset()
+                            //                            isStartGame = false
+                            //                            gameService.send(parties: gameService.parties)
                         }
                         
                         var allEventsCompleted = true
@@ -226,6 +254,18 @@ struct HelmsmanView: View {
                             lastAngle = 0
                             isTurnProgressCompleted = nil
                             gameService.send(parties: gameService.parties)
+                        }
+                    }
+                }
+            })
+            .onChange(of: partyProgress, perform: { newValue in
+                if partyProgress >= 100{
+                    for (index, party) in gameService.parties.enumerated() {
+                        if party.id == partyId {
+                            withAnimation(.linear(duration: 0.5)) {
+                                lives = gameService.parties[index].lives
+                                showPopUp = true
+                            }
                         }
                     }
                 }
@@ -261,12 +301,12 @@ struct HelmsmanView: View {
                                                     }
                                                 }
                                             }
-    //                                        gameService.parties[index].triggerSailingMasterInstruction()
+                                            //                                        gameService.parties[index].triggerSailingMasterInstruction()
                                         }
                                     } else {
                                         if isTurnProgressCompleted == Objective.turnRight {
                                             gameService.parties[index].players[index2].event.instruction = "The Ship is Tilting,\nSlow Down 10 Knots!"
-    //                                        gameService.parties[index].triggerSailingMasterInstruction()
+                                            //                                        gameService.parties[index].triggerSailingMasterInstruction()
                                         }
                                     }
                                     gameService.parties[index].setEventCompleted(role: Role.lookout)
