@@ -26,8 +26,7 @@ struct PartyView: View {
     }
     
     let rows = [
-        GridItem(.flexible()),
-        GridItem(.flexible()),
+        GridItem(.flexible())
     ]
     
     var body: some View {
@@ -82,21 +81,31 @@ struct PartyView: View {
                     Image("BackgroundSelect").resizable().scaledToFill().ignoresSafeArea()
                     ScrollView{
                         VStack{
-                            Image("SelectRoom")
-                                .resizable()
-                                .frame(width: 320, height: 105)
-                                .padding(.vertical, 50)
                             if gameService.parties.count > 0 {
-                                LazyHGrid(rows: rows, spacing: 20) {
-                                    ForEach(Array(gameService.parties.enumerated()), id: \.offset) { index, party in
-                                        PartyCard(partyIndex: index, party: party, name: $name)
+                                LazyVGrid(columns: rows, spacing: 20) {
+                                    Section {
+                                        ForEach(Array(gameService.parties.enumerated()), id: \.offset) { index, party in
+                                            PartyCard(partyIndex: index, party: party, name: $name)
+                                        }
+                                    } header: {
+                                        Image("SelectRoom")
+                                            .resizable()
+                                            .frame(width: 320, height: 105)
+                                            .padding(.top, 50)
                                     }
                                 }
                                 .padding(20)
                             } else {
-                                Text("No party available, create a party!")
-                                    .foregroundColor(.gray)
-                                    .padding()
+                                Section {
+                                    Text("No party available, create a party!")
+                                        .foregroundColor(.gray)
+                                        .padding()
+                                }  header: {
+                                    Image("SelectRoom")
+                                        .resizable()
+                                        .frame(width: 320, height: 105)
+                                        .padding(.top, 50)
+                                }
                             }
                             NavigationLink {
                                 ReadyView(partyId: partyId)
@@ -119,6 +128,7 @@ struct PartyView: View {
                             })
                             .navigationBarBackButtonHidden(true)
                         }
+                        //.background(.green)
                     }
 //                    .toolbar {
 //                        ToolbarItem(placement: .navigationBarLeading) {
