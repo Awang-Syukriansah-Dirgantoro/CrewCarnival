@@ -12,9 +12,13 @@ struct BlacksmithView: View {
     @State private var downloadAmount = 80.0
     @State private var progressInstruction = 0.0
     @State private var roleExplain = false
-    @State var timeExplain = 100
+    @State var timeExplain = 70
     let timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
-    
+    @State private var showPopUp: Bool = false
+    @State private var lives = 0
+    @EnvironmentObject var gameService: GameService
+    var partyId: UUID
+    @Binding var isStartGame: Bool
     @State private var gradient = LinearGradient(
         gradient: Gradient(colors: [Color(red: 0, green: 0.82, blue: 0.23)]),
         startPoint: .topLeading,
@@ -22,12 +26,16 @@ struct BlacksmithView: View {
     )
     var body: some View {
         if roleExplain == false{
-            Image("blacksmithExplain").edgesIgnoringSafeArea(.all).onReceive(timer) { _ in
-                timeExplain -= 1
-                if timeExplain == 0 {
-                    roleExplain = true
+            GeometryReader{proxy in
+                let size = proxy.size
+                
+                Image("blacksmithExplain").resizable().aspectRatio(contentMode: .fill).frame(width: size.width, height: size.height).onReceive(timer) { _ in
+                    timeExplain -= 1
+                    if timeExplain == 0 {
+                        roleExplain = true
+                    }
                 }
-            }
+            }.ignoresSafeArea()
         }else{
             let gradientStyle = GradientProgressStyle(
                 stroke: .clear,
@@ -128,13 +136,15 @@ struct BlacksmithView: View {
                     .environmentObject(vm)
                     Spacer()
                 }
+                RecapSceneView(lives: $lives, partyId: partyId, show: $showPopUp, isStartGame: $isStartGame)
             }
+            
         }
     }
 }
 
 struct BlacksmithView_Previews: PreviewProvider {
     static var previews: some View {
-        BlacksmithView()
+        BlacksmithView(partyId: UUID(), isStartGame: .constant(false)).environmentObject(GameService())
     }
 }
