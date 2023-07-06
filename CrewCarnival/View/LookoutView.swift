@@ -210,7 +210,7 @@ struct LookoutView: View {
                     if gameService.parties[index].lives <= 0 {
                         gameService.parties[index].reset()
                         isStartGame = false
-                        gameService.send(parties: gameService.parties)
+                        gameService.send(party: gameService.party)
                     }
                     
                     var allEventsCompleted = true
@@ -233,7 +233,7 @@ struct LookoutView: View {
                         direction = "Forward"
                         isLeftAble = true
                         isRightAble = true
-                        gameService.send(parties: gameService.parties)
+                        gameService.send(party: gameService.party)
                     }
                 }
             }
@@ -243,13 +243,18 @@ struct LookoutView: View {
                 for (index, party) in gameService.parties.enumerated() {
                     if party.id == partyId {
                         gameService.parties[index].generateLHSEvent()
+                        xOffset = -391
+                        isMove = false
+                        direction = "Forward"
+                        isLeftAble = true
+                        isRightAble = true
                         if party.lives > 0 {
                             gameService.parties[index].lives -= 1
                         }
-                        gameService.send(parties: gameService.parties)
+                        gameService.send(party: gameService.party)
                         if gameService.parties[index].lives <= 0 {
                             gameService.parties[index].reset()
-                            gameService.send(parties: gameService.parties)
+                            gameService.send(party: gameService.party)
                             isStartGame = false
                         }
                         
@@ -281,7 +286,7 @@ struct LookoutView: View {
 //                                    gameService.parties[index].triggerHelmsmanInstruction()
                                 }
                             }
-                            gameService.send(parties: gameService.parties)
+                            gameService.send(party: gameService.party)
                         }
                     }
                 }

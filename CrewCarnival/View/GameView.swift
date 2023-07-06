@@ -39,7 +39,7 @@ struct GameView: View {
             for (index, party) in gameService.parties.enumerated() {
                 if party.id == partyId {
                     gameService.parties[index].generateLHSEvent()
-                    gameService.send(parties: gameService.parties)
+                    gameService.send(party: gameService.party)
                 }
             }
         }

@@ -209,7 +209,7 @@ struct SailingMasterView: View {
                                     if player.event.objective == Objective.slow10 {
                                         gameService.parties[index].setEventCompleted(role: Role.helmsman)
                                         gameService.parties[index].setEventCompleted(role: Role.sailingMaster)
-                                        gameService.send(parties: gameService.parties)
+                                        gameService.send(party: gameService.party)
                                         print("cccc \(   gameService.parties[index])")
                                     }
                                 }
@@ -237,7 +237,7 @@ struct SailingMasterView: View {
                                     if player.event.objective == Objective.slow20 {
                                         gameService.parties[index].setEventCompleted(role: Role.helmsman)
                                         gameService.parties[index].setEventCompleted(role: Role.sailingMaster)
-                                        gameService.send(parties: gameService.parties)
+                                        gameService.send(party: gameService.party)
                                         print("cccc \(   gameService.parties[index])")
                                     }
                                 }
@@ -265,7 +265,7 @@ struct SailingMasterView: View {
                                     if player.event.objective == Objective.slow30 {
                                         gameService.parties[index].setEventCompleted(role: Role.helmsman)
                                         gameService.parties[index].setEventCompleted(role: Role.sailingMaster)
-                                        gameService.send(parties: gameService.parties)
+                                        gameService.send(party: gameService.party)
                                         print("cccc \(   gameService.parties[index])")
                                     }
                                 }
@@ -306,7 +306,7 @@ struct SailingMasterView: View {
                         if gameService.parties[index].lives <= 0 {
                             gameService.parties[index].reset()
                             isStartGame = false
-                            gameService.send(parties: gameService.parties)
+                            gameService.send(party: gameService.party)
                         }
                         
                         var allEventsCompleted = true
@@ -324,7 +324,7 @@ struct SailingMasterView: View {
                                     instructionProgressMax = gameService.parties[index].players[index2].event.duration
                                 }
                             }
-                            gameService.send(parties: gameService.parties)
+                            gameService.send(party: gameService.party)
                         }
                     }
                 }

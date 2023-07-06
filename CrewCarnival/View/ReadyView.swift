@@ -10,7 +10,6 @@ import SwiftUI
 struct ReadyView: View {
     @EnvironmentObject var gameService: GameService
     var partyId: UUID
-    @State var partyIndex = 0
     @State var isStartGame = false
     
     var body: some View {
@@ -20,40 +19,32 @@ struct ReadyView: View {
             } else {
                 VStack() {
                     HStack(alignment: .top) {
-                        ForEach(Array(gameService.parties.enumerated()), id: \.offset) { index, party in
-                            if party.id == partyId {
-                                ForEach(Array(party.players.enumerated()), id: \.offset) { index2, player in
-                                    VStack {
-                                        Text("\(player.name )")
-                                            .multilineTextAlignment(.leading)
-                                            .bold()
-                                        Image(systemName: "figure.stand")
-                                            .font(.system(size: 60))
-                                        if player.isReady {
-                                            Image(systemName: "checkmark.circle.fill")
-                                        }
-                                        Text("\(player.getStringRole() )")
-                                            .multilineTextAlignment(.leading)
-                                            .bold()
-                                    }
-                                    .frame(minWidth: 0, maxWidth: .infinity)
+                        ForEach(Array(gameService.party.players.enumerated()), id: \.offset) { index, player in
+                            VStack {
+                                Text("\(player.name )")
+                                    .multilineTextAlignment(.leading)
+                                    .bold()
+                                Image(systemName: "figure.stand")
+                                    .font(.system(size: 60))
+                                if player.isReady {
+                                    Image(systemName: "checkmark.circle.fill")
                                 }
+                                Text("\(player.getStringRole() )")
+                                    .multilineTextAlignment(.leading)
+                                    .bold()
                             }
+                            .frame(minWidth: 0, maxWidth: .infinity)
                         }
-                        Spacer()
+                        .padding()
                     }
-                    .padding()
                     Button {
-                        for (index, party) in gameService.parties.enumerated() {
-                            if party.id == partyId {
-                                for (index2, player) in party.players.enumerated() {
-                                    if player.id == gameService.currentPlayer.id {
-                                        gameService.parties[index].players[index2].isReady.toggle()
-                                    }
-                                }
+                        for (index, player) in gameService.party.players.enumerated() {
+                            if player.id == gameService.currentPlayer.id {
+                                gameService.party.players[index].isReady.toggle()
                             }
                         }
-                        self.gameService.send(parties: gameService.parties)
+                        self.gameService.send(party: gameService.party)
+                        print("prn \(gameService.party)")
                     } label: {
                         Text("Ready")
                             .foregroundColor(.yellow)
@@ -67,63 +58,48 @@ struct ReadyView: View {
                                 .fill(Color.black))
                             .padding(.horizontal)
                     }
-                    
-                }
-                .onChange(of: gameService.parties, perform: { newValue in
-                    var areAllPlayersReady = true
-                    
-                    for (_, party) in gameService.parties.enumerated() {
-                        if party.id == partyId {
-                            for (_, player) in party.players.enumerated() {
-                                if !player.isReady {
-                                    areAllPlayersReady = false
-                                }
-                            }
-                        }
-                    }
-                    
-                    if areAllPlayersReady {
-                        for (index, party) in gameService.parties.enumerated() {
-                            if party.id == partyId {
-                                gameService.parties[index].isPlaying = true
+                    Spacer()
+                    .onChange(of: gameService.party, perform: { newValue in
+                        var areAllPlayersReady = true
+                        
+                        for (_, player) in gameService.party.players.enumerated() {
+                            if !player.isReady {
+                                areAllPlayersReady = false
                             }
                         }
                         
-                        self.gameService.send(parties: gameService.parties)
-                        
-                        isStartGame = true
-                    }
-                })
-                .onAppear {
-                    for (index, party) in gameService.parties.enumerated() {
-                        if party.id == partyId {
-                            self.partyIndex = index
-                            gameService.parties[index].assignRoles()
+                        if areAllPlayersReady {
+                            gameService.party.isPlaying = true
                             
-                            self.gameService.send(parties: gameService.parties)
+                            self.gameService.send(party: gameService.party)
+                            
+                            isStartGame = true
                         }
+                    })
+                    .onAppear {
+                        gameService.currentPlayer.role = Role.lookout
+                        
+                        gameService.party.players.append(gameService.currentPlayer)
+                        
+                        gameService.party.assignRoles()
+                        
+                        self.gameService.send(party: gameService.party)
                     }
                 }
+                
             }
         }
         .onDisappear {
-            for (index, party) in gameService.parties.enumerated() {
-                if party.id == partyId {
-                    if party.players.count == 1 {
-                        gameService.parties.remove(at: index)
-                    } else {
-                        for (index2, player) in party.players.enumerated() {
-                            if player.id == gameService.currentPlayer.id {
-                                gameService.parties[index].players.remove(at: index2)
-                                break
-                            }
-                        }
-                    }
+            for (index, player) in gameService.party.players.enumerated() {
+                if player.id == gameService.currentPlayer.id {
+                    gameService.party.players.remove(at: index)
                     break
                 }
             }
-            
-            self.gameService.send(parties: gameService.parties)
+
+            gameService.serviceAdvertiser.stopAdvertisingPeer()
+//            gameService.availablePeers = []
+            self.gameService.send(party: gameService.party)
         }
     }
 }

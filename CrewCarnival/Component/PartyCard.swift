@@ -36,7 +36,7 @@ struct PartyCard: View {
                     for (index, party) in gameService.parties.enumerated() {
                         if party.id == self.party.id {
                             gameService.parties.remove(at: index)
-                            self.gameService.send(parties: gameService.parties)
+                            self.gameService.send(party: gameService.party)
                             break
                         }
                     }
@@ -96,7 +96,7 @@ struct PartyCard: View {
                         for (index, party) in gameService.parties.enumerated() {
                             if party.id == self.party.id {
                                 gameService.parties.remove(at: index)
-                                self.gameService.send(parties: gameService.parties)
+                                self.gameService.send(party: gameService.party)
                                 break
                             }
                         }
@@ -122,7 +122,7 @@ struct PartyCard: View {
                 
                 gameService.parties[partyIndex].players.append(gameService.currentPlayer)
                 
-                self.gameService.send(parties: gameService.parties)
+                self.gameService.send(party: gameService.party)
             })
             .onAppear {
                 if party.isPlaying {

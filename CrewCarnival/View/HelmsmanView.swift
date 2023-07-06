@@ -185,7 +185,7 @@ struct HelmsmanView: View {
                     if gameService.parties[index].lives <= 0 {
                         gameService.parties[index].reset()
                         isStartGame = false
-                        gameService.send(parties: gameService.parties)
+                        gameService.send(party: gameService.party)
                     }
                     
                     var allEventsCompleted = true
@@ -207,7 +207,7 @@ struct HelmsmanView: View {
                         angle = 0
                         lastAngle = 0
                         isTurnProgressCompleted = nil
-                        gameService.send(parties: gameService.parties)
+                        gameService.send(party: gameService.party)
                     }
                 }
             }
@@ -252,7 +252,7 @@ struct HelmsmanView: View {
                                     }
                                 }
                                 gameService.parties[index].setEventCompleted(role: Role.lookout)
-                                gameService.send(parties: gameService.parties)
+                                gameService.send(party: gameService.party)
                             }
                         }
                     }

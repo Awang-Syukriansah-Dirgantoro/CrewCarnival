@@ -71,18 +71,27 @@ struct PartyView: View {
             } else {
                 ScrollView{
                     VStack{
-                        if gameService.parties.count > 0 {
-                            LazyVGrid(columns: columns, spacing: 20) {
-                                ForEach(Array(gameService.parties.enumerated()), id: \.offset) { index, party in
-                                    PartyCard(partyIndex: index, party: party, name: $name)
+                        LazyVGrid(columns: columns, spacing: 20) {
+                            ForEach(Array(gameService.availablePeers.enumerated()), id: \.offset) { index, party in
+//                                    PartyCard(partyIndex: index, party: party, name: $name)
+                                NavigationLink {
+                                    ReadyView(partyId: partyId)
+                                } label: {
+                                    Text("\(party.partyId)")
                                 }
+                                .simultaneousGesture(TapGesture().onEnded {
+                                    gameService.party.id = party.partyId
+                                    gameService.serviceBrowser.stopBrowsingForPeers()
+                                    gameService.serviceBrowser.startBrowsingForPeers()
+                                })
                             }
-                            .padding(.horizontal)
-                        } else {
-                            Text("No party available, create a party!")
-                                .foregroundColor(.gray)
-                                .padding()
                         }
+                        
+                        Text("\(gameService.party.id)")
+                            .onTapGesture {
+                                gameService.send(party: gameService.party)
+                            }
+                        Text("\(gameService.parties.count)")
                         
                         NavigationLink {
                             ReadyView(partyId: partyId)
@@ -100,8 +109,7 @@ struct PartyView: View {
                                 .padding()
                         }
                         .simultaneousGesture(TapGesture().onEnded {
-                            self.createParty()
-                            self.gameService.send(parties: gameService.parties)
+                            gameService.startAdvertising(partyId: gameService.party.id)
                         })
                     }
                 }
