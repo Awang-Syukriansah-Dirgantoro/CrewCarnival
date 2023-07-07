@@ -110,7 +110,7 @@ struct PartyCard: View {
 
 struct PartyCard_Previews: PreviewProvider {
     static var previews: some View {
-        PartyCard(partyIndex: 0, party: Party(players: [Player(name: "aaa", role: Role.lookout)]), name: .constant(""))
+        PartyCard(partyIndex: 0, party: Party(players: []), name: .constant(""))
             .environmentObject(GameService())
     }
 }

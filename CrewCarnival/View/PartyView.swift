@@ -134,6 +134,7 @@ struct PartyView: View {
                             }
                             .simultaneousGesture(TapGesture().onEnded {
                                 gameService.party = Party()
+                                gameService.party.players.append(gameService.currentPlayer)
                                 gameService.startAdvertising(partyId: gameService.party.id)
                             })
                             .navigationBarBackButtonHidden(true)

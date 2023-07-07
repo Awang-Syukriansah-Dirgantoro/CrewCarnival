@@ -29,8 +29,9 @@ class GameService: NSObject, ObservableObject {
     
     override init() {
         self.party = Party()
-        self.currentPlayer = Player(name: "")
-        let peerID = MCPeerID(displayName: UIDevice.current.name)
+        let playerID = UUID()
+        let peerID = MCPeerID(displayName: "\(UIDevice.current.name)-\(playerID)")
+        self.currentPlayer = Player(id: playerID, peerDisplayName: peerID.displayName, name: "")
         self.myPeerID = peerID
         
         session = MCSession(peer: peerID, securityIdentity: nil, encryptionPreference: .none)
@@ -141,8 +142,24 @@ extension GameService: MCNearbyServiceBrowserDelegate {
 extension GameService: MCSessionDelegate {
     func session(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState) {
         log.info("peer \(peerID) didChangeState: \(state.rawValue)")
-        if self.party.players.count != 0 {
-            self.send(party: self.party)
+        log.info("connectedpeers \(session.connectedPeers)")
+        
+        if state == .connected {
+            if party.players.count != 0 {
+                send(party: party)
+            }
+            serviceBrowser.stopBrowsingForPeers()
+        } else if state == .notConnected {
+            DispatchQueue.main.async {
+                for (index, player) in self.party.players.enumerated() {
+                    if player.peerDisplayName == peerID.displayName {
+                        self.party.players.remove(at: index)
+                        self.send(party: self.party)
+                        break
+                    }
+                }
+            }
+            serviceBrowser.startBrowsingForPeers()
         }
     }
     
@@ -150,7 +167,16 @@ extension GameService: MCSessionDelegate {
         log.info("Received data change")
         DispatchQueue.main.async {
             do {
-                self.party = try JSONDecoder().decode(Party.self, from: data)
+//                if self.party.players.count == 0 {
+//                    self.party = try JSONDecoder().decode(Party.self, from: data)
+//                    self.currentPlayer.role = Role.lookout
+//                    self.party.players.append(self.currentPlayer)
+//                    self.party.assignRoles()
+//                    self.send(party: self.party)
+//                } else {
+                    self.party = try JSONDecoder().decode(Party.self, from: data)
+//                }
+                print("Decoded data: \(self.party)")
             } catch let error {
                 print("Error decoding: \(error)")
             }

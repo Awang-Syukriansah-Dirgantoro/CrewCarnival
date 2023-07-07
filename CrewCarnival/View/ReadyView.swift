@@ -106,15 +106,7 @@ struct ReadyView: View {
                         })
                 }
             }
-            .onDisappear {
-                for (index, player) in gameService.party.players.enumerated() {
-                    if player.id == gameService.currentPlayer.id {
-                        gameService.party.players.remove(at: index)
-                        break
-                    }
-                }
-                
-                self.gameService.send(party: gameService.party)
+            .onDisappear {               
                 if gameService.isAdvertiser {
                     gameService.serviceAdvertiser.stopAdvertisingPeer()
                     gameService.isAdvertiser = false
