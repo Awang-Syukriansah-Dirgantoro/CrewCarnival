@@ -183,16 +183,12 @@ struct CabinBoyView: View {
                     }.padding(.bottom,20).padding(.horizontal,30)
                     ZStack{
                         Rectangle().frame(height: 60).opacity(0.5)
-                        ForEach(Array(gameService.parties.enumerated()), id: \.offset) { index, party in
-                            if party.id == partyId {
-                                ForEach(Array(party.players.enumerated()), id: \.offset) { index2, player in
-                                    if gameService.currentPlayer.id == player.id {
-                                        Text("\(gameService.parties[index].players[index2].event.instruction)")
-                                            .font(Font.custom("Gasoek One", size: 20))
-                                            .multilineTextAlignment(.center)
-                                            .foregroundColor(Color(red: 0.95, green: 0.74, blue: 0))
-                                    }
-                                }
+                        ForEach(Array(gameService.party.players.enumerated()), id: \.offset) { index, player in
+                            if gameService.currentPlayer.id == player.id {
+                                Text("\(gameService.party.players[index].event.instruction)")
+                                    .font(Font.custom("Gasoek One", size: 20))
+                                    .multilineTextAlignment(.center)
+                                    .foregroundColor(Color(red: 0.95, green: 0.74, blue: 0))
                             }
                         }
                         ProgressView("", value: instructionProgress, total: instructionProgressMax).progressViewStyle(gradientStyle).padding(.horizontal,9)
@@ -206,63 +202,51 @@ struct CabinBoyView: View {
                     Spacer()
                 }
                 .padding(.vertical,50)
-                RecapSceneView(lives: $lives, partyId: partyId, show: $showPopUp, isStartGame: $isStartGame)
+                RecapSceneView(lives: $lives, show: $showPopUp, isStartGame: $isStartGame)
             }
             .onAppear {
-                for (index, party) in gameService.parties.enumerated() {
-                    if party.id == partyId {
-                        for (index2, player) in gameService.parties[index].players.enumerated() {
-                            if player.role == Role.lookout {
-                                instructionProgress = gameService.parties[index].players[index2].event.duration
-                                instructionProgressMax = gameService.parties[index].players[index2].event.duration
-                            }
-                        }
+                for (index, player) in gameService.party.players.enumerated() {
+                    if player.role == Role.lookout {
+                        instructionProgress = gameService.party.players[index].event.duration
+                        instructionProgressMax = gameService.party.players[index].event.duration
                     }
                 }
             }
-            .onChange(of: gameService.parties, perform: { newValue in
-                for (index, party) in gameService.parties.enumerated() {
-                    if party.id == partyId {
-                        if gameService.parties[index].lives <= 0 {
-                            withAnimation(.linear(duration: 0.5)) {
-                                lives = gameService.parties[index].lives
-                                showPopUp = true
-                                
-                            }
-                            //                            gameService.parties[index].reset()
-                            //                            isStartGame = false
-                            //                            gameService.send(parties: gameService.parties)
-                        }
+            .onChange(of: gameService.party, perform: { newValue in
+                if gameService.party.lives <= 0 {
+                    withAnimation(.linear(duration: 0.5)) {
+                        lives = gameService.party.lives
+                        showPopUp = true
                         
-                        var allEventsCompleted = true
-                        for (_, player) in party.players.enumerated() {
-                            if !player.event.isCompleted {
-                                allEventsCompleted = false
-                            }
-                        }
-                        
-                        if allEventsCompleted {
-                            gameService.parties[index].generateLHSEvent()
-                            for (index2, player) in gameService.parties[index].players.enumerated() {
-                                if player.role == Role.helmsman {
-                                    instructionProgress = gameService.parties[index].players[index2].event.duration
-                                    instructionProgressMax = gameService.parties[index].players[index2].event.duration
-                                }
-                            }
-                            gameService.send(parties: gameService.parties)
+                    }
+                    //                            gameService.parties[index].reset()
+                    //                            isStartGame = false
+                    //                            gameService.send(parties: gameService.parties)
+                }
+                
+                var allEventsCompleted = true
+                for (_, player) in gameService.party.players.enumerated() {
+                    if !player.event.isCompleted {
+                        allEventsCompleted = false
+                    }
+                }
+                
+                if allEventsCompleted {
+                    gameService.party.generateLHSEvent()
+                    for (index, player) in gameService.party.players.enumerated() {
+                        if player.role == Role.helmsman {
+                            instructionProgress = gameService.party.players[index].event.duration
+                            instructionProgressMax = gameService.party.players[index].event.duration
                         }
                     }
+                    gameService.send(party: gameService.party)
                 }
             })
             .onChange(of: partyProgress, perform: { newValue in
                 if partyProgress >= 100{
-                    for (index, party) in gameService.parties.enumerated() {
-                        if party.id == partyId {
-                            withAnimation(.linear(duration: 0.5)) {
-                                lives = gameService.parties[index].lives
-                                showPopUp = true
-                            }
-                        }
+                    withAnimation(.linear(duration: 0.5)) {
+                        lives = gameService.party.lives
+                        showPopUp = true
                     }
                 }
             })

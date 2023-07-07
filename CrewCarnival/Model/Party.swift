@@ -37,7 +37,7 @@ struct Party: Codable, Identifiable, Equatable {
                     }
                     
 //                    if player.event.objective != objective {
-                        players[index].event = Event(duration: 30, instruction: "There are obstacles nearby!", objective: objective)
+                        players[index].event = Event(duration: 10, instruction: "There are obstacles nearby!", objective: objective)
 //                        break
 //                    }
 //                }
@@ -56,7 +56,7 @@ struct Party: Codable, Identifiable, Equatable {
                     objective = Objective.turnRight
                 }
                 
-                players[index].event = Event(duration: 30, instruction: "There are obstacles nearby!", objective: objective)
+                players[index].event = Event(duration: 10, instruction: "There are obstacles nearby!", objective: objective)
             }
             
             if player.role == Role.sailingMaster {
@@ -74,7 +74,7 @@ struct Party: Codable, Identifiable, Equatable {
                     objective = Objective.slow30
                 }
                 
-                players[index].event = Event(duration: 30, instruction: "There are obstacles nearby!", objective: objective)
+                players[index].event = Event(duration: 10, instruction: "There are obstacles nearby!", objective: objective)
             }
         }
     }

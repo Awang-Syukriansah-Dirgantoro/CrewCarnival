@@ -32,27 +32,6 @@ struct PartyCard: View {
                 .cornerRadius(16)
                 .shadow(radius: 4)
                 Text(cardText)
-                Button {
-                    for (index, party) in gameService.parties.enumerated() {
-                        if party.id == self.party.id {
-                            gameService.parties.remove(at: index)
-                            self.gameService.send(parties: gameService.parties)
-                            break
-                        }
-                    }
-                } label: {
-                    Text("Delete (Debug Only)")
-                        .foregroundColor(.white)
-                        .fontWeight(.bold)
-                        .frame(
-                            minWidth: 0,
-                            maxWidth: .infinity
-                        )
-                        .padding()
-                        .background(RoundedRectangle(cornerRadius: 15)
-                            .fill(Color.red))
-                        .padding(.horizontal)
-                }
             }
             .onAppear {
                 if party.isPlaying {
@@ -92,27 +71,6 @@ struct PartyCard: View {
                     .cornerRadius(16)
                     .shadow(radius: 4)
                     Text(cardText)
-                    Button {
-                        for (index, party) in gameService.parties.enumerated() {
-                            if party.id == self.party.id {
-                                gameService.parties.remove(at: index)
-                                self.gameService.send(parties: gameService.parties)
-                                break
-                            }
-                        }
-                    } label: {
-                        Text("Delete (Debug Only)")
-                            .foregroundColor(.white)
-                            .fontWeight(.bold)
-                            .frame(
-                                minWidth: 0,
-                                maxWidth: .infinity
-                            )
-                            .padding()
-                            .background(RoundedRectangle(cornerRadius: 15)
-                                .fill(Color.red))
-                            .padding(.horizontal)
-                    }
                 }
             }
             .simultaneousGesture(TapGesture().onEnded {
@@ -120,9 +78,9 @@ struct PartyCard: View {
                 gameService.currentPlayer.name = name
                 gameService.currentPlayer.role = Role.lookout
                 
-                gameService.parties[partyIndex].players.append(gameService.currentPlayer)
+                gameService.party.players.append(gameService.currentPlayer)
                 
-                self.gameService.send(parties: gameService.parties)
+                self.gameService.send(party: gameService.party)
             })
             .onAppear {
                 if party.isPlaying {

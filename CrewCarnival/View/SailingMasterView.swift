@@ -36,7 +36,6 @@ struct SailingMasterView: View {
     )
     @EnvironmentObject var gameService: GameService
     @Binding var isStartGame: Bool
-    var partyId: UUID
     
     var body: some View {
         if roleExplain == false{
@@ -65,22 +64,18 @@ struct SailingMasterView: View {
                             .foregroundColor(.white)
                         Spacer()
                         HStack {
-                            ForEach(Array(gameService.parties.enumerated()), id: \.offset) { index, party in
-                                if party.id == partyId {
-                                    if party.lives > 0 {
-                                        ForEach((0...party.lives - 1), id: \.self) { _ in
-                                            Rectangle()
-                                                .foregroundColor(.clear)
+                            if gameService.party.lives > 0 {
+                                ForEach((0...gameService.party.lives - 1), id: \.self) { _ in
+                                    Rectangle()
+                                        .foregroundColor(.clear)
+                                        .frame(width: 25, height: 19)
+                                        .background(
+                                            Image("Heart")
+                                                .resizable()
+                                                .aspectRatio(contentMode: .fill)
                                                 .frame(width: 25, height: 19)
-                                                .background(
-                                                    Image("Heart")
-                                                        .resizable()
-                                                        .aspectRatio(contentMode: .fill)
-                                                        .frame(width: 25, height: 19)
-                                                        .clipped()
-                                                )
-                                        }
-                                    }
+                                                .clipped()
+                                        )
                                 }
                             }
                         }
@@ -105,21 +100,17 @@ struct SailingMasterView: View {
                             }
                     }.padding(.bottom,20).padding(.horizontal,30)
                     VStack{
-                        ForEach(Array(gameService.parties.enumerated()), id: \.offset) { index, party in
-                            if party.id == partyId {
-                                ForEach(Array(party.players.enumerated()), id: \.offset) { index2, player in
-                                    if gameService.currentPlayer.id == player.id {
-                                        Text("\(player.event.instruction)")
-                                            .font(Font.custom("Gasoek One", size: 20))
-                                            .multilineTextAlignment(.center)
-                                            .frame(maxWidth: .infinity)
-                                            .padding(.vertical, 20)
-                                            .foregroundColor(Color(red: 0.95, green: 0.74, blue: 0))
-                                            .background(
-                                                Rectangle()
-                                                    .opacity(0.5))
-                                    }
-                                }
+                        ForEach(Array(gameService.party.players.enumerated()), id: \.offset) { index, player in
+                            if gameService.currentPlayer.id == player.id {
+                                Text("\(player.event.instruction)")
+                                    .font(Font.custom("Gasoek One", size: 20))
+                                    .multilineTextAlignment(.center)
+                                    .frame(maxWidth: .infinity)
+                                    .padding(.vertical, 20)
+                                    .foregroundColor(Color(red: 0.95, green: 0.74, blue: 0))
+                                    .background(
+                                        Rectangle()
+                                            .opacity(0.5))
                             }
                         }
                         ProgressView("", value: instructionProgress, total: instructionProgressMax)
@@ -353,74 +344,59 @@ struct SailingMasterView: View {
                     Spacer()
                 }
                 .padding(.top,50)
-                RecapSceneView(lives: $lives, partyId: partyId, show: $showPopUp, isStartGame: $isStartGame)
+                RecapSceneView(lives: $lives, show: $showPopUp, isStartGame: $isStartGame)
             }
             .onAppear {
-                for (index, party) in gameService.parties.enumerated() {
-                    if party.id == partyId {
-                        for (index2, player) in gameService.parties[index].players.enumerated() {
-                            if player.role == Role.sailingMaster {
-                                instructionProgress = gameService.parties[index].players[index2].event.duration
-                                instructionProgressMax = gameService.parties[index].players[index2].event.duration
-                            }
-                        }
+                for (index, player) in gameService.party.players.enumerated() {
+                    if player.role == Role.sailingMaster {
+                        instructionProgress = gameService.party.players[index].event.duration
+                        instructionProgressMax = gameService.party.players[index].event.duration
                     }
                 }
             }
-            .onChange(of: gameService.parties, perform: { newValue in
-                for (index, party) in gameService.parties.enumerated() {
-                    if party.id == partyId {
-                        if gameService.parties[index].lives <= 0 {
-                            withAnimation(.linear(duration: 0.5)) {
-                                lives = gameService.parties[index].lives
-                                showPopUp = true
-                                
-                            }
-                            //                            gameService.parties[index].reset()
-                            //                            isStartGame = false
-                            //                            gameService.send(parties: gameService.parties)
-                        }
+            .onChange(of: gameService.party, perform: { newValue in
+                if gameService.party.lives <= 0 {
+                    withAnimation(.linear(duration: 0.5)) {
+                        lives = gameService.party.lives
+                        showPopUp = true
                         
-                        var allEventsCompleted = true
-                        for (_, player) in party.players.enumerated() {
-                            if !player.event.isCompleted {
-                                allEventsCompleted = false
-                            }
-                        }
-                        
-                        if allEventsCompleted {
-                            gameService.parties[index].generateLHSEvent()
-                            for (index2, player) in gameService.parties[index].players.enumerated() {
-                                if player.role == Role.helmsman {
-                                    instructionProgress = gameService.parties[index].players[index2].event.duration
-                                    instructionProgressMax = gameService.parties[index].players[index2].event.duration
-                                }
-                            }
-                            gameService.send(parties: gameService.parties)
-                        }
+                    }
+                    //                            gameService.parties[index].reset()
+                    //                            isStartGame = false
+                    //                            gameService.send(parties: gameService.parties)
+                }
+                
+                var allEventsCompleted = true
+                for (_, player) in gameService.party.players.enumerated() {
+                    if !player.event.isCompleted {
+                        allEventsCompleted = false
                     }
                 }
+                
+                if allEventsCompleted {
+                    gameService.party.generateLHSEvent()
+                    for (index, player) in gameService.party.players.enumerated() {
+                        if player.role == Role.helmsman {
+                            instructionProgress = gameService.party.players[index].event.duration
+                            instructionProgressMax = gameService.party.players[index].event.duration
+                        }
+                    }
+                    gameService.send(party: gameService.party)
+                }
+                gameService.send(party: gameService.party)
             })
             .onChange(of: partyProgress, perform: { newValue in
                 if partyProgress >= 100{
-                    for (index, party) in gameService.parties.enumerated() {
-                        if party.id == partyId {
-                            withAnimation(.linear(duration: 0.5)) {
-                                lives = gameService.parties[index].lives
-                                showPopUp = true
-                            }
-                        }
+                    withAnimation(.linear(duration: 0.5)) {
+                        lives = gameService.party.lives
+                        showPopUp = true
                     }
                 }
             })
             .onChange(of: instructionProgress, perform: { newValue in
                 if instructionProgress <= 0 {
-                    for (index, party) in gameService.parties.enumerated() {
-                        if party.id == partyId {
-                            for (index2, _) in gameService.parties[index].players.enumerated() {
-                                instructionProgress = gameService.parties[index].players[index2].event.duration
-                            }
-                        }
+                    for (index, _) in gameService.party.players.enumerated() {
+                        instructionProgress = gameService.party.players[index].event.duration
                     }
                 }
             })
@@ -452,6 +428,6 @@ struct SailingMasterView: View {
 
 struct SailingMasterView_Previews: PreviewProvider {
     static var previews: some View {
-        SailingMasterView(isStartGame: .constant(false), partyId: UUID()).environmentObject(GameService())
+        SailingMasterView(isStartGame: .constant(false)).environmentObject(GameService())
     }
 }

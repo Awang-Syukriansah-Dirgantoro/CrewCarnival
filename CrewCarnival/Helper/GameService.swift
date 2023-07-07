@@ -12,22 +12,23 @@ class GameService: NSObject, ObservableObject {
     private let serviceType = "crew-carnival"
     private var myPeerID: MCPeerID
     
-    public let serviceAdvertiser: MCNearbyServiceAdvertiser
-    public let serviceBrowser: MCNearbyServiceBrowser
-    public let session: MCSession
+    public var serviceAdvertiser: MCNearbyServiceAdvertiser
+    public var serviceBrowser: MCNearbyServiceBrowser
+    public var session: MCSession
         
     private let log = Logger()
     
-    @Published var parties: [Party]
+    @Published var isAdvertiser = false
+    @Published var party: Party
     @Published var currentPlayer: Player
-    @Published var availablePeers: [MCPeerID] = []
+    @Published var availablePeers: [Peer] = []
     @Published var recvdInvite: Bool = false
     @Published var recvdInviteFrom: MCPeerID? = nil
     @Published var paired: Bool = false
     @Published var invitationHandler: ((Bool, MCSession?) -> Void)?
     
     override init() {
-        self.parties = [Party]()
+        self.party = Party()
         self.currentPlayer = Player(name: "")
         let peerID = MCPeerID(displayName: UIDevice.current.name)
         self.myPeerID = peerID
@@ -41,21 +42,30 @@ class GameService: NSObject, ObservableObject {
         serviceAdvertiser.delegate = self
         serviceBrowser.delegate = self
                 
-        serviceAdvertiser.startAdvertisingPeer()
         serviceBrowser.startBrowsingForPeers()
     }
     
     deinit {
+        serviceAdvertiser.delegate = nil;
+        serviceBrowser.delegate = nil;
         serviceAdvertiser.stopAdvertisingPeer()
         serviceBrowser.stopBrowsingForPeers()
+        session.disconnect()
     }
     
-    func send(parties: [Party]) {
+    func startAdvertising(partyId: UUID) {
+        self.serviceAdvertiser = MCNearbyServiceAdvertiser(peer: myPeerID, discoveryInfo: ["partyId": "\(party.id)"], serviceType: serviceType)
+        serviceAdvertiser.delegate = self
+        serviceAdvertiser.startAdvertisingPeer()
+        isAdvertiser = true
+    }
+    
+    func send(party: Party) {
         if !session.connectedPeers.isEmpty {
             do {
-                let data = try JSONEncoder().encode(parties)
+                let data = try JSONEncoder().encode(party)
                 
-                NSLog("%@", "sendParties: \(parties) to \(session.connectedPeers.count) peers,\(session.connectedPeers.self)")
+                NSLog("%@", "sendParties: \(party) to \(session.connectedPeers.count) peers,\(session.connectedPeers.self)")
 
                 if session.connectedPeers.count > 0 {
                     do {
@@ -97,9 +107,24 @@ extension GameService: MCNearbyServiceBrowserDelegate {
         log.info("ServiceBrowser found peer: \(peerID)")
         // Add the peer to the list of available peers
         DispatchQueue.main.async {
-            self.availablePeers.append(peerID)
+            for peer in self.availablePeers {
+                if peer.peerId == peerID {
+                    return
+                }
+            }
+            guard let info = info else {
+                return
+            }
+            self.availablePeers.append(Peer(partyId: UUID(uuidString: info["partyId"]!)!, peerId: peerID))
         }
-        browser.invitePeer(peerID, to: self.session, withContext: nil, timeout: 30)
+        
+        guard let info = info else {
+            return
+        }
+        
+        if party.id == UUID(uuidString: info["partyId"]!)! {
+            browser.invitePeer(peerID, to: self.session, withContext: nil, timeout: 30)
+        }
     }
     
     func browser(_ browser: MCNearbyServiceBrowser, lostPeer peerID: MCPeerID) {
@@ -107,7 +132,7 @@ extension GameService: MCNearbyServiceBrowserDelegate {
         // Remove lost peer from list of available peers
         DispatchQueue.main.async {
             self.availablePeers.removeAll(where: {
-                $0 == peerID
+                $0.peerId == peerID
             })
         }
     }
@@ -116,15 +141,16 @@ extension GameService: MCNearbyServiceBrowserDelegate {
 extension GameService: MCSessionDelegate {
     func session(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState) {
         log.info("peer \(peerID) didChangeState: \(state.rawValue)")
-        if self.parties.count != 0 {
-            self.send(parties: self.parties)
+        if self.party.players.count != 0 {
+            self.send(party: self.party)
         }
     }
     
     func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID) {
+        log.info("Received data change")
         DispatchQueue.main.async {
             do {
-                self.parties = try JSONDecoder().decode([Party].self, from: data)
+                self.party = try JSONDecoder().decode(Party.self, from: data)
             } catch let error {
                 print("Error decoding: \(error)")
             }
