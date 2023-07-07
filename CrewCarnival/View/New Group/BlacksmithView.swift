@@ -17,7 +17,6 @@ struct BlacksmithView: View {
     @State private var showPopUp: Bool = false
     @State private var lives = 0
     @EnvironmentObject var gameService: GameService
-    var partyId: UUID
     @Binding var isStartGame: Bool
     @State private var gradient = LinearGradient(
         gradient: Gradient(colors: [Color(red: 0, green: 0.82, blue: 0.23)]),
@@ -136,7 +135,7 @@ struct BlacksmithView: View {
                     .environmentObject(vm)
                     Spacer()
                 }
-                RecapSceneView(lives: $lives, partyId: partyId, show: $showPopUp, isStartGame: $isStartGame)
+                RecapSceneView(lives: $lives, show: $showPopUp, isStartGame: $isStartGame)
             }
             
         }
@@ -145,6 +144,6 @@ struct BlacksmithView: View {
 
 struct BlacksmithView_Previews: PreviewProvider {
     static var previews: some View {
-        BlacksmithView(partyId: UUID(), isStartGame: .constant(false)).environmentObject(GameService())
+        BlacksmithView(isStartGame: .constant(false)).environmentObject(GameService())
     }
 }
