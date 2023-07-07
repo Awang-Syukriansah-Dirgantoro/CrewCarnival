@@ -14,16 +14,16 @@ struct PartyView: View {
     @Environment(\.presentationMode) var presentation
     @Binding var menu: Int
     
-    func createParty() {
-        var party = Party()
-        partyId = party.id
-        
-        gameService.currentPlayer.name = name
-        gameService.currentPlayer.role = Role.lookout
-        
-        party.players.append(gameService.currentPlayer)
-        gameService.parties.append(party)
-    }
+//    func createParty() {
+//        var party = Party()
+//        partyId = party.id
+//
+//        gameService.currentPlayer.name = name
+//        gameService.currentPlayer.role = Role.lookout
+//
+//        party.players.append(gameService.currentPlayer)
+//        gameService.parties.append(party)
+//    }
     
     let columns = [
         GridItem(.flexible()),
@@ -88,10 +88,10 @@ struct PartyView: View {
                         }
                         
                         Text("\(gameService.party.id)")
-                            .onTapGesture {
-                                gameService.send(party: gameService.party)
-                            }
-                        Text("\(gameService.parties.count)")
+//                            .onTapGesture {
+//                                gameService.send(party: gameService.party)
+//                            }
+//                        Text("\(gameService.parties.count)")
                         
                         NavigationLink {
                             ReadyView(partyId: partyId)
@@ -109,6 +109,7 @@ struct PartyView: View {
                                 .padding()
                         }
                         .simultaneousGesture(TapGesture().onEnded {
+                            gameService.party = Party()
                             gameService.startAdvertising(partyId: gameService.party.id)
                         })
                     }

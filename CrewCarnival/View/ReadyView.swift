@@ -15,7 +15,7 @@ struct ReadyView: View {
     var body: some View {
         VStack {
             if isStartGame {
-                GameView(partyId: partyId, isStartGame: $isStartGame)
+                GameView(isStartGame: $isStartGame)
             } else {
                 VStack() {
                     HStack(alignment: .top) {
@@ -58,13 +58,45 @@ struct ReadyView: View {
                                 .fill(Color.black))
                             .padding(.horizontal)
                     }
+                    Button {
+                        var alreadyJoined = false
+                        for player in gameService.party.players {
+                            if player.id == gameService.currentPlayer.id {
+                                alreadyJoined = true
+                            }
+                        }
+                        if !alreadyJoined {
+                            gameService.currentPlayer.role = Role.lookout
+                            
+                            gameService.party.players.append(gameService.currentPlayer)
+                            
+                            gameService.party.assignRoles()
+                            
+                            self.gameService.send(party: gameService.party)
+                        }
+                    } label: {
+                        Text("Join")
+                            .foregroundColor(.yellow)
+                            .fontWeight(.bold)
+                            .frame(
+                                minWidth: 0,
+                                maxWidth: .infinity
+                            )
+                            .padding()
+                            .background(RoundedRectangle(cornerRadius: 15)
+                                .fill(Color.black))
+                            .padding(.horizontal)
+                    }
                     Spacer()
                     .onChange(of: gameService.party, perform: { newValue in
-                        var areAllPlayersReady = true
+                        var areAllPlayersReady = false
                         
                         for (_, player) in gameService.party.players.enumerated() {
-                            if !player.isReady {
+                            if player.isReady {
+                                areAllPlayersReady = true
+                            } else {
                                 areAllPlayersReady = false
+                                break
                             }
                         }
                         
@@ -77,13 +109,7 @@ struct ReadyView: View {
                         }
                     })
                     .onAppear {
-                        gameService.currentPlayer.role = Role.lookout
-                        
-                        gameService.party.players.append(gameService.currentPlayer)
-                        
-                        gameService.party.assignRoles()
-                        
-                        self.gameService.send(party: gameService.party)
+                       
                     }
                 }
                 
@@ -97,9 +123,13 @@ struct ReadyView: View {
                 }
             }
 
-            gameService.serviceAdvertiser.stopAdvertisingPeer()
-//            gameService.availablePeers = []
             self.gameService.send(party: gameService.party)
+            if gameService.isAdvertiser {
+                gameService.serviceAdvertiser.stopAdvertisingPeer()
+                gameService.isAdvertiser = false
+            }
+            gameService.party = Party()
+            gameService.session.disconnect()
         }
     }
 }

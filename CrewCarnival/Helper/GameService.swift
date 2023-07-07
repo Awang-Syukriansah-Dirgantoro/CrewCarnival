@@ -18,7 +18,7 @@ class GameService: NSObject, ObservableObject {
         
     private let log = Logger()
     
-    @Published var parties: [Party]
+    @Published var isAdvertiser = false
     @Published var party: Party
     @Published var currentPlayer: Player
     @Published var availablePeers: [Peer] = []
@@ -28,7 +28,6 @@ class GameService: NSObject, ObservableObject {
     @Published var invitationHandler: ((Bool, MCSession?) -> Void)?
     
     override init() {
-        self.parties = [Party]()
         self.party = Party()
         self.currentPlayer = Player(name: "")
         let peerID = MCPeerID(displayName: UIDevice.current.name)
@@ -47,6 +46,8 @@ class GameService: NSObject, ObservableObject {
     }
     
     deinit {
+        serviceAdvertiser.delegate = nil;
+        serviceBrowser.delegate = nil;
         serviceAdvertiser.stopAdvertisingPeer()
         serviceBrowser.stopBrowsingForPeers()
         session.disconnect()
@@ -56,6 +57,7 @@ class GameService: NSObject, ObservableObject {
         self.serviceAdvertiser = MCNearbyServiceAdvertiser(peer: myPeerID, discoveryInfo: ["partyId": "\(party.id)"], serviceType: serviceType)
         serviceAdvertiser.delegate = self
         serviceAdvertiser.startAdvertisingPeer()
+        isAdvertiser = true
     }
     
     func send(party: Party) {
@@ -139,9 +141,9 @@ extension GameService: MCNearbyServiceBrowserDelegate {
 extension GameService: MCSessionDelegate {
     func session(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState) {
         log.info("peer \(peerID) didChangeState: \(state.rawValue)")
-//        if self.parties.count != 0 {
+        if self.party.players.count != 0 {
             self.send(party: self.party)
-//        }
+        }
     }
     
     func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID) {
