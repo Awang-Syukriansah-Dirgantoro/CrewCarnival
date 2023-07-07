@@ -6,18 +6,15 @@
 //
 
 import SwiftUI
+import OneFingerRotation
 
 struct SailingMasterView: View {
     @State private var downloadAmount = 80.0
     @State private var progressInstruction = 0.0
-    @State private var angle1: CGFloat = 0
-    @State private var lastAngle1: CGFloat = 0
     @State private var sailOneHeight: CGFloat = 112
+    @State private var sailTwoHeight: CGFloat = 160
+    @State private var sailThreeHeight: CGFloat = 260
     @State private var length : CGFloat = 400
-    @State private var angle2: CGFloat = 0
-    @State private var lastAngle2: CGFloat = 0
-    @State private var angle3: CGFloat = 0
-    @State private var lastAngle3: CGFloat = 0
     @State private var offset = CGSize.zero
     
     let timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
@@ -33,6 +30,80 @@ struct SailingMasterView: View {
     @EnvironmentObject var gameService: GameService
     @Binding var isStartGame: Bool
     var partyId: UUID
+    
+    @State private var totalAngleOne: Double = 0.0
+    @State private var totalAngleTwo: Double = 0.0
+    @State private var totalAngleThree: Double = 0.0
+    
+    func changeHeight( sail : Double, newAngle : Double ) {
+        switch sail {
+        case 1:
+            if totalAngleOne > newAngle {
+                sailOneHeight += 0.1
+                if sailOneHeight > 112 {
+                    sailOneHeight = 112
+                } else if sailOneHeight < 0 {
+                    sailOneHeight = 0
+                } else {
+                    totalAngleOne = newAngle
+                }
+            } else {
+                sailOneHeight -= 0.1
+                if sailOneHeight > 112 {
+                    sailOneHeight = 112
+                } else if sailOneHeight < 0 {
+                    sailOneHeight = 0
+                } else {
+                    totalAngleOne = newAngle
+                }
+            }
+            
+        case 2:
+            if totalAngleTwo > newAngle {
+                sailTwoHeight += 0.1
+                if sailTwoHeight > 160 {
+                    sailTwoHeight = 160
+                } else if sailTwoHeight < 0 {
+                    sailTwoHeight = 0
+                } else {
+                    totalAngleTwo = newAngle
+                }
+            } else {
+                sailTwoHeight -= 0.1
+                if sailTwoHeight > 160 {
+                    sailTwoHeight = 160
+                } else if sailTwoHeight < 0 {
+                    sailTwoHeight = 0
+                } else {
+                    totalAngleTwo = newAngle
+                }
+            }
+            
+        case 3:
+            if totalAngleThree > newAngle {
+                sailThreeHeight += 0.1
+                if sailThreeHeight > 260 {
+                    sailThreeHeight = 260
+                } else if sailThreeHeight < 0 {
+                    sailThreeHeight = 0
+                } else {
+                    totalAngleThree = newAngle
+                }
+            } else {
+                sailThreeHeight -= 0.1
+                if sailThreeHeight > 260 {
+                    sailThreeHeight = 260
+                } else if sailThreeHeight < 0 {
+                    sailThreeHeight = 0
+                } else {
+                    totalAngleThree = newAngle
+                }
+            }
+            
+        default:
+            print("oke")
+        }
+    }
     
     var body: some View {
         let gradientStyle = GradientProgressStyle(
@@ -136,7 +207,7 @@ struct SailingMasterView: View {
                                 VStack{
                                     Image("Sail")
                                         .resizable()
-                                        .frame(maxWidth: 440, maxHeight: 160)
+                                        .frame(maxWidth: 440, maxHeight: sailTwoHeight)
                                         .padding(.bottom, -5)
                                     Spacer()
                                 }
@@ -148,7 +219,7 @@ struct SailingMasterView: View {
                                 VStack{
                                     Image("Sail")
                                         .resizable()
-                                        .frame(maxWidth: 590, maxHeight: 260)
+                                        .frame(maxWidth: 590, maxHeight: sailThreeHeight)
                                         .padding(.bottom, 20)
                                     Spacer()
                                 }
@@ -175,32 +246,10 @@ struct SailingMasterView: View {
                                 .resizable()
                                 .frame(width: 24, height: 63)
                                 .padding(.bottom, 50)
-                                .rotationEffect(.degrees(Double(self.angle1)))
-                                .gesture(DragGesture()
-                                    .onChanged{ v in
-                                        let theta = (atan2(v.location.x - self.length / 5, self.length / 5 - v.location.y) - atan2(v.startLocation.x - self.length / 5, self.length / 5 - v.startLocation.y)) * 360 / .pi
-                                        print(self.angle1)
-                                        self.angle1 = theta + self.lastAngle1
-                                        if theta + self.lastAngle1 > lastAngle1{
-                                            sailOneHeight += 1
-                                            if sailOneHeight > 112 {
-                                                sailOneHeight = 112
-                                                angle1 = lastAngle1
-                                            } else if sailOneHeight < 0 {
-                                                sailOneHeight = 0
-                                            }
-                                        } else {
-                                            sailOneHeight -= 1
-                                            if sailOneHeight > 112 {
-                                                sailOneHeight = 112
-                                            } else if sailOneHeight < 0 {
-                                                sailOneHeight = 0
-                                                angle1 = lastAngle1
-                                            }
-                                        }
-                                    }
-                                    .onEnded { v in
-                                        self.lastAngle1 = self.angle1
+                                .valueRotation(
+                                    totalAngle: $totalAngleOne,
+                                    onAngleChanged: { newAngle in
+                                        changeHeight(sail: 1, newAngle: newAngle)
                                     }
                                 )
                         }
@@ -213,16 +262,10 @@ struct SailingMasterView: View {
                             Image("Tuas1")
                                 .resizable()
                                 .frame(width: 24, height: 63)
-                                .padding(.bottom, 50)
-                                .rotationEffect(.degrees(Double(self.angle2)))
-                                .gesture(DragGesture()
-                                    .onChanged{ v in
-                                        var theta = (atan2(v.location.x - self.length / 2, self.length / 2 - v.location.y) - atan2(v.startLocation.x - self.length / 2, self.length / 2 - v.startLocation.y)) * 180 / .pi
-                                        if (theta < 0) { theta += 360 }
-                                        self.angle2 = theta + self.lastAngle2
-                                    }
-                                    .onEnded { v in
-                                        self.lastAngle2 = self.angle2
+                                .padding(.bottom, 50).valueRotation(
+                                    totalAngle: $totalAngleTwo,
+                                    onAngleChanged: { newAngle in
+                                        changeHeight(sail: 2, newAngle: newAngle)
                                     }
                                 )
                         }
@@ -235,16 +278,10 @@ struct SailingMasterView: View {
                             Image("Tuas1")
                                 .resizable()
                                 .frame(width: 24, height: 63)
-                                .padding(.bottom, 50)
-                                .rotationEffect(.degrees(Double(self.angle3)))
-                                .gesture(DragGesture()
-                                    .onChanged{ v in
-                                        var theta = (atan2(v.location.x - self.length / 2, self.length / 2 - v.location.y) - atan2(v.startLocation.x - self.length / 2, self.length / 2 - v.startLocation.y)) * 180 / .pi
-                                        if (theta < 0) { theta += 360 }
-                                        self.angle3 = theta + self.lastAngle3
-                                    }
-                                    .onEnded { v in
-                                        self.lastAngle3 = self.angle3
+                                .padding(.bottom, 50).valueRotation(
+                                    totalAngle: $totalAngleThree,
+                                    onAngleChanged: { newAngle in
+                                        changeHeight(sail: 3, newAngle: newAngle)
                                     }
                                 )
                         }
