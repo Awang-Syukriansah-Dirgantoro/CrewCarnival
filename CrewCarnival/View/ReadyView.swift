@@ -108,9 +108,6 @@ struct ReadyView: View {
                             isStartGame = true
                         }
                     })
-                    .onAppear {
-                       
-                    }
                 }
                 
             }

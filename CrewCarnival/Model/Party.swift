@@ -127,10 +127,10 @@ struct Party: Codable, Identifiable, Equatable {
                     players[index].role = Role.sailingMaster
                     break
                 case 3:
-                    players[index].role = Role.lookout
+                    players[index].role = Role.cabinBoy
                     break
                 default:
-                    players[index].role = Role.lookout
+                    players[index].role = Role.blackSmith
                 }
                 
                 var isRoleTaken = false
