@@ -46,6 +46,7 @@
 		59117DE72A414F2700701627 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 59117DE62A414F2700701627 /* Preview Assets.xcassets */; };
 		59117DEE2A43E87600701627 /* LookoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59117DED2A43E87600701627 /* LookoutView.swift */; };
 		59117DF02A45397600701627 /* GasoekOne-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 59117DEF2A45397600701627 /* GasoekOne-Regular.ttf */; };
+		59EC62B82A57A61E001D9B26 /* OneFingerRotation in Frameworks */ = {isa = PBXBuildFile; productRef = 59EC62B72A57A61E001D9B26 /* OneFingerRotation */; };
 		59ECAE502A4A7829008FE730 /* CabinBoyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59ECAE4F2A4A7829008FE730 /* CabinBoyView.swift */; };
 /* End PBXBuildFile section */
 
@@ -99,6 +100,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				59EC62B82A57A61E001D9B26 /* OneFingerRotation in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -266,6 +268,9 @@
 			dependencies = (
 			);
 			name = CrewCarnival;
+			packageProductDependencies = (
+				59EC62B72A57A61E001D9B26 /* OneFingerRotation */,
+			);
 			productName = CrewCarnival;
 			productReference = 59117DDC2A414F2600701627 /* CrewCarnival.app */;
 			productType = "com.apple.product-type.application";
@@ -294,6 +299,9 @@
 				Base,
 			);
 			mainGroup = 59117DD32A414F2500701627;
+			packageReferences = (
+				59EC62B62A57A61E001D9B26 /* XCRemoteSwiftPackageReference "OneFingerRotation" */,
+			);
 			productRefGroup = 59117DDD2A414F2600701627 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -561,6 +569,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		59EC62B62A57A61E001D9B26 /* XCRemoteSwiftPackageReference "OneFingerRotation" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/matteofontana-app/OneFingerRotation.git";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		59EC62B72A57A61E001D9B26 /* OneFingerRotation */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 59EC62B62A57A61E001D9B26 /* XCRemoteSwiftPackageReference "OneFingerRotation" */;
+			productName = OneFingerRotation;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 59117DD42A414F2500701627 /* Project object */;
 }
