@@ -37,7 +37,7 @@ struct ProgressBar: View {
 //                    .background(Color(red: 0.88, green: 0.68, blue: 0))
 //                    .cornerRadius(13)
 //                    .padding(.horizontal, 20)
-                ProgressView("", value: progress, total: 300)
+                ProgressView("", value: progress, total: 100)
                     .padding(.horizontal, 20)
                     .progressViewStyle(gradientStyle)
                 Image("ImageProgressBar")
