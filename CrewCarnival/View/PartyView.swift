@@ -14,16 +14,16 @@ struct PartyView: View {
     @Environment(\.presentationMode) var presentation
     @Binding var menu: Int
     
-    func createParty() {
-        var party = Party()
-        partyId = party.id
-        
-        gameService.currentPlayer.name = name
-        gameService.currentPlayer.role = Role.lookout
-        
-        party.players.append(gameService.currentPlayer)
-        gameService.parties.append(party)
-    }
+//    func createParty() {
+//        var party = Party()
+//        partyId = party.id
+//
+//        gameService.currentPlayer.name = name
+//        gameService.currentPlayer.role = Role.lookout
+//
+//        party.players.append(gameService.currentPlayer)
+//        gameService.parties.append(party)
+//    }
     
     let rows = [
         GridItem(.flexible())
@@ -81,11 +81,21 @@ struct PartyView: View {
                     Image("BackgroundSelect").resizable().scaledToFill().ignoresSafeArea()
                     ScrollView{
                         VStack{
-                            if gameService.parties.count > 0 {
+                            if gameService.availablePeers.count > 0 {
                                 LazyVGrid(columns: rows, spacing: 20) {
                                     Section {
-                                        ForEach(Array(gameService.parties.enumerated()), id: \.offset) { index, party in
-                                            PartyCard(partyIndex: index, party: party, name: $name)
+                                        ForEach(Array(gameService.availablePeers.enumerated()), id: \.offset) { index, peer in
+                                            // PartyCard(partyIndex: index, party: party, name: $name)
+                                            NavigationLink {
+                                                ReadyView(partyId: partyId)
+                                            } label: {
+                                                Text("\(peer.partyId)")
+                                            }
+                                            .simultaneousGesture(TapGesture().onEnded {
+                                                gameService.party.id = peer.partyId
+                                                gameService.serviceBrowser.stopBrowsingForPeers()
+                                                gameService.serviceBrowser.startBrowsingForPeers()
+                                            })
                                         }
                                     } header: {
                                         Image("SelectRoom")
@@ -123,8 +133,9 @@ struct PartyView: View {
                                     .padding()
                             }
                             .simultaneousGesture(TapGesture().onEnded {
-                                self.createParty()
-                                self.gameService.send(parties: gameService.parties)
+                                gameService.party = Party()
+                                gameService.party.players.append(gameService.currentPlayer)
+                                gameService.startAdvertising(partyId: gameService.party.id)
                             })
                             .navigationBarBackButtonHidden(true)
                         }

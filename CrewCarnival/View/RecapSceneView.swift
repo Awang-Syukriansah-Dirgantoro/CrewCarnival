@@ -12,7 +12,6 @@ struct RecapSceneView: View {
     @State var scaleEff = 0.7
     @State var isAnimate = 0.0
     @EnvironmentObject var gameService: GameService
-    var partyId: UUID
     @Binding var show: Bool
     @Binding var isStartGame: Bool
     var body: some View {
@@ -46,14 +45,9 @@ struct RecapSceneView: View {
                 }
                 HStack(spacing: 10){
                     Button {
-                        for (index, party) in gameService.parties.enumerated() {
-                            if party.id == partyId {
-                                gameService.parties[index].reset()
-                                isStartGame = false
-                                gameService.send(parties: gameService.parties)
-                                
-                            }
-                        }
+                        gameService.party.reset()
+                        isStartGame = false
+                        gameService.send(party: gameService.party)
                     } label: {
                         Image("okrecap").resizable().frame(width: 100, height: 40).opacity(isAnimate)
                     }

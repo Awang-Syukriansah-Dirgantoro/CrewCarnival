@@ -12,7 +12,8 @@ struct Player: Codable, Identifiable, Equatable {
         lhs.name == rhs.name && lhs.role == rhs.role && lhs.isReady == rhs.isReady && lhs.event == rhs.event
     }
     
-    var id = UUID()
+    var id: UUID
+    var peerDisplayName: String
     var name: String
     var role: Role?
     var isReady: Bool = false

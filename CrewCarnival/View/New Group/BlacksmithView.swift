@@ -18,7 +18,6 @@ struct BlacksmithView: View {
     @State private var showPopUp: Bool = false
     @State private var lives = 0
     @EnvironmentObject var gameService: GameService
-    var partyId: UUID
     @Binding var isStartGame: Bool
     @State private var isPuzzleCompleted: Objective?
     @State private var gradient = LinearGradient(
@@ -139,7 +138,7 @@ struct BlacksmithView: View {
                     .environmentObject(vm)
                     Spacer()
                 }
-                RecapSceneView(lives: $lives, partyId: partyId, show: $showPopUp, isStartGame: $isStartGame)
+                RecapSceneView(lives: $lives, show: $showPopUp, isStartGame: $isStartGame)
             }
             .onAppear {
                 for (index, party) in gameService.parties.enumerated() {
@@ -220,6 +219,6 @@ struct BlacksmithView: View {
 
 struct BlacksmithView_Previews: PreviewProvider {
     static var previews: some View {
-        BlacksmithView(partyId: UUID(), isStartGame: .constant(false)).environmentObject(GameService())
+        BlacksmithView(isStartGame: .constant(false)).environmentObject(GameService())
     }
 }

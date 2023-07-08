@@ -10,15 +10,16 @@ import SwiftUI
 @main
 struct CrewCarnivalApp: App {
     @StateObject var gameService = GameService()
-    let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+//    let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .preferredColorScheme(.light)
                 .environmentObject(gameService)
-                .onReceive(timer) { time in
-                    gameService.send(parties: gameService.parties)
-                }
+//                .onReceive(timer) { time in
+//                    gameService.send(party: gameService.party)
+//                }
         }
     }
 }
