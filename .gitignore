@@ -1,7 +1,5 @@
 
 *.xcuserstate
-<<<<<<< HEAD
-=======
 *.xcuserstate
 .DS_Store
 *.xcuserstate
@@ -9,4 +7,3 @@
 *.xcuserstate
 *.xcuserstate
 *.xcuserstate
->>>>>>> main
