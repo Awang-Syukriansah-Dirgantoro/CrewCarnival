@@ -55,20 +55,20 @@ struct HelmsmanView: View {
                 
                 ZStack {
                     Image("ShipHelmsman").resizable().scaledToFill().ignoresSafeArea(.all)
-                    Button(action: {
-                        for (index, party) in gameService.parties.enumerated() {
-                            if party.id == partyId {
-                                gameService.parties[index].lives -= 1
-                                gameService.send(parties: gameService.parties)
-                                
-                                break
-                            }
-                        }
-                    }) {
-                        Image(systemName: "minus.circle")
-                            .font(.system(size: 50))
-                            .foregroundColor(.red)
-                    }.offset(y:-100)
+//                    Button(action: {
+//                        for (index, party) in gameService.parties.enumerated() {
+//                            if party.id == partyId {
+//                                gameService.parties[index].lives -= 1
+//                                gameService.send(parties: gameService.parties)
+//                                
+//                                break
+//                            }
+//                        }
+//                    }) {
+//                        Image(systemName: "minus.circle")
+//                            .font(.system(size: 50))
+//                            .foregroundColor(.red)
+//                    }.offset(y:-100)
                     
                     VStack{
                         HStack{

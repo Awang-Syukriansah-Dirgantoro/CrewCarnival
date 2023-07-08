@@ -76,6 +76,23 @@ struct Party: Codable, Identifiable, Equatable {
                 
                 players[index].event = Event(duration: 30, instruction: "There are obstacles nearby!", objective: objective)
             }
+            if player.role == Role.blackSmith {
+                var randomInt = 0
+                var objective = Objective.sail
+                
+                switch randomInt {
+                case 0:
+                    objective = Objective.sail
+                    break
+                case 1:
+                    objective = Objective.binocular
+                    break
+                default:
+                    objective = Objective.steer
+                }
+                
+                players[index].event = Event(duration: 30, instruction: "Drag and fix the object", objective: objective)
+            }
         }
     }
     
