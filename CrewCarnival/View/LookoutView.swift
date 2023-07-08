@@ -205,14 +205,10 @@ struct LookoutView: View {
             .onAppear{
 //                self.views = listView.randomElement()!
 //                print("videoNamelook: \(self.views)")
-                for (index, party) in gameService.parties.enumerated() {
-                    if party.id == partyId {
-                        for (index2, player) in gameService.parties[index].players.enumerated() {
-                            if player.role == Role.lookout {
-                                instructionProgress = gameService.parties[index].players[index2].event.duration
-                                instructionProgressMax = gameService.parties[index].players[index2].event.duration
-                            }
-                        }
+                for (index, player) in gameService.party.players.enumerated() {
+                    if player.role == Role.lookout {
+                        instructionProgress = gameService.party.players[index].event.duration
+                        instructionProgressMax = gameService.party.players[index].event.duration
                     }
                 }
                 xOffset = -391
