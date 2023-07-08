@@ -14,7 +14,7 @@ struct HelmsmanView: View {
     @State private var instructionProgressMax = 100.0
     @State private var isTurnProgressCompleted: Objective?
     @State private var roleExplain = false
-    @State var timeExplain = 10
+    @State var timeExplain = 70
     @State private var showPopUp: Bool = false
     @State private var lives = 0
     @EnvironmentObject var gameService: GameService
