@@ -6,14 +6,13 @@
 //
 
 import SwiftUI
-import AVFoundation
 
 struct LookoutView: View {
     @State private var partyProgress = 0.0
     @State private var instructionProgress = 100.0
     @State private var instructionProgressMax = 100.0
     @State private var roleExplain = false
-    @State var timeExplain = 10
+    @State var timeExplain = 70
     @State private var showPopUp: Bool = false
     @State private var lives = 0
     @State private var gradient = LinearGradient(
@@ -28,7 +27,6 @@ struct LookoutView: View {
     @State private var isRightAble = true
     @EnvironmentObject var gameService: GameService
     @Binding var isStartGame: Bool
-    var partyId: UUID
     let timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
     
     var body: some View {
@@ -64,22 +62,18 @@ struct LookoutView: View {
                             .foregroundColor(.white)
                         Spacer()
                         HStack {
-                            ForEach(Array(gameService.parties.enumerated()), id: \.offset) { index, party in
-                                if party.id == partyId {
-                                    if party.lives > 0 {
-                                        ForEach((0...party.lives - 1), id: \.self) { _ in
-                                            Rectangle()
-                                                .foregroundColor(.clear)
+                            if gameService.party.lives > 0 {
+                                ForEach((0...gameService.party.lives - 1), id: \.self) { _ in
+                                    Rectangle()
+                                        .foregroundColor(.clear)
+                                        .frame(width: 25, height: 19)
+                                        .background(
+                                            Image("Heart")
+                                                .resizable()
+                                                .aspectRatio(contentMode: .fill)
                                                 .frame(width: 25, height: 19)
-                                                .background(
-                                                    Image("Heart")
-                                                        .resizable()
-                                                        .aspectRatio(contentMode: .fill)
-                                                        .frame(width: 25, height: 19)
-                                                        .clipped()
-                                                )
-                                        }
-                                    }
+                                                .clipped()
+                                        )
                                 }
                             }
                         }
@@ -103,21 +97,17 @@ struct LookoutView: View {
                             }
                     }.padding(.bottom,20).padding(.horizontal,30)
                     VStack{
-                        ForEach(Array(gameService.parties.enumerated()), id: \.offset) { index, party in
-                            if party.id == partyId {
-                                ForEach(Array(party.players.enumerated()), id: \.offset) { index2, player in
-                                    if gameService.currentPlayer.id == player.id {
-                                        Text("\(player.event.instruction)")
-                                            .font(Font.custom("Gasoek One", size: 20))
-                                            .multilineTextAlignment(.center)
-                                            .frame(maxWidth: .infinity)
-                                            .padding(.vertical, 20)
-                                            .foregroundColor(Color(red: 0.95, green: 0.74, blue: 0))
-                                            .background(
-                                                Rectangle()
-                                                    .opacity(0.5))
-                                    }
-                                }
+                        ForEach(Array(gameService.party.players.enumerated()), id: \.offset) { index, player in
+                            if gameService.currentPlayer.id == player.id {
+                                Text("\(player.event.instruction)")
+                                    .font(Font.custom("Gasoek One", size: 20))
+                                    .multilineTextAlignment(.center)
+                                    .frame(maxWidth: .infinity)
+                                    .padding(.vertical, 20)
+                                    .foregroundColor(Color(red: 0.95, green: 0.74, blue: 0))
+                                    .background(
+                                        Rectangle()
+                                            .opacity(0.5))
                             }
                         }
                         ProgressView("", value: instructionProgress, total: instructionProgressMax)
@@ -209,7 +199,7 @@ struct LookoutView: View {
                     }
                 }
                 .padding(.vertical,50)
-                RecapSceneView(lives: $lives, partyId: partyId, show: $showPopUp, isStartGame: $isStartGame)
+                RecapSceneView(lives: $lives, show: $showPopUp, isStartGame: $isStartGame)
             }
             
             .onAppear{
@@ -225,104 +215,94 @@ struct LookoutView: View {
                         }
                     }
                 }
+                xOffset = -391
+                isMove = false
+                direction = "Forward"
+                isLeftAble = true
+                isRightAble = true
+                gameService.send(party: gameService.party)
             }
-            .onChange(of: gameService.parties, perform: { newValue in
-                for (index, party) in gameService.parties.enumerated() {
-                    if party.id == partyId {
-                        if gameService.parties[index].lives <= 0 {
-                            withAnimation(.linear(duration: 0.5)) {
-                                lives = gameService.parties[index].lives
-                                showPopUp = true
-                                
-                            }
-                            //                            gameService.parties[index].reset()
-                            //                            isStartGame = false
-                            //                            gameService.send(parties: gameService.parties)
-                        }
+            .onChange(of: gameService.party, perform: { newValue in
+                if gameService.party.lives <= 0 {
+                    withAnimation(.linear(duration: 0.5)) {
+                        lives = gameService.party.lives
+                        showPopUp = true
                         
-                        var allEventsCompleted = true
-                        for (_, player) in party.players.enumerated() {
-                            if !player.event.isCompleted {
-                                allEventsCompleted = false
-                            }
-                        }
-                        
-                        if allEventsCompleted {
-                            gameService.parties[index].generateLHSEvent()
-                            for (index2, player) in gameService.parties[index].players.enumerated() {
-                                if player.role == Role.helmsman {
-                                    instructionProgress = gameService.parties[index].players[index2].event.duration
-                                    instructionProgressMax = gameService.parties[index].players[index2].event.duration
-                                }
-                            }
-                            xOffset = -391
-                            isMove = false
-                            direction = "Forward"
-                            isLeftAble = true
-                            isRightAble = true
-                            gameService.send(parties: gameService.parties)
+                    }
+                    //                            gameService.parties[index].reset()
+                    //                            isStartGame = false
+                    //                            gameService.send(parties: gameService.parties)
+                }
+                
+                var allEventsCompleted = true
+                for (_, player) in gameService.party.players.enumerated() {
+                    if !player.event.isCompleted {
+                        allEventsCompleted = false
+                    }
+                }
+                
+                if allEventsCompleted {
+                    gameService.party.generateLHSEvent()
+                    for (index, player) in gameService.party.players.enumerated() {
+                        if player.role == Role.helmsman {
+                            instructionProgress = gameService.party.players[index].event.duration
+                            instructionProgressMax = gameService.party.players[index].event.duration
                         }
                     }
+                    xOffset = -391
+                    isMove = false
+                    direction = "Forward"
+                    isLeftAble = true
+                    isRightAble = true
+                    gameService.send(party: gameService.party)
                 }
             })
             .onChange(of: partyProgress, perform: { newValue in
                 if partyProgress >= 100{
-                    for (index, party) in gameService.parties.enumerated() {
-                        if party.id == partyId {
-                            withAnimation(.linear(duration: 0.5)) {
-                                lives = gameService.parties[index].lives
-                                showPopUp = true
-                            }
-                        }
+                    withAnimation(.linear(duration: 0.5)) {
+                        lives = gameService.party.lives
+                        showPopUp = true
                     }
                 }
             })
             .onChange(of: instructionProgress, perform: { newValue in
                 if instructionProgress <= 0 {
-                    for (index, party) in gameService.parties.enumerated() {
-                        if party.id == partyId {
-                            gameService.parties[index].generateLHSEvent()
-                            if party.lives > 0 {
-                                gameService.parties[index].lives -= 1
-                            }
-                            gameService.send(parties: gameService.parties)
-                            if gameService.parties[index].lives <= 0 {
-                                gameService.parties[index].reset()
-                                gameService.send(parties: gameService.parties)
-                                isStartGame = false
-                            }
-                            
-                            for (index2, _) in gameService.parties[index].players.enumerated() {
-                                instructionProgress = gameService.parties[index].players[index2].event.duration
-                            }
-                        }
+                    gameService.party.generateLHSEvent()
+                    if gameService.party.lives > 0 {
+                        gameService.party.lives -= 1
+                    }
+                    gameService.send(party: gameService.party)
+                    if gameService.party.lives <= 0 {
+                        gameService.party.reset()
+                        gameService.send(party: gameService.party)
+                        isStartGame = false
+                    }
+                    
+                    for (index, _) in gameService.party.players.enumerated() {
+                        instructionProgress = gameService.party.players[index].event.duration
                     }
                 }
             })
             .onChange(of: direction) { newDirection in
-                for (index, party) in gameService.parties.enumerated() {
-                    if party.id == partyId {
-                        for (index2, player) in gameService.parties[index].players.enumerated() {
-                            if player.role == Role.lookout {
-                                if player.event.objective == Objective.lookLeft {
-                                    if newDirection == "Left" {
-                                        gameService.parties[index].players[index2].event.instruction = "Our Left is Clear!\nQuickly Turn the Ship!"
-                                        //                                    gameService.parties[index].triggerHelmsmanInstruction()
-                                    }
-                                } else if player.event.objective == Objective.lookRight {
-                                    if newDirection == "Right" {
-                                        gameService.parties[index].players[index2].event.instruction = "Our Right is Clear!\nQuickly Turn the Ship!"
-                                        //                                    gameService.parties[index].triggerHelmsmanInstruction()
-                                    }
-                                } else {
-                                    if newDirection == "Front" {
-                                        gameService.parties[index].players[index2].event.instruction = "Our Front is Clear!\nQuickly Turn the Ship!"
-                                        //                                    gameService.parties[index].triggerHelmsmanInstruction()
-                                    }
-                                }
-                                gameService.send(parties: gameService.parties)
+                for (index, player) in gameService.party.players.enumerated() {
+                    if player.role == Role.lookout {
+                        if player.event.objective == Objective.lookLeft {
+                            if newDirection == "Left" {
+                                gameService.party.players[index].event.instruction = "Our Left is Clear!\nQuickly Turn the Ship!"
+                                //                                    gameService.parties[index].triggerHelmsmanInstruction()
+                            }
+                        } else if player.event.objective == Objective.lookRight {
+                            if newDirection == "Right" {
+                                gameService.party.players[index].event.instruction = "Our Right is Clear!\nQuickly Turn the Ship!"
+                                //                                    gameService.parties[index].triggerHelmsmanInstruction()
+                            }
+                        } else {
+                            if newDirection == "Front" {
+                                gameService.party.players[index].event.instruction = "Our Front is Clear!\nQuickly Turn the Ship!"
+                                //                                    gameService.parties[index].triggerHelmsmanInstruction()
                             }
                         }
+                        gameService.send(party: gameService.party)
                     }
                 }
             }
@@ -333,7 +313,7 @@ struct LookoutView: View {
 
 struct LookoutView_Previews: PreviewProvider {
     static var previews: some View {
-        LookoutView(isStartGame: .constant(false), partyId: UUID())
+        LookoutView(isStartGame: .constant(false))
             .environmentObject(GameService())
     }
 }

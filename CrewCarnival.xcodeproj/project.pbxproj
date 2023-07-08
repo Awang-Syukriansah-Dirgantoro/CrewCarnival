@@ -32,6 +32,7 @@
 		0B9EFFFC2A4AA2C600BEF546 /* Drop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9EFFFB2A4AA2C600BEF546 /* Drop.swift */; };
 		4C2509172A4946D000721A03 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C2509162A4946D000721A03 /* GameView.swift */; };
 		4C25091B2A496C7400721A03 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C25091A2A496C7400721A03 /* Event.swift */; };
+		4C4AC29D2A555DB700D589CD /* Peer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C4AC29C2A555DB700D589CD /* Peer.swift */; };
 		4C7234072A49218C00F371E7 /* ReadyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C7234052A49218C00F371E7 /* ReadyView.swift */; };
 		4C7234082A49218C00F371E7 /* PartyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C7234062A49218C00F371E7 /* PartyView.swift */; };
 		4C72340A2A49219A00F371E7 /* PartyCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C7234092A49219A00F371E7 /* PartyCard.swift */; };
@@ -50,6 +51,7 @@
 		59117DE72A414F2700701627 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 59117DE62A414F2700701627 /* Preview Assets.xcassets */; };
 		59117DEE2A43E87600701627 /* LookoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59117DED2A43E87600701627 /* LookoutView.swift */; };
 		59117DF02A45397600701627 /* GasoekOne-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 59117DEF2A45397600701627 /* GasoekOne-Regular.ttf */; };
+		59EC62B82A57A61E001D9B26 /* OneFingerRotation in Frameworks */ = {isa = PBXBuildFile; productRef = 59EC62B72A57A61E001D9B26 /* OneFingerRotation */; };
 		59ECAE502A4A7829008FE730 /* CabinBoyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59ECAE4F2A4A7829008FE730 /* CabinBoyView.swift */; };
 /* End PBXBuildFile section */
 
@@ -79,6 +81,7 @@
 		0B9EFFFB2A4AA2C600BEF546 /* Drop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Drop.swift; sourceTree = "<group>"; };
 		4C2509162A4946D000721A03 /* GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
 		4C25091A2A496C7400721A03 /* Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
+		4C4AC29C2A555DB700D589CD /* Peer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Peer.swift; sourceTree = "<group>"; };
 		4C7234052A49218C00F371E7 /* ReadyView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReadyView.swift; sourceTree = "<group>"; };
 		4C7234062A49218C00F371E7 /* PartyView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PartyView.swift; sourceTree = "<group>"; };
 		4C7234092A49219A00F371E7 /* PartyCard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PartyCard.swift; sourceTree = "<group>"; };
@@ -107,6 +110,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				59EC62B82A57A61E001D9B26 /* OneFingerRotation in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -200,6 +204,7 @@
 				4C72341E2A49270E00F371E7 /* Player.swift */,
 				4C25091A2A496C7400721A03 /* Event.swift */,
 				0B9EFFF32A4AA20E00BEF546 /* Puzzle.swift */,
+				4C4AC29C2A555DB700D589CD /* Peer.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -278,6 +283,9 @@
 			dependencies = (
 			);
 			name = CrewCarnival;
+			packageProductDependencies = (
+				59EC62B72A57A61E001D9B26 /* OneFingerRotation */,
+			);
 			productName = CrewCarnival;
 			productReference = 59117DDC2A414F2600701627 /* CrewCarnival.app */;
 			productType = "com.apple.product-type.application";
@@ -306,6 +314,9 @@
 				Base,
 			);
 			mainGroup = 59117DD32A414F2500701627;
+			packageReferences = (
+				59EC62B62A57A61E001D9B26 /* XCRemoteSwiftPackageReference "OneFingerRotation" */,
+			);
 			productRefGroup = 59117DDD2A414F2600701627 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -345,6 +356,7 @@
 				4E3F47142A4A737900915B7F /* ScrollViewOffsetModifier.swift in Sources */,
 				0B0B77802A455D8600B10F99 /* SailingMasterView.swift in Sources */,
 				59117DE22A414F2600701627 /* LivesView.swift in Sources */,
+				4C4AC29D2A555DB700D589CD /* Peer.swift in Sources */,
 				0B228A262A42A04A0078D22A /* HelmsmanView.swift in Sources */,
 				4E3F47132A4A737900915B7F /* AllRole.swift in Sources */,
 				0B0B777E2A454AE200B10F99 /* GradientProgressStyle.swift in Sources */,
@@ -503,7 +515,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"CrewCarnival/Preview Content\"";
-				DEVELOPMENT_TEAM = S398LUTY9A;
+				DEVELOPMENT_TEAM = 594Q84397D;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = CrewCarnival/Info.plist;
@@ -533,7 +545,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"CrewCarnival/Preview Content\"";
-				DEVELOPMENT_TEAM = S398LUTY9A;
+				DEVELOPMENT_TEAM = 594Q84397D;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = CrewCarnival/Info.plist;
@@ -577,6 +589,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		59EC62B62A57A61E001D9B26 /* XCRemoteSwiftPackageReference "OneFingerRotation" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/matteofontana-app/OneFingerRotation.git";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		59EC62B72A57A61E001D9B26 /* OneFingerRotation */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 59EC62B62A57A61E001D9B26 /* XCRemoteSwiftPackageReference "OneFingerRotation" */;
+			productName = OneFingerRotation;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 59117DD42A414F2500701627 /* Project object */;
 }
