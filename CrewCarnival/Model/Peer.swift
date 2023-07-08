@@ -10,5 +10,6 @@ import MultipeerConnectivity
 
 struct Peer {
     var partyId: UUID
-    var peerId: MCPeerID
+    var peerId: MCPeerID?
+    var name: String
 }
