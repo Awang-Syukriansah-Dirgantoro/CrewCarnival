@@ -20,13 +20,11 @@ struct GameView: View {
                     ForEach(Array(party.players.enumerated()), id: \.offset) { index, player in
                         if player.id == gameService.currentPlayer.id {
                             if player.role == Role.lookout {
-//                                LookoutView(isStartGame: $isStartGame, partyId: partyId)
-                                HelmsmanView(partyId: partyId, isStartGame: $isStartGame)
+                                LookoutView(isStartGame: $isStartGame, partyId: partyId)
                             } else if player.role == Role.helmsman  {
                                 HelmsmanView(partyId: partyId, isStartGame: $isStartGame)
                             } else if player.role == Role.sailingMaster  {
-//                                SailingMasterView(isStartGame: $isStartGame, partyId: partyId)
-                                HelmsmanView(partyId: partyId, isStartGame: $isStartGame)
+                                SailingMasterView(isStartGame: $isStartGame, partyId: partyId)
                             } else if player.role == Role.cabinBoy  {
                                 Text("cabin")
                             } else {
