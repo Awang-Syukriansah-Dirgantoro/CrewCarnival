@@ -51,37 +51,6 @@ struct ReadyView: View {
                         } label: {
                             Image("readybtn")
                         }.offset(y:70)
-                        
-                        Button {
-                            var alreadyJoined = false
-                            for player in gameService.party.players {
-                                if player.id == gameService.currentPlayer.id {
-                                    alreadyJoined = true
-                                }
-                            }
-                            if !alreadyJoined {
-                                gameService.currentPlayer.role = Role.lookout
-                                
-                                gameService.party.players.append(gameService.currentPlayer)
-                                
-                                gameService.party.assignRoles()
-                                
-                                self.gameService.send(party: gameService.party)
-                            }
-                        } label: {
-                            Text("Join")
-                                .foregroundColor(.yellow)
-                                .fontWeight(.bold)
-                                .frame(
-                                    minWidth: 0,
-                                    maxWidth: .infinity
-                                )
-                                .padding()
-                                .background(RoundedRectangle(cornerRadius: 15)
-                                    .fill(Color.black))
-                                .padding(.horizontal)
-                        }
-                        
                     }.offset(y: 60)
                         .onChange(of: gameService.party, perform: { newValue in
                             var areAllPlayersReady = false
@@ -112,6 +81,22 @@ struct ReadyView: View {
                 }
                 gameService.party = Party()
                 gameService.session.disconnect()
+            }
+            .onChange(of: gameService.party) { newValue in
+                if gameService.party.players.count > 0 {
+                    var alreadyJoined = false
+                    for player in gameService.party.players {
+                        if player.id == gameService.currentPlayer.id {
+                            alreadyJoined = true
+                            break
+                        }
+                    }
+                    if !alreadyJoined {
+                        gameService.party.players.append(gameService.currentPlayer)
+                        gameService.party.assignRoles()
+                        gameService.send(party: gameService.party)
+                    }
+                }
             }
         }
     }
