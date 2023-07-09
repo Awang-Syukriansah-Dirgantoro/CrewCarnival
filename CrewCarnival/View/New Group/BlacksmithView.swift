@@ -56,22 +56,18 @@ struct BlacksmithView: View {
                             .foregroundColor(.white)
                         Spacer()
                         HStack {
-                            ForEach(Array(gameService.parties.enumerated()), id: \.offset) { index, party in
-                                if party.id == partyId {
-                                    if party.lives > 0 {
-                                        ForEach((0...party.lives - 1), id: \.self) { _ in
-                                            Rectangle()
-                                                .foregroundColor(.clear)
+                            if gameService.party.lives > 0 {
+                                ForEach((0...gameService.party.lives - 1), id: \.self) { _ in
+                                    Rectangle()
+                                        .foregroundColor(.clear)
+                                        .frame(width: 25, height: 19)
+                                        .background(
+                                            Image("Heart")
+                                                .resizable()
+                                                .aspectRatio(contentMode: .fill)
                                                 .frame(width: 25, height: 19)
-                                                .background(
-                                                    Image("Heart")
-                                                        .resizable()
-                                                        .aspectRatio(contentMode: .fill)
-                                                        .frame(width: 25, height: 19)
-                                                        .clipped()
-                                                )
-                                        }
-                                    }
+                                                .clipped()
+                                        )
                                 }
                             }
                         }
@@ -96,21 +92,17 @@ struct BlacksmithView: View {
                             }
                     }.padding(.bottom,20).padding(.horizontal,30)
                     VStack{
-                        ForEach(Array(gameService.parties.enumerated()), id: \.offset) { index, party in
-                            if party.id == partyId {
-                                ForEach(Array(party.players.enumerated()), id: \.offset) { index2, player in
-                                    if gameService.currentPlayer.id == player.id {
-                                        Text("\(player.event.instruction)")
-                                            .font(Font.custom("Gasoek One", size: 20))
-                                            .multilineTextAlignment(.center)
-                                            .frame(maxWidth: .infinity)
-                                            .padding(.vertical, 20)
-                                            .foregroundColor(Color(red: 0.95, green: 0.74, blue: 0))
-                                            .background(
-                                                Rectangle()
-                                                    .opacity(0.5))
-                                    }
-                                }
+                        ForEach(Array(gameService.party.players.enumerated()), id: \.offset) { index, player in
+                            if gameService.currentPlayer.id == player.id {
+                                Text("\(player.event.instruction)")
+                                    .font(Font.custom("Gasoek One", size: 20))
+                                    .multilineTextAlignment(.center)
+                                    .frame(maxWidth: .infinity)
+                                    .padding(.vertical, 20)
+                                    .foregroundColor(Color(red: 0.95, green: 0.74, blue: 0))
+                                    .background(
+                                        Rectangle()
+                                            .opacity(0.5))
                             }
                         }
                         ProgressView("", value: instructionProgress, total: instructionProgressMax)
@@ -126,14 +118,10 @@ struct BlacksmithView: View {
                         
                             Drop(vm: vm)
                                 .padding(.vertical,30)
-                        Drag(vm: vm).offset(y: 270)
+                        Drag(vm: vm).offset(y: 300)
                        
                     }
                     .padding()
-                    .onAppear {
-                        vm.shuffleEvent()
-                        vm.shuffleArray()
-                    }
                     .offset(x: vm.animateWrong ? -30 : 0)
                     .environmentObject(vm)
                     Spacer()
@@ -141,78 +129,75 @@ struct BlacksmithView: View {
                 RecapSceneView(lives: $lives, show: $showPopUp, isStartGame: $isStartGame)
             }
             .onAppear {
-                for (index, party) in gameService.parties.enumerated() {
-                    if party.id == partyId {
-                        for (index2, player) in gameService.parties[index].players.enumerated() {
-                            if player.role == Role.blackSmith {
-                                instructionProgress = gameService.parties[index].players[index2].event.duration
-                                instructionProgressMax = gameService.parties[index].players[index2].event.duration
-                            }
-                        }
+                for (index, player) in gameService.party.players.enumerated() {
+                    if player.role == Role.blackSmith {
+                        instructionProgress = gameService.party.players[index].event.duration
+                        instructionProgressMax = gameService.party.players[index].event.duration
                     }
                 }
+                vm.shuffleEvent()
+                vm.shuffleArray()
+                isPuzzleCompleted = nil
+                gameService.send(party: gameService.party)
             }
-            .onChange(of: gameService.parties, perform: { newValue in
-                for (index, party) in gameService.parties.enumerated() {
-                    if party.id == partyId {
-                        if gameService.parties[index].lives <= 0 {
-                            withAnimation(.linear(duration: 0.5)) {
-                                lives = gameService.parties[index].lives
-                                showPopUp = true
-                                
-                            }
-                            //                            gameService.parties[index].reset()
-                            //                            isStartGame = false
-                            //                            gameService.send(parties: gameService.parties)
-                        }
+            .onChange(of: gameService.party, perform: { newValue in
+                if gameService.party.lives <= 0 {
+                    withAnimation(.linear(duration: 0.5)) {
+                        lives = gameService.party.lives
+                        showPopUp = true
                         
-                        var allEventsCompleted = true
-                        for (_, player) in party.players.enumerated() {
-                            if !player.event.isCompleted {
-                                allEventsCompleted = false
-                            }
-                        }
-                        
-                        if allEventsCompleted {
-                            gameService.parties[index].generateLHSEvent()
-                            for (index2, player) in gameService.parties[index].players.enumerated() {
-                                if player.role == Role.blackSmith {
-                                    instructionProgress = gameService.parties[index].players[index2].event.duration
-                                    instructionProgressMax = gameService.parties[index].players[index2].event.duration
-                                }
-                            }
-//                            progress = 0
-//                            angle = 0
-//                            lastAngle = 0
-//                            isTurnProgressCompleted = nil
-                            gameService.send(parties: gameService.parties)
+                    }
+                    //                            gameService.parties[index].reset()
+                    //                            isStartGame = false
+                    //                            gameService.send(parties: gameService.parties)
+                }
+                
+                var allEventsCompleted = true
+                for (_, player) in gameService.party.players.enumerated() {
+                    if !player.event.isCompleted {
+                        allEventsCompleted = false
+                    }
+                }
+                
+                if allEventsCompleted {
+                    gameService.party.generateLHSEvent()
+                    for (index, player) in gameService.party.players.enumerated() {
+                        if player.role == Role.blackSmith {
+                            instructionProgress = gameService.party.players[index].event.duration
+                            instructionProgressMax = gameService.party.players[index].event.duration
                         }
                     }
+                    isPuzzleCompleted = nil
+                    gameService.send(party: gameService.party)
                 }
             })
             .onChange(of: partyProgress, perform: { newValue in
                 if partyProgress >= 100{
-                    for (index, party) in gameService.parties.enumerated() {
-                        if party.id == partyId {
-                            withAnimation(.linear(duration: 0.5)) {
-                                lives = gameService.parties[index].lives
-                                showPopUp = true
-                            }
-                        }
+                    withAnimation(.linear(duration: 0.5)) {
+                        lives = gameService.party.lives
+                        showPopUp = true
                     }
                 }
             })
             .onChange(of: instructionProgress, perform: { newValue in
                 if instructionProgress <= 0 {
-                    for (index, party) in gameService.parties.enumerated() {
-                        if party.id == partyId {
-                            for (index2, _) in gameService.parties[index].players.enumerated() {
-                                instructionProgress = gameService.parties[index].players[index2].event.duration
-                            }
-                        }
+                    gameService.party.generateLHSEvent()
+                    if gameService.party.lives > 0 {
+                        gameService.party.lives -= 1
+                    }
+                    gameService.send(party: gameService.party)
+                    if gameService.party.lives <= 0 {
+                        gameService.party.reset()
+                        gameService.send(party: gameService.party)
+                        isStartGame = false
+                    }
+                    
+                    for (index, _) in gameService.party.players.enumerated() {
+                        instructionProgress = gameService.party.players[index].event.duration
                     }
                 }
             })
+            
         }
     }
 }
