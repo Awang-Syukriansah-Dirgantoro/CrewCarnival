@@ -85,17 +85,17 @@ struct PartyView: View {
                                 LazyVGrid(columns: rows, spacing: 20) {
                                     Section {
                                         ForEach(Array(gameService.availablePeers.enumerated()), id: \.offset) { index, peer in
-                                            // PartyCard(partyIndex: index, party: party, name: $name)
-                                            NavigationLink {
-                                                ReadyView(partyId: partyId)
-                                            } label: {
-                                                Text("\(peer.partyId)")
-                                            }
-                                            .simultaneousGesture(TapGesture().onEnded {
-                                                gameService.party.id = peer.partyId
-                                                gameService.serviceBrowser.stopBrowsingForPeers()
-                                                gameService.serviceBrowser.startBrowsingForPeers()
-                                            })
+                                            PartyCard(peer: peer)
+//                                            NavigationLink {
+//                                                ReadyView(partyId: partyId)
+//                                            } label: {
+//                                                Text("\(peer.partyId)")
+//                                            }
+//                                            .simultaneousGesture(TapGesture().onEnded {
+//                                                gameService.party.id = peer.partyId
+//                                                gameService.serviceBrowser.stopBrowsingForPeers()
+//                                                gameService.serviceBrowser.startBrowsingForPeers()
+//                                            })
                                         }
                                     } header: {
                                         Image("SelectRoom")
@@ -118,7 +118,7 @@ struct PartyView: View {
                                 }
                             }
                             NavigationLink {
-                                ReadyView(partyId: partyId)
+                                ReadyView()
                             } label: {
                                 Text("Create Party")
                                     .foregroundColor(.yellow)

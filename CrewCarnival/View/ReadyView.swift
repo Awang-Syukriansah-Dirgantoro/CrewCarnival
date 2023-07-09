@@ -9,7 +9,6 @@ import SwiftUI
 
 struct ReadyView: View {
     @EnvironmentObject var gameService: GameService
-    var partyId: UUID
     @State var isStartGame = false
     
     var body: some View {
@@ -20,7 +19,7 @@ struct ReadyView: View {
                 Image("backgroundroom").resizable().aspectRatio(contentMode: .fill).frame(width: size.width, height: size.height)
             }.ignoresSafeArea()
             
-            Text("Waiting For \n Players").font(.custom("Gasoek One", size: 30)).foregroundColor(.white).offset(y: -200).multilineTextAlignment(.center).shadow(color: .yellow, radius: 1)
+            Text("Waiting For \n Players").font(.custom("Gasoek One", size: 30)).foregroundColor(.white).offset(y: -200).multilineTextAlignment(.center).shadow(color: .yellow, radius: 5)
             VStack {
                 if isStartGame {
                     GameView(isStartGame: $isStartGame)
@@ -120,6 +119,6 @@ struct ReadyView: View {
 
 struct ReadyView_Previews: PreviewProvider {
     static var previews: some View {
-        ReadyView(partyId: UUID()).environmentObject(GameService())
+        ReadyView().environmentObject(GameService())
     }
 }

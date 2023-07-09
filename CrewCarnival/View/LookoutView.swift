@@ -20,13 +20,11 @@ struct LookoutView: View {
         startPoint: .topLeading,
         endPoint: .bottomTrailing
     )
-    @State private var xOffset:CGFloat = -391
+    @State private var xOffset:CGFloat = -225
     @State private var isMove = false
     @State private var direction = "Forward"
     @State private var isLeftAble = true
     @State private var isRightAble = true
-    @State private var listView = ["ViewRight","ViewForward","ViewLeft"]
-    @State private var views = ""
     @EnvironmentObject var gameService: GameService
     @Binding var isStartGame: Bool
     let timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
@@ -50,9 +48,13 @@ struct LookoutView: View {
                 caption: ""
             )
             ZStack{
-                GeometryReader { geometry in
-                    Image(views).resizable().scaledToFill().ignoresSafeArea(.all).offset(x:xOffset)
+                GeometryReader { geo in
+                    PlayerView()
+                        .scaledToFill()
+                        .aspectRatio(contentMode: .fill)
+                        .offset(x: xOffset)
                 }
+                .ignoresSafeArea()
                 VStack{
                     HStack{
                         Text("Lookout")
@@ -141,9 +143,9 @@ struct LookoutView: View {
                             isLeftAble = false
                             isRightAble = false
                             withAnimation (Animation.easeOut (duration: 3)){
-                                xOffset = xOffset + 393
+                                xOffset = xOffset + 225
                             }
-                            if xOffset == -391 {
+                            if xOffset == -225 {
                                 direction = "Forward"
                                 isLeftAble = true
                                 isRightAble = true
@@ -170,9 +172,9 @@ struct LookoutView: View {
                             isLeftAble = false
                             isRightAble = false
                             withAnimation (Animation.easeOut (duration: 3)){
-                                xOffset = xOffset - 393
+                                xOffset = xOffset - 225
                             }
-                            if xOffset == -391 {
+                            if xOffset == -225 {
                                 direction = "Forward"
                                 isLeftAble = true
                                 isRightAble = true
@@ -199,8 +201,10 @@ struct LookoutView: View {
                 .padding(.vertical,50)
                 RecapSceneView(lives: $lives, show: $showPopUp, isStartGame: $isStartGame)
             }
-            .onAppear {
-                views = listView.randomElement()!
+            
+            .onAppear{
+//                self.views = listView.randomElement()!
+//                print("videoNamelook: \(self.views)")
                 for (index, player) in gameService.party.players.enumerated() {
                     if player.role == Role.lookout {
                         instructionProgress = gameService.party.players[index].event.duration
@@ -298,6 +302,7 @@ struct LookoutView: View {
                     }
                 }
             }
+            
         }
     }
 }

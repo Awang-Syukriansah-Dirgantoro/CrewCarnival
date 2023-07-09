@@ -55,7 +55,7 @@ class GameService: NSObject, ObservableObject {
     }
     
     func startAdvertising(partyId: UUID) {
-        self.serviceAdvertiser = MCNearbyServiceAdvertiser(peer: myPeerID, discoveryInfo: ["partyId": "\(party.id)"], serviceType: serviceType)
+        self.serviceAdvertiser = MCNearbyServiceAdvertiser(peer: myPeerID, discoveryInfo: ["partyId": "\(party.id)", "name": currentPlayer.name], serviceType: serviceType)
         serviceAdvertiser.delegate = self
         serviceAdvertiser.startAdvertisingPeer()
         isAdvertiser = true
@@ -116,7 +116,7 @@ extension GameService: MCNearbyServiceBrowserDelegate {
             guard let info = info else {
                 return
             }
-            self.availablePeers.append(Peer(partyId: UUID(uuidString: info["partyId"]!)!, peerId: peerID))
+            self.availablePeers.append(Peer(partyId: UUID(uuidString: info["partyId"]!)!, peerId: peerID, name: info["name"]!))
         }
         
         guard let info = info else {

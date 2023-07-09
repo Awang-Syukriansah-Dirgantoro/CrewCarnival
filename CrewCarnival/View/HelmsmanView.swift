@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import OneFingerRotation
 
 struct HelmsmanView: View {
     @State private var partyProgress = 0.0
@@ -31,6 +32,8 @@ struct HelmsmanView: View {
     @State private var length : CGFloat = 400
     @Binding var isStartGame: Bool
     @State private var text = "Turn Progress"
+    
+    @State private var knobValue: Double = 0.5
     
     var body: some View {
         if roleExplain == false{
@@ -133,38 +136,54 @@ struct HelmsmanView: View {
                             .resizable()
                             .scaledToFill()
                             .frame(width: 300, height: 300)
-                            .rotationEffect(
-                                .degrees(Double(self.angle)))
-                            .gesture(DragGesture()
-                                .onChanged{ v in
-                                    let theta = (atan2(v.location.x - self.length / 2, self.length / 2 - v.location.y) - atan2(v.startLocation.x - self.length / 2, self.length / 2 - v.startLocation.y)) * 180 / .pi
-                                    self.angle = theta + self.lastAngle
-                                    print(self.angle)
-                                    
-                                    if (self.angle > 300){
-                                        self.angle = 300
-                                        self.progress = self.angle
-                                        isTurnProgressCompleted = Objective.turnRight
-                                    } else if (self.angle < 0){
-                                        if (self.angle < -300){
-                                            self.angle = -300
-                                            self.progress = 300
-                                            isTurnProgressCompleted = Objective.turnLeft
-                                        } else {
-                                            self.progress = self.angle * (-1)
-                                        }
-                                    }
-                                    else {
-                                        self.progress = self.angle
-                                    }
-                                    print(self.angle)
-                                }
-                                .onEnded { v in
-                                    self.lastAngle = self.angle
-                                }
+                            .knobRotation(
+                              knobValue: $knobValue,
+                              minAngle: -360,
+                              maxAngle: +360,
+                              onKnobValueChanged: { newValue in
+                                knobValue = newValue
+                              },
+                              animation: .spring()
                             )
+                            .onChange(of: knobValue, perform: { newValue in
+                                var value = "\(knobValue)"
+                                if Double(value)! > 0.5 {
+                                    self.progress = (Double(value)! - 0.5) * 200
+                                } else {
+                                    self.progress = ((1 - Double(value)!) - 0.5) * 200
+                                }
+                            })
+//                            .rotationEffect(
+//                                .degrees(Double(self.angle)))
+//                            .gesture(DragGesture()
+//                                .onChanged{ v in
+//                                    let theta = (atan2(v.location.x - self.length / 2, self.length / 2 - v.location.y) - atan2(v.startLocation.x - self.length / 2, self.length / 2 - v.startLocation.y)) * 180 / .pi
+//                                    self.angle = theta + self.lastAngle
+//                                    print(self.angle)
+//
+//                                    if (self.angle > 300){
+//                                        self.angle = 300
+//                                        self.progress = self.angle
+//                                        isTurnProgressCompleted = Objective.turnRight
+//                                    } else if (self.angle < 0){
+//                                        if (self.angle < -300){
+//                                            self.angle = -300
+//                                            self.progress = 300
+//                                            isTurnProgressCompleted = Objective.turnLeft
+//                                        } else {
+//                                            self.progress = self.angle * (-1)
+//                                        }
+//                                    }
+//                                    else {
+//                                        self.progress = self.angle
+//                                    }
+//                                    print(self.angle)
+//                                }
+//                                .onEnded { v in
+//                                    self.lastAngle = self.angle
+//                                }
+//                            )
                             .offset(y: 150)
-                        
                         Spacer()
                             .frame(height: 180)
                         VStack{
