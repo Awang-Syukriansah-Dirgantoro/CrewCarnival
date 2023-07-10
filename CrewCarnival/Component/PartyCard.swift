@@ -39,7 +39,9 @@ struct PartyCard: View {
                 }
                 .shadow(radius: 4)
                 Text("Join \(peer.name)'s Crew")
-                    .foregroundColor(.yellow)
+                    .font(.custom("Gasoek One", size: 18))
+                    .foregroundColor(.orange)
+                    .shadow(color: Color.black.opacity(0.2), radius: 4)
             }
         }
         .buttonStyle(PlainButtonStyle())

@@ -37,10 +37,7 @@ struct AllRole: View {
                         Button {
                             menu = -1
                         } label: {
-                            HStack {
-                                Image(systemName: "chevron.backward")
-                                Text("Back")
-                            }
+                            Image("BackButton")
                         }
                     }
                 }

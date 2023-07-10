@@ -14,7 +14,7 @@ struct HelmsmanView: View {
     @State private var instructionProgressMax = 100.0
     @State private var isTurnProgressCompleted: Objective?
     @State private var roleExplain = false
-    @State var timeExplain = 70
+    @State var timeExplain = 7.9
     @State private var showPopUp: Bool = false
     @State private var lives = 0
     @EnvironmentObject var gameService: GameService
@@ -39,12 +39,21 @@ struct HelmsmanView: View {
         if roleExplain == false{
             GeometryReader{proxy in
                 let size = proxy.size
-                
-                Image("helmsmanExplain").resizable().aspectRatio(contentMode: .fill).frame(width: size.width, height: size.height).onReceive(timer) { _ in
-                    timeExplain -= 1
-                    if timeExplain == 0 {
-                        roleExplain = true
+                ZStack {
+                    Image("helmsmanExplain").resizable().aspectRatio(contentMode: .fill).frame(width: size.width, height: size.height).onReceive(timer) { _ in
+                        timeExplain -= 0.1
+                        if timeExplain <= 1.1 {
+                            timeExplain = 0
+                            roleExplain = true
+                        }
                     }
+                    Text("Sailing In... \(String(String(timeExplain).first!))")
+                        .font(.custom("Gasoek One", size: 20))
+                        .foregroundColor(.white)
+                        .shadow(color: Color.black.opacity(0.2), radius: 4)
+                        .position(x: size.width / 2, y: 215)
+                        .multilineTextAlignment(.center)
+                      
                 }
             }.ignoresSafeArea()
         }else{
