@@ -42,9 +42,7 @@ struct Drop: View {
                                                     
                                                 }
                                                 for (index, player) in gameService.party.players.enumerated() {
-                                                    print("bbbb \(player)")
                                                     if player.role == Role.blackSmith {
-                                                        print("aaaa")
                                                         let obj = gameService.party.players[index].event.objective
                                                         if obj == Objective.binocular{
                                                             if vm.droppedCount == 3 {

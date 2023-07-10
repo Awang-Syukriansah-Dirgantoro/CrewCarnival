@@ -84,9 +84,9 @@ class PuzzleViewModel:NSObject, ObservableObject {
         
     }
     
-    func shuffleEvent() {
-        randomEvent = event.randomElement()
-    }
+//    func shuffleEvent() {
+//        randomEvent = event.randomElement()
+//    }
     
     func shuffleArray(objct: Objective?) {
         droppedCount = 0
@@ -112,7 +112,7 @@ class PuzzleViewModel:NSObject, ObservableObject {
 //                }
 //            }
 //        }
-        if rows.isEmpty {
+        
             rows =  generateGrid()
             if randomEvent == "steer"{
                 steers =  steers.shuffled()
@@ -122,7 +122,7 @@ class PuzzleViewModel:NSObject, ObservableObject {
                 binoculars =  binoculars.shuffled()
             }
             shuffledRows =  generateGrid()
-        }
+        
     }
     
     func updateSuffledArray(character:Puzzle) {

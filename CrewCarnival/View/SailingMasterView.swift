@@ -29,6 +29,7 @@ struct SailingMasterView: View {
     )
     @EnvironmentObject var gameService: GameService
     @Binding var isStartGame: Bool
+    @State var eventblacksmith = false
     
     @State private var totalAngleOne: Double = 0.0
     @State private var totalAngleTwo: Double = 0.0
@@ -157,15 +158,27 @@ struct SailingMasterView: View {
                 VStack{
                     ForEach(Array(gameService.party.players.enumerated()), id: \.offset) { index, player in
                         if gameService.currentPlayer.id == player.id {
-                            Text("\(player.event.instruction)")
-                                .font(Font.custom("Gasoek One", size: 20))
-                                .multilineTextAlignment(.center)
-                                .frame(maxWidth: .infinity)
-                                .padding(.vertical, 20)
-                                .foregroundColor(Color(red: 0.95, green: 0.74, blue: 0))
-                                .background(
-                                    Rectangle()
-                                        .opacity(0.5))
+                            if eventblacksmith == false {
+                                Text("\(player.event.instruction)")
+                                    .font(Font.custom("Gasoek One", size: 20))
+                                    .multilineTextAlignment(.center)
+                                    .frame(maxWidth: .infinity)
+                                    .padding(.vertical, 20)
+                                    .foregroundColor(Color(red: 0.95, green: 0.74, blue: 0))
+                                    .background(
+                                        Rectangle()
+                                            .opacity(0.5))
+                            } else {
+                                Text("Your sail is broken")
+                                    .font(Font.custom("Gasoek One", size: 20))
+                                    .multilineTextAlignment(.center)
+                                    .frame(maxWidth: .infinity)
+                                    .padding(.vertical, 20)
+                                    .foregroundColor(Color(red: 0.95, green: 0.74, blue: 0))
+                                    .background(
+                                        Rectangle()
+                                            .opacity(0.5))
+                            }
                         }
                     }
                     ProgressView("", value: instructionProgress, total: instructionProgressMax)
@@ -233,16 +246,25 @@ struct SailingMasterView: View {
                             Image("Tuas2")
                                 .resizable()
                                 .frame(width: 60, height: 60)
-                            Image("Tuas1")
-                                .resizable()
-                                .frame(width: 24, height: 63)
-                                .padding(.bottom, 50)
-                                .valueRotation(
-                                    totalAngle: $totalAngleOne,
-                                    onAngleChanged: { newAngle in
-                                        changeHeight(sail: 1, newAngle: newAngle)
-                                    }
-                                )
+                            if eventblacksmith == false{
+                                Image("Tuas1")
+                                    .resizable()
+                                    .frame(width: 24, height: 63)
+                                    .padding(.bottom, 50)
+                                    .valueRotation(
+                                        totalAngle: $totalAngleOne,
+                                        onAngleChanged: { newAngle in
+                                            changeHeight(sail: 1, newAngle: newAngle)
+                                        }
+                                    )
+                            }
+                            else{
+                                Image("Tuas1")
+                                    .resizable()
+                                    .frame(width: 24, height: 63)
+                                    .padding(.bottom, 50)
+                            }
+                            
                         }
                         Spacer()
                             .frame(height: 80)
@@ -250,15 +272,23 @@ struct SailingMasterView: View {
                             Image("Tuas2")
                                 .resizable()
                                 .frame(width: 60, height: 60)
-                            Image("Tuas1")
-                                .resizable()
-                                .frame(width: 24, height: 63)
-                                .padding(.bottom, 50).valueRotation(
-                                    totalAngle: $totalAngleTwo,
-                                    onAngleChanged: { newAngle in
-                                        changeHeight(sail: 2, newAngle: newAngle)
-                                    }
-                                )
+                            if eventblacksmith == false{
+                                Image("Tuas1")
+                                    .resizable()
+                                    .frame(width: 24, height: 63)
+                                    .padding(.bottom, 50).valueRotation(
+                                        totalAngle: $totalAngleTwo,
+                                        onAngleChanged: { newAngle in
+                                            changeHeight(sail: 2, newAngle: newAngle)
+                                        }
+                                    )
+                            }else{
+                                Image("Tuas1")
+                                    .resizable()
+                                    .frame(width: 24, height: 63)
+                                    .padding(.bottom, 50)
+                            }
+                            
                         }
                         Spacer()
                             .frame(height: 120)
@@ -266,15 +296,23 @@ struct SailingMasterView: View {
                             Image("Tuas2")
                                 .resizable()
                                 .frame(width: 60, height: 60)
-                            Image("Tuas1")
-                                .resizable()
-                                .frame(width: 24, height: 63)
-                                .padding(.bottom, 50).valueRotation(
-                                    totalAngle: $totalAngleThree,
-                                    onAngleChanged: { newAngle in
-                                        changeHeight(sail: 3, newAngle: newAngle)
-                                    }
-                                )
+                            if eventblacksmith == false{
+                                Image("Tuas1")
+                                    .resizable()
+                                    .frame(width: 24, height: 63)
+                                    .padding(.bottom, 50).valueRotation(
+                                        totalAngle: $totalAngleThree,
+                                        onAngleChanged: { newAngle in
+                                            changeHeight(sail: 3, newAngle: newAngle)
+                                        }
+                                    )
+                            }else{
+                                Image("Tuas1")
+                                    .resizable()
+                                    .frame(width: 24, height: 63)
+                                    .padding(.bottom, 50)
+                            }
+                            
                         }
                     }.padding(.trailing, 10)
                 }
@@ -373,6 +411,17 @@ struct SailingMasterView: View {
                     instructionProgressMax = gameService.party.players[index].event.duration
                 }
             }
+            for (index, player) in gameService.party.players.enumerated() {
+                if player.role == Role.blackSmith {
+                    let obj = gameService.party.players[index].event.objective
+                    if obj == Objective.sail{
+                        eventblacksmith = true
+                    } else {
+                        eventblacksmith = false
+                    }
+                }
+            }
+            gameService.send(party: gameService.party)
         }
         .onChange(of: gameService.party, perform: { newValue in
             if gameService.party.lives <= 0 {
@@ -380,7 +429,13 @@ struct SailingMasterView: View {
                 isStartGame = false
                 gameService.send(party: gameService.party)
             }
-            
+            for (index, player) in gameService.party.players.enumerated() {
+                if player.role == Role.blackSmith {
+                    if gameService.party.players[index].event.isCompleted == true {
+                        eventblacksmith = false
+                    }
+                }
+            }
             var allEventsCompleted = true
             for (_, player) in gameService.party.players.enumerated() {
                 if !player.event.isCompleted {
@@ -396,6 +451,17 @@ struct SailingMasterView: View {
                         instructionProgressMax = gameService.party.players[index].event.duration
                     }
                 }
+                for (index, player) in gameService.party.players.enumerated() {
+                    if player.role == Role.blackSmith {
+                        let obj = gameService.party.players[index].event.objective
+                        if obj == Objective.sail{
+                            eventblacksmith = true
+                        } else {
+                            eventblacksmith = false
+                        }
+                    }
+                }
+                
                 gameService.send(party: gameService.party)
             }
         })
