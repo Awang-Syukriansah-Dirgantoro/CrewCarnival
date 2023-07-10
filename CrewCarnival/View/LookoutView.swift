@@ -153,8 +153,8 @@ struct LookoutView: View {
                                     .frame(width: 247, height: 66)
                                     .clipped()
                             )
-                        Text("You are looking at: \(direction) Direction")
-                            .font(Font.custom("Krub-Regular", size: 20))
+                        Text("You Are Facing \(direction)")
+                            .font(Font.custom("Krub-Regular", size: 18))
                             .multilineTextAlignment(.center)
                             .foregroundColor(.white).frame(width: 247, height: 66)
                     }
@@ -243,11 +243,6 @@ struct LookoutView: View {
                         }
                     }
                 }
-                xOffset = -391
-                isMove = false
-                direction = "Forward"
-                isLeftAble = true
-                isRightAble = true
                 gameService.send(party: gameService.party)
             }
             .onChange(of: gameService.party, perform: { newValue in
@@ -294,7 +289,7 @@ struct LookoutView: View {
                             }
                         }
                     }
-                    xOffset = -391
+                    xOffset = -225
                     isMove = false
                     direction = "Forward"
                     isLeftAble = true
@@ -315,6 +310,11 @@ struct LookoutView: View {
                     gameService.party.generateLHSEvent()
                     if gameService.party.lives > 0 {
                         gameService.party.lives -= 1
+                        xOffset = -225
+                        isMove = false
+                        direction = "Forward"
+                        isLeftAble = true
+                        isRightAble = true
                     }
                     gameService.send(party: gameService.party)
                     if gameService.party.lives <= 0 {

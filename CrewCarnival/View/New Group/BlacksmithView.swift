@@ -13,7 +13,7 @@ struct BlacksmithView: View {
     @State private var instructionProgress = 100.0
     @State private var instructionProgressMax = 100.0
     @State private var roleExplain = false
-    @State var timeExplain = 7.0
+    @State var timeExplain = 7.9
     let timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
     @State private var showPopUp: Bool = false
     @State private var lives = 0
@@ -34,7 +34,7 @@ struct BlacksmithView: View {
                 ZStack {
                     Image("blacksmithExplain").resizable().aspectRatio(contentMode: .fill).frame(width: size.width, height: size.height).onReceive(timer) { _ in
                         timeExplain -= 0.1
-                        if timeExplain <= 0.1 {
+                        if timeExplain <= 1.1 {
                             timeExplain = 0
                             roleExplain = true
                         }

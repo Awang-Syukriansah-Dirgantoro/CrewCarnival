@@ -22,6 +22,8 @@ struct SailingMasterView: View {
     @State private var partyProgress = 0.0
     @State private var instructionProgress = 100.0
     @State private var instructionProgressMax = 100.0
+    @State private var roleExplain = false
+    @State var timeExplain = 7.9
     @State private var gradient = LinearGradient(
         gradient: Gradient(colors: [Color(red: 0, green: 0.82, blue: 0.23)]),
         startPoint: .topLeading,
@@ -106,345 +108,326 @@ struct SailingMasterView: View {
     }
     
     var body: some View {
-        let gradientStyle = GradientProgressStyle(
-            stroke: .clear,
-            fill: gradient,
-            caption: ""
-        )
-        ZStack{
-            Image("BgSailingMaster").resizable().scaledToFill().ignoresSafeArea(.all)
-            VStack{
-                HStack{
-                    Text("Sailing Master")
-                        .font(.custom("Gasoek One", size: 24))
+        if roleExplain == false {
+            GeometryReader{proxy in
+                let size = proxy.size
+                ZStack {
+                    Image("sailingmasterExplain").resizable().aspectRatio(contentMode: .fill).frame(width: size.width, height: size.height).onReceive(timer) { _ in
+                        timeExplain -= 0.1
+                        if timeExplain <= 1.1 {
+                            timeExplain = 0
+                            roleExplain = true
+                        }
+                    }
+                    Text("Sailing In... \(String(String(timeExplain).first!))")
+                        .font(.custom("Gasoek One", size: 20))
                         .foregroundColor(.white)
-                    Spacer()
-                    HStack {
-                        if gameService.party.lives > 0 {
-                            ForEach((0...gameService.party.lives - 1), id: \.self) { _ in
-                                Rectangle()
-                                    .foregroundColor(.clear)
-                                    .frame(width: 25, height: 19)
-                                    .background(
-                                        Image("Heart")
-                                            .resizable()
-                                            .aspectRatio(contentMode: .fill)
-                                            .frame(width: 25, height: 19)
-                                            .clipped()
-                                    )
-                            }
-                        }
-                    }
-                }.padding(.horizontal, 30)
-                    .padding(.top, 10)
-                ZStack{
-                    Rectangle()
-                        .foregroundColor(.clear)
-                        .frame(width: 334, height: 27)
-                        .background(
-                            Image("LoadingBar")
-                                .resizable()
-                                .aspectRatio(contentMode: .fill)
-                                .frame(width: 334, height: 27)
-                                .clipped()
-                        )
-                    ProgressView("", value: partyProgress, total: 100).progressViewStyle(gradientStyle).padding(.horizontal,9)
-                        .onReceive(timer) { _ in
-                            if partyProgress < 100 {
-                                partyProgress += 0.1
-                            }
-                        }
-                }.padding(.bottom,20).padding(.horizontal,30)
+                        .shadow(color: Color.black.opacity(0.2), radius: 4)
+                        .position(x: size.width / 2, y: 215)
+                        .multilineTextAlignment(.center)
+                      
+                }
+            }.ignoresSafeArea()
+        } else {
+            let gradientStyle = GradientProgressStyle(
+                stroke: .clear,
+                fill: gradient,
+                caption: ""
+            )
+            ZStack{
+                Image("BgSailingMaster").resizable().scaledToFill().ignoresSafeArea(.all)
                 VStack{
-                    ForEach(Array(gameService.party.players.enumerated()), id: \.offset) { index, player in
-                        if gameService.currentPlayer.id == player.id {
-                            if eventblacksmith == false {
-                                Text("\(player.event.instruction)")
-                                    .font(Font.custom("Gasoek One", size: 20))
-                                    .multilineTextAlignment(.center)
-                                    .frame(maxWidth: .infinity)
-                                    .padding(.vertical, 20)
-                                    .foregroundColor(Color(red: 0.95, green: 0.74, blue: 0))
-                                    .background(
-                                        Rectangle()
-                                            .opacity(0.5))
-                            } else {
-                                Text("Your sail is broken")
-                                    .font(Font.custom("Gasoek One", size: 20))
-                                    .multilineTextAlignment(.center)
-                                    .frame(maxWidth: .infinity)
-                                    .padding(.vertical, 20)
-                                    .foregroundColor(Color(red: 0.95, green: 0.74, blue: 0))
-                                    .background(
-                                        Rectangle()
-                                            .opacity(0.5))
+                    HStack{
+                        Text("Sailing Master")
+                            .font(.custom("Gasoek One", size: 24))
+                            .foregroundColor(.white)
+                        Spacer()
+                        HStack {
+                            if gameService.party.lives > 0 {
+                                ForEach((0...gameService.party.lives - 1), id: \.self) { _ in
+                                    Rectangle()
+                                        .foregroundColor(.clear)
+                                        .frame(width: 25, height: 19)
+                                        .background(
+                                            Image("Heart")
+                                                .resizable()
+                                                .aspectRatio(contentMode: .fill)
+                                                .frame(width: 25, height: 19)
+                                                .clipped()
+                                        )
+                                }
                             }
                         }
-                    }
-                    ProgressView("", value: instructionProgress, total: instructionProgressMax)
-                        .onReceive(timer) { _ in
-                            if instructionProgress > 0 {
-                                instructionProgress -= 0.1
+                    }.padding(.horizontal, 30)
+                        .padding(.top, 10)
+                    ZStack{
+                        Rectangle()
+                            .foregroundColor(.clear)
+                            .frame(width: 334, height: 27)
+                            .background(
+                                Image("LoadingBar")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width: 334, height: 27)
+                                    .clipped()
+                            )
+                        ProgressView("", value: partyProgress, total: 100).progressViewStyle(gradientStyle).padding(.horizontal,9)
+                            .onReceive(timer) { _ in
+                                if partyProgress < 100 {
+                                    partyProgress += 0.1
+                                }
                             }
-                        }
-                        .progressViewStyle(LinearProgressViewStyle(tint: Color(red: 0, green: 0.82, blue: 0.23)))
-                        .padding(.top, -30)
-                }
-                ZStack{
+                    }.padding(.bottom,20).padding(.horizontal,30)
                     VStack{
+                        ForEach(Array(gameService.party.players.enumerated()), id: \.offset) { index, player in
+                            if gameService.currentPlayer.id == player.id {
+                                if eventblacksmith == false {
+                                    Text("\(player.event.instruction)")
+                                        .font(Font.custom("Gasoek One", size: 20))
+                                        .multilineTextAlignment(.center)
+                                        .frame(maxWidth: .infinity)
+                                        .padding(.vertical, 20)
+                                        .foregroundColor(Color(red: 0.95, green: 0.74, blue: 0))
+                                        .background(
+                                            Rectangle()
+                                                .opacity(0.5))
+                                } else {
+                                    Text("Your sail is broken")
+                                        .font(Font.custom("Gasoek One", size: 20))
+                                        .multilineTextAlignment(.center)
+                                        .frame(maxWidth: .infinity)
+                                        .padding(.vertical, 20)
+                                        .foregroundColor(Color(red: 0.95, green: 0.74, blue: 0))
+                                        .background(
+                                            Rectangle()
+                                                .opacity(0.5))
+                                }
+                            }
+                        }
+                        ProgressView("", value: instructionProgress, total: instructionProgressMax)
+                            .onReceive(timer) { _ in
+                                if instructionProgress > 0 {
+                                    instructionProgress -= 0.1
+                                }
+                            }
+                            .progressViewStyle(LinearProgressViewStyle(tint: Color(red: 0, green: 0.82, blue: 0.23)))
+                            .padding(.top, -30)
+                    }
+                    ZStack{
+                        VStack{
+                            Rectangle()
+                                .foregroundColor(.clear)
+                                .frame(maxWidth: 350, maxHeight: 112)
+                                .background(
+                                    VStack{
+                                        Image("Sail")
+                                            .resizable()
+                                            .frame(maxWidth: 350, maxHeight: sailOneHeight)
+                                            .padding(.vertical, -5)
+                                        Spacer()
+                                    }
+                                ).offset(y:32)
+                            Rectangle()
+                                .foregroundColor(.clear)
+                                .frame(maxWidth: 440, maxHeight: 160)
+                                .background(
+                                    VStack{
+                                        Image("Sail")
+                                            .resizable()
+                                            .frame(maxWidth: 440, maxHeight: sailTwoHeight)
+                                            .padding(.bottom, -5)
+                                        Spacer()
+                                    }
+                                ).offset(y:32)
+                            Rectangle()
+                                .foregroundColor(.clear)
+                                .frame(maxWidth: 590, maxHeight: 260)
+                                .background(
+                                    VStack{
+                                        Image("Sail")
+                                            .resizable()
+                                            .frame(maxWidth: 590, maxHeight: sailThreeHeight)
+                                            .padding(.bottom, 20)
+                                        Spacer()
+                                    }
+                                ).offset(y:32)
+                        }
                         Rectangle()
                             .foregroundColor(.clear)
-                            .frame(maxWidth: 350, maxHeight: 112)
+                            .frame(width: 390, height: 635.99042)
                             .background(
-                                VStack{
-                                    Image("Sail")
-                                        .resizable()
-                                        .frame(maxWidth: 350, maxHeight: sailOneHeight)
-                                        .padding(.vertical, -5)
-                                    Spacer()
-                                }
+                                Image("NoSail")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width: 390, height: 635.9904174804688)
+                                    .clipped()
                             ).offset(y:32)
-                        Rectangle()
-                            .foregroundColor(.clear)
-                            .frame(maxWidth: 440, maxHeight: 160)
-                            .background(
-                                VStack{
-                                    Image("Sail")
+                        VStack{
+                            Spacer()
+                                .frame(height: 50)
+                            ZStack{
+                                Image("Tuas2")
+                                    .resizable()
+                                    .frame(width: 60, height: 60)
+                                if eventblacksmith == false{
+                                    Image("Tuas1")
                                         .resizable()
-                                        .frame(maxWidth: 440, maxHeight: sailTwoHeight)
-                                        .padding(.bottom, -5)
-                                    Spacer()
+                                        .frame(width: 24, height: 63)
+                                        .padding(.bottom, 50)
+                                        .valueRotation(
+                                            totalAngle: $totalAngleOne,
+                                            onAngleChanged: { newAngle in
+                                                changeHeight(sail: 1, newAngle: newAngle)
+                                            }
+                                        )
                                 }
-                            ).offset(y:32)
-                        Rectangle()
-                            .foregroundColor(.clear)
-                            .frame(maxWidth: 590, maxHeight: 260)
-                            .background(
-                                VStack{
-                                    Image("Sail")
+                                else{
+                                    Image("Tuas1")
                                         .resizable()
-                                        .frame(maxWidth: 590, maxHeight: sailThreeHeight)
-                                        .padding(.bottom, 20)
-                                    Spacer()
+                                        .frame(width: 24, height: 63)
+                                        .padding(.bottom, 50)
                                 }
-                            ).offset(y:32)
+                                
+                            }
+                            Spacer()
+                                .frame(height: 80)
+                            ZStack{
+                                Image("Tuas2")
+                                    .resizable()
+                                    .frame(width: 60, height: 60)
+                                if eventblacksmith == false{
+                                    Image("Tuas1")
+                                        .resizable()
+                                        .frame(width: 24, height: 63)
+                                        .padding(.bottom, 50).valueRotation(
+                                            totalAngle: $totalAngleTwo,
+                                            onAngleChanged: { newAngle in
+                                                changeHeight(sail: 2, newAngle: newAngle)
+                                            }
+                                        )
+                                }else{
+                                    Image("Tuas1")
+                                        .resizable()
+                                        .frame(width: 24, height: 63)
+                                        .padding(.bottom, 50)
+                                }
+                                
+                            }
+                            Spacer()
+                                .frame(height: 120)
+                            ZStack{
+                                Image("Tuas2")
+                                    .resizable()
+                                    .frame(width: 60, height: 60)
+                                if eventblacksmith == false{
+                                    Image("Tuas1")
+                                        .resizable()
+                                        .frame(width: 24, height: 63)
+                                        .padding(.bottom, 50).valueRotation(
+                                            totalAngle: $totalAngleThree,
+                                            onAngleChanged: { newAngle in
+                                                changeHeight(sail: 3, newAngle: newAngle)
+                                            }
+                                        )
+                                }else{
+                                    Image("Tuas1")
+                                        .resizable()
+                                        .frame(width: 24, height: 63)
+                                        .padding(.bottom, 50)
+                                }
+                                
+                            }
+                        }.padding(.trailing, 10)
                     }
-                    Rectangle()
-                        .foregroundColor(.clear)
-                        .frame(width: 390, height: 635.99042)
-                        .background(
-                            Image("NoSail")
-                                .resizable()
-                                .aspectRatio(contentMode: .fill)
-                                .frame(width: 390, height: 635.9904174804688)
-                                .clipped()
-                        ).offset(y:32)
-                    VStack{
-                        Spacer()
-                            .frame(height: 50)
-                        ZStack{
-                            Image("Tuas2")
-                                .resizable()
-                                .frame(width: 60, height: 60)
-                            if eventblacksmith == false{
-                                Image("Tuas1")
-                                    .resizable()
-                                    .frame(width: 24, height: 63)
-                                    .padding(.bottom, 50)
-                                    .valueRotation(
-                                        totalAngle: $totalAngleOne,
-                                        onAngleChanged: { newAngle in
-                                            changeHeight(sail: 1, newAngle: newAngle)
-                                        }
-                                    )
-                            }
-                            else{
-                                Image("Tuas1")
-                                    .resizable()
-                                    .frame(width: 24, height: 63)
-                                    .padding(.bottom, 50)
-                            }
-                            
-                        }
-                        Spacer()
-                            .frame(height: 80)
-                        ZStack{
-                            Image("Tuas2")
-                                .resizable()
-                                .frame(width: 60, height: 60)
-                            if eventblacksmith == false{
-                                Image("Tuas1")
-                                    .resizable()
-                                    .frame(width: 24, height: 63)
-                                    .padding(.bottom, 50).valueRotation(
-                                        totalAngle: $totalAngleTwo,
-                                        onAngleChanged: { newAngle in
-                                            changeHeight(sail: 2, newAngle: newAngle)
-                                        }
-                                    )
-                            }else{
-                                Image("Tuas1")
-                                    .resizable()
-                                    .frame(width: 24, height: 63)
-                                    .padding(.bottom, 50)
-                            }
-                            
-                        }
-                        Spacer()
-                            .frame(height: 120)
-                        ZStack{
-                            Image("Tuas2")
-                                .resizable()
-                                .frame(width: 60, height: 60)
-                            if eventblacksmith == false{
-                                Image("Tuas1")
-                                    .resizable()
-                                    .frame(width: 24, height: 63)
-                                    .padding(.bottom, 50).valueRotation(
-                                        totalAngle: $totalAngleThree,
-                                        onAngleChanged: { newAngle in
-                                            changeHeight(sail: 3, newAngle: newAngle)
-                                        }
-                                    )
-                            }else{
-                                Image("Tuas1")
-                                    .resizable()
-                                    .frame(width: 24, height: 63)
-                                    .padding(.bottom, 50)
-                            }
-                            
-                        }
-                    }.padding(.trailing, 10)
+                    //                Button {
+                    //                    for (index, party) in gameService.parties.enumerated() {
+                    //                        if party.id == partyId {
+                    //                            for (_, player) in gameService.parties[index].players.enumerated() {
+                    //                                if player.role == Role.sailingMaster {
+                    //                                    if player.event.objective == Objective.slow10 {
+                    //                                        gameService.parties[index].setEventCompleted(role: Role.helmsman)
+                    //                                        gameService.parties[index].setEventCompleted(role: Role.sailingMaster)
+                    //                                        gameService.send(parties: gameService.parties)
+                    //                                        print("cccc \(   gameService.parties[index])")
+                    //                                    }
+                    //                                }
+                    //                            }
+                    //                        }
+                    //                    }
+                    //                } label: {
+                    //                    Text("Slow 10 Knots")
+                    //                        .foregroundColor(.yellow)
+                    //                        .fontWeight(.bold)
+                    //                        .frame(
+                    //                            minWidth: 0,
+                    //                            maxWidth: .infinity
+                    //                        )
+                    //                        .padding()
+                    //                        .background(RoundedRectangle(cornerRadius: 15)
+                    //                            .fill(Color.black))
+                    //                        .padding(.horizontal)
+                    //                }
+                    //                Button {
+                    //                    for (index, party) in gameService.parties.enumerated() {
+                    //                        if party.id == partyId {
+                    //                            for (_, player) in gameService.parties[index].players.enumerated() {
+                    //                                if player.role == Role.sailingMaster {
+                    //                                    if player.event.objective == Objective.slow20 {
+                    //                                        gameService.parties[index].setEventCompleted(role: Role.helmsman)
+                    //                                        gameService.parties[index].setEventCompleted(role: Role.sailingMaster)
+                    //                                        gameService.send(parties: gameService.parties)
+                    //                                        print("cccc \(   gameService.parties[index])")
+                    //                                    }
+                    //                                }
+                    //                            }
+                    //                        }
+                    //                    }
+                    //                } label: {
+                    //                    Text("Slow 20 Knots")
+                    //                        .foregroundColor(.yellow)
+                    //                        .fontWeight(.bold)
+                    //                        .frame(
+                    //                            minWidth: 0,
+                    //                            maxWidth: .infinity
+                    //                        )
+                    //                        .padding()
+                    //                        .background(RoundedRectangle(cornerRadius: 15)
+                    //                            .fill(Color.black))
+                    //                        .padding(.horizontal)
+                    //                }
+                    //                Button {
+                    //                    for (index, party) in gameService.parties.enumerated() {
+                    //                        if party.id == partyId {
+                    //                            for (_, player) in gameService.parties[index].players.enumerated() {
+                    //                                if player.role == Role.sailingMaster {
+                    //                                    if player.event.objective == Objective.slow30 {
+                    //                                        gameService.parties[index].setEventCompleted(role: Role.helmsman)
+                    //                                        gameService.parties[index].setEventCompleted(role: Role.sailingMaster)
+                    //                                        gameService.send(parties: gameService.parties)
+                    //                                        print("cccc \(   gameService.parties[index])")
+                    //                                    }
+                    //                                }
+                    //                            }
+                    //                        }
+                    //                    }
+                    //                } label: {
+                    //                    Text("Slow 30 Knots")
+                    //                        .foregroundColor(.yellow)
+                    //                        .fontWeight(.bold)
+                    //                        .frame(
+                    //                            minWidth: 0,
+                    //                            maxWidth: .infinity
+                    //                        )
+                    //                        .padding()
+                    //                        .background(RoundedRectangle(cornerRadius: 15)
+                    //                            .fill(Color.black))
+                    //                        .padding(.horizontal)
+                    //                }
+                    Spacer()
                 }
-                //                Button {
-                //                    for (index, party) in gameService.parties.enumerated() {
-                //                        if party.id == partyId {
-                //                            for (_, player) in gameService.parties[index].players.enumerated() {
-                //                                if player.role == Role.sailingMaster {
-                //                                    if player.event.objective == Objective.slow10 {
-                //                                        gameService.parties[index].setEventCompleted(role: Role.helmsman)
-                //                                        gameService.parties[index].setEventCompleted(role: Role.sailingMaster)
-                //                                        gameService.send(parties: gameService.parties)
-                //                                        print("cccc \(   gameService.parties[index])")
-                //                                    }
-                //                                }
-                //                            }
-                //                        }
-                //                    }
-                //                } label: {
-                //                    Text("Slow 10 Knots")
-                //                        .foregroundColor(.yellow)
-                //                        .fontWeight(.bold)
-                //                        .frame(
-                //                            minWidth: 0,
-                //                            maxWidth: .infinity
-                //                        )
-                //                        .padding()
-                //                        .background(RoundedRectangle(cornerRadius: 15)
-                //                            .fill(Color.black))
-                //                        .padding(.horizontal)
-                //                }
-                //                Button {
-                //                    for (index, party) in gameService.parties.enumerated() {
-                //                        if party.id == partyId {
-                //                            for (_, player) in gameService.parties[index].players.enumerated() {
-                //                                if player.role == Role.sailingMaster {
-                //                                    if player.event.objective == Objective.slow20 {
-                //                                        gameService.parties[index].setEventCompleted(role: Role.helmsman)
-                //                                        gameService.parties[index].setEventCompleted(role: Role.sailingMaster)
-                //                                        gameService.send(parties: gameService.parties)
-                //                                        print("cccc \(   gameService.parties[index])")
-                //                                    }
-                //                                }
-                //                            }
-                //                        }
-                //                    }
-                //                } label: {
-                //                    Text("Slow 20 Knots")
-                //                        .foregroundColor(.yellow)
-                //                        .fontWeight(.bold)
-                //                        .frame(
-                //                            minWidth: 0,
-                //                            maxWidth: .infinity
-                //                        )
-                //                        .padding()
-                //                        .background(RoundedRectangle(cornerRadius: 15)
-                //                            .fill(Color.black))
-                //                        .padding(.horizontal)
-                //                }
-                //                Button {
-                //                    for (index, party) in gameService.parties.enumerated() {
-                //                        if party.id == partyId {
-                //                            for (_, player) in gameService.parties[index].players.enumerated() {
-                //                                if player.role == Role.sailingMaster {
-                //                                    if player.event.objective == Objective.slow30 {
-                //                                        gameService.parties[index].setEventCompleted(role: Role.helmsman)
-                //                                        gameService.parties[index].setEventCompleted(role: Role.sailingMaster)
-                //                                        gameService.send(parties: gameService.parties)
-                //                                        print("cccc \(   gameService.parties[index])")
-                //                                    }
-                //                                }
-                //                            }
-                //                        }
-                //                    }
-                //                } label: {
-                //                    Text("Slow 30 Knots")
-                //                        .foregroundColor(.yellow)
-                //                        .fontWeight(.bold)
-                //                        .frame(
-                //                            minWidth: 0,
-                //                            maxWidth: .infinity
-                //                        )
-                //                        .padding()
-                //                        .background(RoundedRectangle(cornerRadius: 15)
-                //                            .fill(Color.black))
-                //                        .padding(.horizontal)
-                //                }
-                Spacer()
+                .padding(.top,50)
             }
-            .padding(.top,50)
-        }
-        .onAppear {
-            for (index, player) in gameService.party.players.enumerated() {
-                if player.role == Role.sailingMaster {
-                    instructionProgress = gameService.party.players[index].event.duration
-                    instructionProgressMax = gameService.party.players[index].event.duration
-                }
-            }
-            for (index, player) in gameService.party.players.enumerated() {
-                if player.role == Role.blackSmith {
-                    let obj = gameService.party.players[index].event.objective
-                    if obj == Objective.sail{
-                        eventblacksmith = true
-                    } else {
-                        eventblacksmith = false
-                    }
-                }
-            }
-            gameService.send(party: gameService.party)
-        }
-        .onChange(of: gameService.party, perform: { newValue in
-            if gameService.party.lives <= 0 {
-                gameService.party.reset()
-                isStartGame = false
-                gameService.send(party: gameService.party)
-            }
-            for (index, player) in gameService.party.players.enumerated() {
-                if player.role == Role.blackSmith {
-                    if gameService.party.players[index].event.isCompleted == true {
-                        eventblacksmith = false
-                    }
-                }
-            }
-            var allEventsCompleted = true
-            for (_, player) in gameService.party.players.enumerated() {
-                if !player.event.isCompleted {
-                    allEventsCompleted = false
-                }
-            }
-            
-            if allEventsCompleted {
-                gameService.party.generateLHSEvent()
+            .onAppear {
                 for (index, player) in gameService.party.players.enumerated() {
                     if player.role == Role.sailingMaster {
                         instructionProgress = gameService.party.players[index].event.duration
@@ -461,39 +444,80 @@ struct SailingMasterView: View {
                         }
                     }
                 }
-                
                 gameService.send(party: gameService.party)
             }
-        })
-        .onChange(of: instructionProgress, perform: { newValue in
-            if instructionProgress <= 0 {
-                for (index, _) in gameService.party.players.enumerated() {
-                    instructionProgress = gameService.party.players[index].event.duration
+            .onChange(of: gameService.party, perform: { newValue in
+                if gameService.party.lives <= 0 {
+                    gameService.party.reset()
+                    isStartGame = false
+                    gameService.send(party: gameService.party)
                 }
-            }
-        })
-        //            .onChange(of: progress) { newValue in
-        //                print(progress)
-        //                for (index, party) in gameService.parties.enumerated() {
-        //                    if party.id == partyId {
-        //                        for (index2, player) in gameService.parties[index].players.enumerated() {
-        //                            if player.role == Role.sailingMaster {
-        //                                if player.event.objective == Objective.turnLeft {
-        //                                    if newValue < -100 {
-        //                                        gameService.parties[index].players[index2].event.instruction = "Our Left is Clear!\nQuickly Turn the Ship!"
-        //                                        gameService.parties[index].triggerSailingMasterInstruction()
-        //                                    }
-        //                                } else {
-        //                                    if newValue > 100 {
-        //                                        gameService.parties[index].players[index2].event.instruction = "Our Front is Clear!\nQuickly Turn the Ship!"
-        //                                        gameService.parties[index].triggerSailingMasterInstruction()
-        //                                    }
-        //                                }
-        //                            }
-        //                        }
-        //                    }
-        //                }
-        //            }
+                for (index, player) in gameService.party.players.enumerated() {
+                    if player.role == Role.blackSmith {
+                        if gameService.party.players[index].event.isCompleted == true {
+                            eventblacksmith = false
+                        }
+                    }
+                }
+                var allEventsCompleted = true
+                for (_, player) in gameService.party.players.enumerated() {
+                    if !player.event.isCompleted {
+                        allEventsCompleted = false
+                    }
+                }
+                
+                if allEventsCompleted {
+                    gameService.party.generateLHSEvent()
+                    for (index, player) in gameService.party.players.enumerated() {
+                        if player.role == Role.sailingMaster {
+                            instructionProgress = gameService.party.players[index].event.duration
+                            instructionProgressMax = gameService.party.players[index].event.duration
+                        }
+                    }
+                    for (index, player) in gameService.party.players.enumerated() {
+                        if player.role == Role.blackSmith {
+                            let obj = gameService.party.players[index].event.objective
+                            if obj == Objective.sail{
+                                eventblacksmith = true
+                            } else {
+                                eventblacksmith = false
+                            }
+                        }
+                    }
+                    
+                    gameService.send(party: gameService.party)
+                }
+            })
+            .onChange(of: instructionProgress, perform: { newValue in
+                if instructionProgress <= 0 {
+                    for (index, _) in gameService.party.players.enumerated() {
+                        instructionProgress = gameService.party.players[index].event.duration
+                    }
+                }
+            })
+            //            .onChange(of: progress) { newValue in
+            //                print(progress)
+            //                for (index, party) in gameService.parties.enumerated() {
+            //                    if party.id == partyId {
+            //                        for (index2, player) in gameService.parties[index].players.enumerated() {
+            //                            if player.role == Role.sailingMaster {
+            //                                if player.event.objective == Objective.turnLeft {
+            //                                    if newValue < -100 {
+            //                                        gameService.parties[index].players[index2].event.instruction = "Our Left is Clear!\nQuickly Turn the Ship!"
+            //                                        gameService.parties[index].triggerSailingMasterInstruction()
+            //                                    }
+            //                                } else {
+            //                                    if newValue > 100 {
+            //                                        gameService.parties[index].players[index2].event.instruction = "Our Front is Clear!\nQuickly Turn the Ship!"
+            //                                        gameService.parties[index].triggerSailingMasterInstruction()
+            //                                    }
+            //                                }
+            //                            }
+            //                        }
+            //                    }
+            //                }
+            //            }
+        }
     }
 }
 
