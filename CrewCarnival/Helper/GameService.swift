@@ -145,7 +145,7 @@ extension GameService: MCSessionDelegate {
         log.info("connectedpeers \(session.connectedPeers)")
         
         if state == .connected {
-            if party.players.count != 0 {
+            if isAdvertiser {
                 send(party: party)
             }
             serviceBrowser.stopBrowsingForPeers()

@@ -52,26 +52,6 @@ struct ReadyView: View {
                             Image("readybtn")
                         }.offset(y:70)
                     }.offset(y: 60)
-                        .onChange(of: gameService.party, perform: { newValue in
-                            var areAllPlayersReady = false
-                            
-                            for (_, player) in gameService.party.players.enumerated() {
-                                if player.isReady {
-                                    areAllPlayersReady = true
-                                } else {
-                                    areAllPlayersReady = false
-                                    break
-                                }
-                            }
-                            
-                            if areAllPlayersReady {
-                                gameService.party.isPlaying = true
-                                
-                                self.gameService.send(party: gameService.party)
-                                
-                                isStartGame = true
-                            }
-                        })
                 }
             }
             .onDisappear {               
@@ -96,6 +76,22 @@ struct ReadyView: View {
                         gameService.party.assignRoles()
                         gameService.send(party: gameService.party)
                     }
+                }
+                
+                var areAllPlayersReady = false
+                
+                for (_, player) in gameService.party.players.enumerated() {
+                    if player.isReady {
+                        areAllPlayersReady = true
+                    } else {
+                        areAllPlayersReady = false
+                        break
+                    }
+                }
+                
+                if areAllPlayersReady {
+                    gameService.party.isPlaying = true
+                    isStartGame = true
                 }
             }
         }
