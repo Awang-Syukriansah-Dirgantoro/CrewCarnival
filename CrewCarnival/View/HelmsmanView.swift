@@ -34,6 +34,7 @@ struct HelmsmanView: View {
     @State private var text = "Turn Progress"
     
     @State private var knobValue: Double = 0.5
+    @State var eventblacksmith = false
     
     var body: some View {
         if roleExplain == false{
@@ -66,14 +67,7 @@ struct HelmsmanView: View {
                 
                 ZStack {
                     Image("ShipHelmsman").resizable().scaledToFill().ignoresSafeArea(.all)
-                    Button(action: {
-                        gameService.party.lives -= 1
-                        gameService.send(party: gameService.party)
-                    }) {
-                        Image(systemName: "minus.circle")
-                            .font(.system(size: 50))
-                            .foregroundColor(.red)
-                    }.offset(y:-100)
+                    
                     
                     VStack{
                         HStack{
@@ -121,15 +115,28 @@ struct HelmsmanView: View {
                         VStack{
                             ForEach(Array(gameService.party.players.enumerated()), id: \.offset) { index, player in
                                 if gameService.currentPlayer.id == player.id {
-                                    Text("\(player.event.instruction)")
-                                        .font(Font.custom("Gasoek One", size: 20))
-                                        .multilineTextAlignment(.center)
-                                        .frame(maxWidth: .infinity)
-                                        .padding(.vertical, 20)
-                                        .foregroundColor(Color(red: 0.95, green: 0.74, blue: 0))
-                                        .background(
-                                            Rectangle()
-                                                .opacity(0.5))
+                                    if eventblacksmith == false {
+                                        Text("\(player.event.instruction)")
+                                            .font(Font.custom("Gasoek One", size: 20))
+                                            .multilineTextAlignment(.center)
+                                            .frame(maxWidth: .infinity)
+                                            .padding(.vertical, 20)
+                                            .foregroundColor(Color(red: 0.95, green: 0.74, blue: 0))
+                                            .background(
+                                                Rectangle()
+                                                    .opacity(0.5))
+                                    } else {
+                                        Text("Your steer is broken")
+                                            .font(Font.custom("Gasoek One", size: 20))
+                                            .multilineTextAlignment(.center)
+                                            .frame(maxWidth: .infinity)
+                                            .padding(.vertical, 20)
+                                            .foregroundColor(Color(red: 0.95, green: 0.74, blue: 0))
+                                            .background(
+                                                Rectangle()
+                                                    .opacity(0.5))
+                                    }
+                                    
                                 }
                             }
                             ProgressView("", value: instructionProgress, total: instructionProgressMax)
@@ -141,27 +148,35 @@ struct HelmsmanView: View {
                                 .progressViewStyle(LinearProgressViewStyle(tint: Color(red: 0, green: 0.82, blue: 0.23)))
                                 .padding(.top, -30)
                         }
-                        Image("StearingWheel")
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 300, height: 300)
-                            .knobRotation(
-                              knobValue: $knobValue,
-                              minAngle: -360,
-                              maxAngle: +360,
-                              onKnobValueChanged: { newValue in
-                                knobValue = newValue
-                              },
-                              animation: .spring()
-                            )
-                            .onChange(of: knobValue, perform: { newValue in
-                                var value = "\(knobValue)"
-                                if Double(value)! > 0.5 {
-                                    self.progress = (Double(value)! - 0.5) * 200
-                                } else {
-                                    self.progress = ((1 - Double(value)!) - 0.5) * 200
-                                }
-                            })
+                        if eventblacksmith == false{
+                            Image("StearingWheel")
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: 300, height: 300)
+                                .knobRotation(
+                                  knobValue: $knobValue,
+                                  minAngle: -360,
+                                  maxAngle: +360,
+                                  onKnobValueChanged: { newValue in
+                                    knobValue = newValue
+                                  },
+                                  animation: .spring()
+                                )
+                                .onChange(of: knobValue, perform: { newValue in
+                                    var value = "\(knobValue)"
+                                    if Double(value)! > 0.5 {
+                                        self.progress = (Double(value)! - 0.5) * 200
+                                    } else {
+                                        self.progress = ((1 - Double(value)!) - 0.5) * 200
+                                    }
+                                }).offset(y: 150)
+                        }else{
+                            Image("StearingWheel")
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: 300, height: 300).offset(y: 150)
+                        }
+                        
 //                            .rotationEffect(
 //                                .degrees(Double(self.angle)))
 //                            .gesture(DragGesture()
@@ -192,7 +207,7 @@ struct HelmsmanView: View {
 //                                    self.lastAngle = self.angle
 //                                }
 //                            )
-                            .offset(y: 150)
+                            
                         Spacer()
                             .frame(height: 180)
                         VStack{
@@ -228,6 +243,16 @@ struct HelmsmanView: View {
                         instructionProgressMax = gameService.party.players[index].event.duration
                     }
                 }
+                for (index, player) in gameService.party.players.enumerated() {
+                    if player.role == Role.blackSmith {
+                        let obj = gameService.party.players[index].event.objective
+                        if obj == Objective.steer{
+                            eventblacksmith = true
+                        } else {
+                            eventblacksmith = false
+                        }
+                    }
+                }
                 progress = 0
                 angle = 0
                 lastAngle = 0
@@ -245,6 +270,13 @@ struct HelmsmanView: View {
                     //                            isStartGame = false
                     //                            gameService.send(parties: gameService.parties)
                 }
+                for (index, player) in gameService.party.players.enumerated() {
+                    if player.role == Role.blackSmith {
+                        if gameService.party.players[index].event.isCompleted == true {
+                            eventblacksmith = false
+                        }
+                    }
+                }
                 
                 var allEventsCompleted = true
                 for (_, player) in gameService.party.players.enumerated() {
@@ -259,6 +291,16 @@ struct HelmsmanView: View {
                         if player.role == Role.helmsman {
                             instructionProgress = gameService.party.players[index].event.duration
                             instructionProgressMax = gameService.party.players[index].event.duration
+                        }
+                    }
+                    for (index, player) in gameService.party.players.enumerated() {
+                        if player.role == Role.blackSmith {
+                            let obj = gameService.party.players[index].event.objective
+                            if obj == Objective.steer{
+                                eventblacksmith = true
+                            } else {
+                                eventblacksmith = false
+                            }
                         }
                     }
                     progress = 0

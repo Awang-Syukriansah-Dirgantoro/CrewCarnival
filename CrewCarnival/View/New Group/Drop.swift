@@ -10,6 +10,8 @@ import SwiftUI
 struct Drop: View {
     
     @ObservedObject var vm : PuzzleViewModel
+    @Binding var isPuzzleCompleted: Bool
+    @EnvironmentObject var gameService: GameService
     
     var body: some View {
         ZStack {
@@ -37,10 +39,26 @@ struct Drop: View {
                                                 withAnimation {
                                                     item.isShowing = true
                                                     vm.updateSuffledArray(character: item)
+                                                    
+                                                }
+                                                for (index, player) in gameService.party.players.enumerated() {
+                                                    if player.role == Role.blackSmith {
+                                                        let obj = gameService.party.players[index].event.objective
+                                                        if obj == Objective.binocular{
+                                                            if vm.droppedCount == 3 {
+                                                                isPuzzleCompleted = true
+                                                            }
+                                                        } else {
+                                                            if vm.droppedCount == 4 {
+                                                                isPuzzleCompleted = true
+                                                            }
+                                                        }
+                                                    }
                                                 }
                                                 
                                                 item.isShowing = true
                                             }
+                                            
                                             
                                         }else {
                                             animationView()
@@ -68,12 +86,6 @@ struct Drop: View {
                 vm.animateWrong = false
             }
         }
-    }
-}
-
-struct DropView_Previews: PreviewProvider {
-    static var previews: some View {
-        Drop(vm: PuzzleViewModel())
     }
 }
 

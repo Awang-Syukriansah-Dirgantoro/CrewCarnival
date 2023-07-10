@@ -27,6 +27,7 @@ struct LookoutView: View {
     @State private var isRightAble = true
     @EnvironmentObject var gameService: GameService
     @Binding var isStartGame: Bool
+    @State var eventblacksmith = false
     let timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
     
     var body: some View {
@@ -108,15 +109,27 @@ struct LookoutView: View {
                     VStack{
                         ForEach(Array(gameService.party.players.enumerated()), id: \.offset) { index, player in
                             if gameService.currentPlayer.id == player.id {
-                                Text("\(player.event.instruction)")
-                                    .font(Font.custom("Gasoek One", size: 20))
-                                    .multilineTextAlignment(.center)
-                                    .frame(maxWidth: .infinity)
-                                    .padding(.vertical, 20)
-                                    .foregroundColor(Color(red: 0.95, green: 0.74, blue: 0))
-                                    .background(
-                                        Rectangle()
-                                            .opacity(0.5))
+                                if eventblacksmith == false {
+                                    Text("\(player.event.instruction)")
+                                        .font(Font.custom("Gasoek One", size: 20))
+                                        .multilineTextAlignment(.center)
+                                        .frame(maxWidth: .infinity)
+                                        .padding(.vertical, 20)
+                                        .foregroundColor(Color(red: 0.95, green: 0.74, blue: 0))
+                                        .background(
+                                            Rectangle()
+                                                .opacity(0.5))
+                                } else {
+                                    Text("Your steer is broken")
+                                        .font(Font.custom("Gasoek One", size: 20))
+                                        .multilineTextAlignment(.center)
+                                        .frame(maxWidth: .infinity)
+                                        .padding(.vertical, 20)
+                                        .foregroundColor(Color(red: 0.95, green: 0.74, blue: 0))
+                                        .background(
+                                            Rectangle()
+                                                .opacity(0.5))
+                                }
                             }
                         }
                         ProgressView("", value: instructionProgress, total: instructionProgressMax)
@@ -174,7 +187,7 @@ struct LookoutView: View {
                                         .frame(width: 125.5172348022461, height: 129.99998474121094)
                                         .clipped()
                                 )
-                        }.disabled(!isLeftAble)
+                        }.disabled(!isLeftAble).disabled(eventblacksmith)
                         Spacer()
                         Button{
                             isMove = true
@@ -203,7 +216,7 @@ struct LookoutView: View {
                                         .frame(width: 125.5172348022461, height: 129.99998474121094)
                                         .clipped()
                                 )
-                        }.disabled(!isRightAble)
+                        }.disabled(!isRightAble).disabled(eventblacksmith)
                         Spacer()
                     }
                 }
@@ -218,6 +231,16 @@ struct LookoutView: View {
                     if player.role == Role.lookout {
                         instructionProgress = gameService.party.players[index].event.duration
                         instructionProgressMax = gameService.party.players[index].event.duration
+                    }
+                }
+                for (index, player) in gameService.party.players.enumerated() {
+                    if player.role == Role.blackSmith {
+                        let obj = gameService.party.players[index].event.objective
+                        if obj == Objective.binocular{
+                            eventblacksmith = true
+                        } else {
+                            eventblacksmith = false
+                        }
                     }
                 }
                 xOffset = -391
@@ -238,6 +261,13 @@ struct LookoutView: View {
                     //                            isStartGame = false
                     //                            gameService.send(parties: gameService.parties)
                 }
+                for (index, player) in gameService.party.players.enumerated() {
+                    if player.role == Role.blackSmith {
+                        if gameService.party.players[index].event.isCompleted == true {
+                            eventblacksmith = false
+                        }
+                    }
+                }
                 
                 var allEventsCompleted = true
                 for (_, player) in gameService.party.players.enumerated() {
@@ -252,6 +282,16 @@ struct LookoutView: View {
                         if player.role == Role.helmsman {
                             instructionProgress = gameService.party.players[index].event.duration
                             instructionProgressMax = gameService.party.players[index].event.duration
+                        }
+                    }
+                    for (index, player) in gameService.party.players.enumerated() {
+                        if player.role == Role.blackSmith {
+                            let obj = gameService.party.players[index].event.objective
+                            if obj == Objective.binocular{
+                                eventblacksmith = true
+                            } else {
+                                eventblacksmith = false
+                            }
                         }
                     }
                     xOffset = -391

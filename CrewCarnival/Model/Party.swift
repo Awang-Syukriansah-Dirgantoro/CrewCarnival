@@ -37,7 +37,7 @@ struct Party: Codable, Identifiable, Equatable {
                     }
                     
 //                    if player.event.objective != objective {
-                        players[index].event = Event(duration: 10, instruction: "There are obstacles nearby!", objective: objective)
+                        players[index].event = Event(duration: 30, instruction: "There are obstacles nearby!", objective: objective)
 //                        break
 //                    }
 //                }
@@ -56,7 +56,7 @@ struct Party: Codable, Identifiable, Equatable {
                     objective = Objective.turnRight
                 }
                 
-                players[index].event = Event(duration: 10, instruction: "There are obstacles nearby!", objective: objective)
+                players[index].event = Event(duration: 30, instruction: "There are obstacles nearby!", objective: objective)
             }
             
             if player.role == Role.sailingMaster {
@@ -74,7 +74,27 @@ struct Party: Codable, Identifiable, Equatable {
                     objective = Objective.slow30
                 }
                 
-                players[index].event = Event(duration: 10, instruction: "There are obstacles nearby!", objective: objective)
+                players[index].event = Event(duration: 30, instruction: "There are obstacles nearby!", objective: objective)
+            }
+            if player.role == Role.blackSmith {
+                var randomInt = Int.random(in: 0...2)
+                var objective = Objective.steer
+                
+                switch randomInt {
+                case 0:
+                    objective = Objective.sail
+                    break
+                case 1:
+                    objective = Objective.binocular
+                    break
+                case 2:
+                    objective = Objective.steer
+                    break
+                default:
+                    objective = Objective.steer
+                }
+                
+                players[index].event = Event(duration: 30, instruction: "Drag and fix the object", objective: objective, isCompleted: false)
             }
         }
     }
@@ -127,10 +147,10 @@ struct Party: Codable, Identifiable, Equatable {
                     players[index].role = Role.sailingMaster
                     break
                 case 3:
-                    players[index].role = Role.cabinBoy
+                    players[index].role = Role.blackSmith
                     break
                 default:
-                    players[index].role = Role.blackSmith
+                    players[index].role = Role.cabinBoy
                 }
                 
                 var isRoleTaken = false
