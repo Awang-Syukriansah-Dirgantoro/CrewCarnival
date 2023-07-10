@@ -30,12 +30,16 @@ class PuzzleViewModel:NSObject, ObservableObject {
     
     @Published var animateWrong = false
     @Published var droppedCount: CGFloat = 0
+    @EnvironmentObject var gameService: GameService
+    
  
     func generateGrid() -> [[Puzzle]] {
         var gridArray: [[Puzzle]] = []
         var tempArray: [Puzzle] = []
         var currentWidth: CGFloat = 0
         let totalScreenWidth:CGFloat = CGFloat(UIScreen.main.bounds.width - 30)
+        
+        
         
         if randomEvent == "steer"{
             for steer in steers {
@@ -84,7 +88,30 @@ class PuzzleViewModel:NSObject, ObservableObject {
         randomEvent = event.randomElement()
     }
     
-    func shuffleArray() {
+    func shuffleArray(objct: Objective?) {
+        droppedCount = 0
+               
+        if objct == Objective.sail{
+            randomEvent = "sail"
+        } else if objct == Objective.steer{
+            randomEvent = "steer"
+        } else {
+            randomEvent = "binocular"
+        }
+        
+        
+//        for (index, player) in gameService.party.players.enumerated() {
+//            if player.role == Role.blackSmith {
+//                var obj = gameService.party.players[index].event.objective
+//                if obj == Objective.sail{
+//                    randomEvent = "sail"
+//                } else if obj == Objective.steer{
+//                    randomEvent = "steer"
+//                } else {
+//                    randomEvent = "binocular"
+//                }
+//            }
+//        }
         if rows.isEmpty {
             rows =  generateGrid()
             if randomEvent == "steer"{

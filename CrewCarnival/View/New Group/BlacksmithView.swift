@@ -19,7 +19,8 @@ struct BlacksmithView: View {
     @State private var lives = 0
     @EnvironmentObject var gameService: GameService
     @Binding var isStartGame: Bool
-    @State private var isPuzzleCompleted: Objective?
+    @State private var isPuzzleCompleted = false
+    @State var objct: Objective?
     @State private var gradient = LinearGradient(
         gradient: Gradient(colors: [Color(red: 0, green: 0.82, blue: 0.23)]),
         startPoint: .topLeading,
@@ -116,7 +117,7 @@ struct BlacksmithView: View {
                     }
                     ZStack {
                         
-                            Drop(vm: vm)
+                        Drop(vm: vm, isPuzzleCompleted: $isPuzzleCompleted)
                                 .padding(.vertical,30)
                         Drag(vm: vm).offset(y: 300)
                        
@@ -135,9 +136,14 @@ struct BlacksmithView: View {
                         instructionProgressMax = gameService.party.players[index].event.duration
                     }
                 }
-                vm.shuffleEvent()
-                vm.shuffleArray()
-                isPuzzleCompleted = nil
+//                vm.shuffleEvent()
+                for (index, player) in gameService.party.players.enumerated() {
+                    if player.role == Role.blackSmith {
+                        objct = gameService.party.players[index].event.objective
+                    }
+                }
+                vm.shuffleArray(objct: objct)
+                isPuzzleCompleted = false
                 gameService.send(party: gameService.party)
             }
             .onChange(of: gameService.party, perform: { newValue in
@@ -167,7 +173,9 @@ struct BlacksmithView: View {
                             instructionProgressMax = gameService.party.players[index].event.duration
                         }
                     }
-                    isPuzzleCompleted = nil
+//                    vm.shuffleEvent()
+                    vm.shuffleArray(objct: objct)
+                    isPuzzleCompleted = false
                     gameService.send(party: gameService.party)
                 }
             })
@@ -197,6 +205,14 @@ struct BlacksmithView: View {
                     }
                 }
             })
+            .onChange(of: isPuzzleCompleted) { newValue in
+                if isPuzzleCompleted == true {
+                    withAnimation(.linear(duration: 0.5)) {
+                        lives = gameService.party.lives
+                        showPopUp = true
+                    }
+                }
+            }
             
         }
     }
