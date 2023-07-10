@@ -141,27 +141,62 @@ struct HelmsmanView: View {
                                 .progressViewStyle(LinearProgressViewStyle(tint: Color(red: 0, green: 0.82, blue: 0.23)))
                                 .padding(.top, -30)
                         }
-                        Image("StearingWheel")
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 300, height: 300)
-                            .knobRotation(
-                              knobValue: $knobValue,
-                              minAngle: -360,
-                              maxAngle: +360,
-                              onKnobValueChanged: { newValue in
-                                knobValue = newValue
-                              },
-                              animation: .spring()
-                            )
-                            .onChange(of: knobValue, perform: { newValue in
-                                var value = "\(knobValue)"
-                                if Double(value)! > 0.5 {
-                                    self.progress = (Double(value)! - 0.5) * 200
-                                } else {
-                                    self.progress = ((1 - Double(value)!) - 0.5) * 200
+                        ForEach(Array(gameService.party.players.enumerated()), id: \.offset) { index, player in
+                            if gameService.currentPlayer.id == player.id {
+                                if player.role == Role.helmsman {
+                                    if player.event.objective == Objective.turnLeft {
+                                        Image("StearingWheel")
+                                            .resizable()
+                                            .scaledToFill()
+                                            .frame(width: 300, height: 300)
+                                            .knobRotation(
+                                                knobValue: $knobValue,
+                                                minAngle: -360,
+                                                maxAngle: +360,
+                                                onKnobValueChanged: { newValue in
+                                                    knobValue = newValue
+                                                },
+                                              animation: .spring()
+                                            )
+                                            .onAppear{
+                                                knobValue = 1
+                                            }
+                                            .onChange(of: knobValue, perform: { newValue in
+                                                var value = "\(knobValue)"
+                                                self.progress = (Double(value)! - 1) * -100
+//                                                var value = "\(knobValue)"
+//                                                if Double(value)! > 0.5 {
+//                                                    self.progress = (Double(value)! - 0.5) * 200
+//                                                } else {
+//                                                    self.progress = ((1 - Double(value)!) - 0.5) * 200
+//                                                }
+                                            })
+                                    } else {
+                                        Image("StearingWheel")
+                                            .resizable()
+                                            .scaledToFill()
+                                            .frame(width: 300, height: 300)
+                                            .knobRotation(
+                                                knobValue: $knobValue,
+                                                minAngle: -360,
+                                                maxAngle: +360,
+                                                onKnobValueChanged: { newValue in
+                                                    knobValue = newValue
+                                                },
+                                              animation: .spring()
+                                            )
+                                            .onAppear{
+                                                knobValue = 0
+                                            }
+                                            .onChange(of: knobValue, perform: { newValue in
+                                                var value = "\(knobValue)"
+                                                self.progress = Double(value)! * 100
+                                            })
+                                    }
                                 }
-                            })
+                            }
+                        }
+                        
 //                            .rotationEffect(
 //                                .degrees(Double(self.angle)))
 //                            .gesture(DragGesture()
