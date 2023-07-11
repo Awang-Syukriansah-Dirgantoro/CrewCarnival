@@ -39,10 +39,11 @@ struct BlacksmithView: View {
                             roleExplain = true
                         }
                     }
-                    Text("The Game Will Start In \(String(String(timeExplain).first!))")
+                    Text("Sailing In... \(String(String(timeExplain).first!))")
                         .font(.custom("Gasoek One", size: 20))
-                        .foregroundColor(.black)
-                        .position(x: size.width / 2, y: 250)
+                        .foregroundColor(.white)
+                        .shadow(color: Color.black.opacity(0.2), radius: 4)
+                        .position(x: size.width / 2, y: 215)
                         .multilineTextAlignment(.center)
                       
                 }
@@ -210,11 +211,7 @@ struct BlacksmithView: View {
                         isPuzzleCompleted = true
                     }
                     gameService.send(party: gameService.party)
-                    if gameService.party.lives <= 0 {
-                        gameService.party.reset()
-                        gameService.send(party: gameService.party)
-                        isStartGame = false
-                    }
+                    
                     
                     for (index, _) in gameService.party.players.enumerated() {
                         instructionProgress = gameService.party.players[index].event.duration

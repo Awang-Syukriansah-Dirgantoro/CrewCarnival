@@ -18,7 +18,8 @@ struct SailingMasterView: View {
     @State private var offset = CGSize.zero
     
     let timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
-    
+    @State private var showPopUp: Bool = false
+    @State private var lives = 0
     @State private var partyProgress = 0.0
     @State private var instructionProgress = 100.0
     @State private var instructionProgressMax = 100.0
@@ -426,6 +427,7 @@ struct SailingMasterView: View {
                     Spacer()
                 }
                 .padding(.top,50)
+                RecapSceneView(lives: $lives, show: $showPopUp, isStartGame: $isStartGame)
             }
             .onAppear {
                 for (index, player) in gameService.party.players.enumerated() {
@@ -448,9 +450,14 @@ struct SailingMasterView: View {
             }
             .onChange(of: gameService.party, perform: { newValue in
                 if gameService.party.lives <= 0 {
-                    gameService.party.reset()
-                    isStartGame = false
-                    gameService.send(party: gameService.party)
+                    withAnimation(.linear(duration: 0.5)) {
+                        lives = gameService.party.lives
+                        showPopUp = true
+                        
+                    }
+                    //                            gameService.parties[index].reset()
+                    //                            isStartGame = false
+                    //                            gameService.send(parties: gameService.parties)
                 }
                 for (index, player) in gameService.party.players.enumerated() {
                     if player.role == Role.blackSmith {
@@ -488,8 +495,24 @@ struct SailingMasterView: View {
                     gameService.send(party: gameService.party)
                 }
             })
+            .onChange(of: partyProgress, perform: { newValue in
+                if partyProgress >= 100{
+                    withAnimation(.linear(duration: 0.5)) {
+                        lives = gameService.party.lives
+                        showPopUp = true
+                    }
+                }
+            })
             .onChange(of: instructionProgress, perform: { newValue in
                 if instructionProgress <= 0 {
+                    gameService.party.generateLHSEvent()
+                    if gameService.party.lives > 0 {
+                        gameService.party.lives -= 1
+                        
+                    }
+                    gameService.send(party: gameService.party)
+                    
+                    
                     for (index, _) in gameService.party.players.enumerated() {
                         instructionProgress = gameService.party.players[index].event.duration
                     }

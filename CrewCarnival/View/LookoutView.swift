@@ -317,11 +317,7 @@ struct LookoutView: View {
                         isRightAble = true
                     }
                     gameService.send(party: gameService.party)
-                    if gameService.party.lives <= 0 {
-                        gameService.party.reset()
-                        gameService.send(party: gameService.party)
-                        isStartGame = false
-                    }
+                    
                     
                     for (index, _) in gameService.party.players.enumerated() {
                         instructionProgress = gameService.party.players[index].event.duration

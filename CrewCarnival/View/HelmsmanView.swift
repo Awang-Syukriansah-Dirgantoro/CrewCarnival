@@ -354,6 +354,14 @@ struct HelmsmanView: View {
             })
             .onChange(of: instructionProgress, perform: { newValue in
                 if instructionProgress <= 0 {
+                    gameService.party.generateLHSEvent()
+                    if gameService.party.lives > 0 {
+                        gameService.party.lives -= 1
+                        
+                    }
+                    gameService.send(party: gameService.party)
+                    
+                    
                     for (index, _) in gameService.party.players.enumerated() {
                         instructionProgress = gameService.party.players[index].event.duration
                     }
