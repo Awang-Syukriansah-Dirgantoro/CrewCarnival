@@ -115,7 +115,7 @@ struct PartyView: View {
                                     Image("SelectRoom")
                                         .resizable()
                                         .frame(width: 320, height: 105)
-                                        .padding(.top, 50)
+                                        .padding(.top, 100)
                                 }
                             }
                             NavigationLink {
