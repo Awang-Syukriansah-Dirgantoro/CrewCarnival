@@ -1,0 +1,14 @@
+{
+  "pins" : [
+    {
+      "identity" : "onefingerrotation",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/matteofontana-app/OneFingerRotation.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "2150ae9847ec936f3cafc2ca035bf8f15c7fca10"
+      }
+    }
+  ],
+  "version" : 2
+}
