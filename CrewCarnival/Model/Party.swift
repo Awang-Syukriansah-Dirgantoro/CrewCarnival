@@ -37,7 +37,7 @@ struct Party: Codable, Identifiable, Equatable {
                     }
                     
 //                    if player.event.objective != objective {
-                        players[index].event = Event(duration: 30, instruction: "There are obstacles nearby!", objective: objective)
+                        players[index].event = Event(duration: 10, instruction: "There are obstacles nearby!", objective: objective)
 //                        break
 //                    }
 //                }
@@ -56,7 +56,7 @@ struct Party: Codable, Identifiable, Equatable {
                     objective = Objective.turnRight
                 }
                 
-                players[index].event = Event(duration: 30, instruction: "There are obstacles nearby!", objective: objective)
+                players[index].event = Event(duration: 10, instruction: "There are obstacles nearby!", objective: objective)
             }
             
             if player.role == Role.sailingMaster {
@@ -74,7 +74,7 @@ struct Party: Codable, Identifiable, Equatable {
                     objective = Objective.slow30
                 }
                 
-                players[index].event = Event(duration: 30, instruction: "There are obstacles nearby!", objective: objective)
+                players[index].event = Event(duration: 10, instruction: "There are obstacles nearby!", objective: objective)
             }
             if player.role == Role.blackSmith {
                 var randomInt = Int.random(in: 0...2)
@@ -94,7 +94,7 @@ struct Party: Codable, Identifiable, Equatable {
                     objective = Objective.steer
                 }
                 
-                players[index].event = Event(duration: 30, instruction: "Drag and fix the object", objective: objective, isCompleted: false)
+                players[index].event = Event(duration: 10, instruction: "Drag and fix the object", objective: objective, isCompleted: false)
             }
         }
     }
@@ -170,13 +170,12 @@ struct Party: Codable, Identifiable, Equatable {
     }
     
     mutating func reset() {
-        self.isPlaying = false
-        self.lives = 3
-        
         for (index, _) in self.players.enumerated() {
             self.players[index].isReady = false
             self.players[index].role = nil
         }
+        
+        self.lives = 3
         
         assignRoles()
     }
