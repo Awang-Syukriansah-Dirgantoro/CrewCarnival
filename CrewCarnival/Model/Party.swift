@@ -18,34 +18,24 @@ struct Party: Codable, Identifiable, Equatable {
     var lives = 3
     
     mutating func generateLHSEvent() {
+        var randomInt = Int.random(in: 0...1)
+        
         for (index, player) in players.enumerated() {
             if player.role == Role.lookout {
-//                while true {
-//                    var randomInt = Int.random(in: 0...2)
-                    var randomInt = 0
-                    var objective = Objective.lookLeft
-                    
-                    switch randomInt {
-                    case 0:
-                        objective = Objective.lookLeft
-                        break
-                    case 1:
-                        objective = Objective.lookFront
-                        break
-                    default:
-                        objective = Objective.lookRight
-                    }
-                    
-//                    if player.event.objective != objective {
-                        players[index].event = Event(duration: 10, instruction: "There are obstacles nearby!", objective: objective)
-//                        break
-//                    }
-//                }
+                var objective = Objective.lookLeft
+                
+                switch randomInt {
+                case 0:
+                    objective = Objective.lookLeft
+                    break
+                default:
+                    objective = Objective.lookRight
+                }
+                
+                players[index].event = Event(duration: 10, instruction: "There are obstacles nearby!", objective: objective)
             }
             
             if player.role == Role.helmsman {
-//                var randomInt = Int.random(in: 0...1)
-                var randomInt = 0
                 var objective = Objective.turnLeft
                 
                 switch randomInt {
@@ -60,7 +50,7 @@ struct Party: Codable, Identifiable, Equatable {
             }
             
             if player.role == Role.sailingMaster {
-                var randomInt = Int.random(in: 0...2)
+                randomInt = Int.random(in: 0...2)
                 var objective = Objective.slow10
                 
                 switch randomInt {
@@ -77,7 +67,7 @@ struct Party: Codable, Identifiable, Equatable {
                 players[index].event = Event(duration: 10, instruction: "There are obstacles nearby!", objective: objective)
             }
             if player.role == Role.blackSmith {
-                var randomInt = Int.random(in: 0...2)
+                randomInt = Int.random(in: 0...2)
                 var objective = Objective.steer
                 
                 switch randomInt {

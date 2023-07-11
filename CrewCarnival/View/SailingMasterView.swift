@@ -42,7 +42,7 @@ struct SailingMasterView: View {
         switch sail {
         case 1:
             if totalAngleOne > newAngle {
-                sailOneHeight += 0.1
+                sailOneHeight += 1
                 if sailOneHeight > 112 {
                     sailOneHeight = 112
                 } else if sailOneHeight < 0 {
@@ -51,7 +51,7 @@ struct SailingMasterView: View {
                     totalAngleOne = newAngle
                 }
             } else {
-                sailOneHeight -= 0.1
+                sailOneHeight -= 1
                 if sailOneHeight > 112 {
                     sailOneHeight = 112
                 } else if sailOneHeight < 0 {
@@ -63,7 +63,7 @@ struct SailingMasterView: View {
             
         case 2:
             if totalAngleTwo > newAngle {
-                sailTwoHeight += 0.1
+                sailTwoHeight += 1
                 if sailTwoHeight > 160 {
                     sailTwoHeight = 160
                 } else if sailTwoHeight < 0 {
@@ -72,7 +72,7 @@ struct SailingMasterView: View {
                     totalAngleTwo = newAngle
                 }
             } else {
-                sailTwoHeight -= 0.1
+                sailTwoHeight -= 1
                 if sailTwoHeight > 160 {
                     sailTwoHeight = 160
                 } else if sailTwoHeight < 0 {
@@ -84,7 +84,7 @@ struct SailingMasterView: View {
             
         case 3:
             if totalAngleThree > newAngle {
-                sailThreeHeight += 0.1
+                sailThreeHeight += 1
                 if sailThreeHeight > 260 {
                     sailThreeHeight = 260
                 } else if sailThreeHeight < 0 {
@@ -93,7 +93,7 @@ struct SailingMasterView: View {
                     totalAngleThree = newAngle
                 }
             } else {
-                sailThreeHeight -= 0.1
+                sailThreeHeight -= 1
                 if sailThreeHeight > 260 {
                     sailThreeHeight = 260
                 } else if sailThreeHeight < 0 {

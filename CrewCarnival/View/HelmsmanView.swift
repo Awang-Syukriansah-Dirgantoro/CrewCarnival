@@ -17,6 +17,7 @@ struct HelmsmanView: View {
     @State var timeExplain = 7.9
     @State private var showPopUp: Bool = false
     @State private var lives = 0
+    @State private var lockSteer = false
     @EnvironmentObject var gameService: GameService
     
     let timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
@@ -149,60 +150,76 @@ struct HelmsmanView: View {
                                 .padding(.top, -30)
                         }
                         if eventblacksmith == false{
-                            ForEach(Array(gameService.party.players.enumerated()), id: \.offset) { index, player in
-                                if gameService.currentPlayer.id == player.id {
-                                    if player.role == Role.helmsman {
-                                        if player.event.objective == Objective.turnLeft {
-                                            Image("StearingWheel")
-                                                .resizable()
-                                                .scaledToFill()
-                                                .frame(width: 300, height: 300)
-                                                .knobRotation(
-                                                    knobValue: $knobValue,
-                                                    minAngle: -360,
-                                                    maxAngle: +360,
-                                                    onKnobValueChanged: { newValue in
-                                                        knobValue = newValue
-                                                    },
-                                                    animation: .spring()
-                                                )
-                                                .onAppear{
-                                                    knobValue = 1
-                                                }
-                                                .onChange(of: knobValue, perform: { newValue in
-                                                    var value = "\(knobValue)"
-                                                    self.progress = (Double(value)! - 1) * -100
-                                                    //                                                var value = "\(knobValue)"
-                                                    //                                                if Double(value)! > 0.5 {
-                                                    //                                                    self.progress = (Double(value)! - 0.5) * 200
-                                                    //                                                } else {
-                                                    //                                                    self.progress = ((1 - Double(value)!) - 0.5) * 200
-                                                    //                                                }
-                                                })
-                                        } else {
-                                            Image("StearingWheel")
-                                                .resizable()
-                                                .scaledToFill()
-                                                .frame(width: 300, height: 300)
-                                                .knobRotation(
-                                                    knobValue: $knobValue,
-                                                    minAngle: -360,
-                                                    maxAngle: +360,
-                                                    onKnobValueChanged: { newValue in
-                                                        knobValue = newValue
-                                                    },
-                                                    animation: .spring()
-                                                )
-                                                .onAppear{
-                                                    knobValue = 0
-                                                }
-                                                .onChange(of: knobValue, perform: { newValue in
-                                                    var value = "\(knobValue)"
-                                                    self.progress = Double(value)! * 100
-                                                })
+                            if lockSteer == false {
+                                ForEach(Array(gameService.party.players.enumerated()), id: \.offset) { index, player in
+                                    if gameService.currentPlayer.id == player.id {
+                                        if player.role == Role.helmsman {
+                                            if player.event.objective == Objective.turnLeft {
+                                                Image("StearingWheel")
+                                                    .resizable()
+                                                    .scaledToFill()
+                                                    .frame(width: 300, height: 300)
+                                                    .knobRotation(
+                                                        knobValue: $knobValue,
+                                                        minAngle: -360,
+                                                        maxAngle: +360,
+                                                        onKnobValueChanged: { newValue in
+                                                            knobValue = newValue
+                                                        },
+                                                        animation: .spring()
+                                                    )
+                                                    .onAppear{
+                                                        knobValue = 1
+                                                    }
+                                                    .onChange(of: knobValue, perform: { newValue in
+                                                        var value = "\(knobValue)"
+                                                        self.progress = (Double(value)! - 1) * -100
+                                                        if self.progress >= 100 {
+                                                            isTurnProgressCompleted = Objective.turnLeft
+                                                            lockSteer = true
+                                                        }
+                                                        //                                                var value = "\(knobValue)"
+                                                        //                                                if Double(value)! > 0.5 {
+                                                        //                                                    self.progress = (Double(value)! - 0.5) * 200
+                                                        //                                                } else {
+                                                        //                                                    self.progress = ((1 - Double(value)!) - 0.5) * 200
+                                                        //                                                }
+                                                    })
+                                            } else {
+                                                Image("StearingWheel")
+                                                    .resizable()
+                                                    .scaledToFill()
+                                                    .frame(width: 300, height: 300)
+                                                    .knobRotation(
+                                                        knobValue: $knobValue,
+                                                        minAngle: -360,
+                                                        maxAngle: +360,
+                                                        onKnobValueChanged: { newValue in
+                                                            knobValue = newValue
+                                                            lockSteer = true
+                                                        },
+                                                        animation: .spring()
+                                                    )
+                                                    .onAppear{
+                                                        knobValue = 0
+                                                    }
+                                                    .onChange(of: knobValue, perform: { newValue in
+                                                        var value = "\(knobValue)"
+                                                        self.progress = Double(value)! * 100
+                                                        if self.progress >= 100 {
+                                                            isTurnProgressCompleted = Objective.turnRight
+                                                            lockSteer = true
+                                                        }
+                                                    })
+                                            }
                                         }
                                     }
                                 }
+                            } else {
+                                Image("StearingWheel")
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(width: 300, height: 300)
                             }
                         }else{
                             Image("StearingWheel")
@@ -355,6 +372,7 @@ struct HelmsmanView: View {
             .onChange(of: instructionProgress, perform: { newValue in
                 if instructionProgress <= 0 {
                     gameService.party.generateLHSEvent()
+                    lockSteer = false
                     if gameService.party.lives > 0 {
                         gameService.party.lives -= 1
                         
