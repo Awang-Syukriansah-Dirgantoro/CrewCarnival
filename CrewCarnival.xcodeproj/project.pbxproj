@@ -46,6 +46,7 @@
 		4E3F47132A4A737900915B7F /* AllRole.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E3F47102A4A737900915B7F /* AllRole.swift */; };
 		4E3F47142A4A737900915B7F /* ScrollViewOffsetModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E3F47112A4A737900915B7F /* ScrollViewOffsetModifier.swift */; };
 		4E3F47162A4A890600915B7F /* CobaRecapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E3F47152A4A890600915B7F /* CobaRecapView.swift */; };
+		4EB709C12A5D72A1004C2BED /* HowtoplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB709C02A5D72A1004C2BED /* HowtoplayView.swift */; };
 		59117DE02A414F2600701627 /* CrewCarnivalApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59117DDF2A414F2600701627 /* CrewCarnivalApp.swift */; };
 		59117DE72A414F2700701627 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 59117DE62A414F2700701627 /* Preview Assets.xcassets */; };
 		59117DEE2A43E87600701627 /* LookoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59117DED2A43E87600701627 /* LookoutView.swift */; };
@@ -95,6 +96,7 @@
 		4E3F47102A4A737900915B7F /* AllRole.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AllRole.swift; sourceTree = "<group>"; };
 		4E3F47112A4A737900915B7F /* ScrollViewOffsetModifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScrollViewOffsetModifier.swift; sourceTree = "<group>"; };
 		4E3F47152A4A890600915B7F /* CobaRecapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CobaRecapView.swift; sourceTree = "<group>"; };
+		4EB709C02A5D72A1004C2BED /* HowtoplayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HowtoplayView.swift; sourceTree = "<group>"; };
 		59117DDC2A414F2600701627 /* CrewCarnival.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CrewCarnival.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		59117DDF2A414F2600701627 /* CrewCarnivalApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrewCarnivalApp.swift; sourceTree = "<group>"; };
 		59117DE12A414F2600701627 /* LivesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LivesView.swift; sourceTree = "<group>"; };
@@ -146,6 +148,7 @@
 				4C72340D2A4921FB00F371E7 /* MenuView.swift */,
 				4C7234062A49218C00F371E7 /* PartyView.swift */,
 				4C7234052A49218C00F371E7 /* ReadyView.swift */,
+				4EB709C02A5D72A1004C2BED /* HowtoplayView.swift */,
 				59117DE12A414F2600701627 /* LivesView.swift */,
 				59117DED2A43E87600701627 /* LookoutView.swift */,
 				0B228A252A42A04A0078D22A /* HelmsmanView.swift */,
@@ -355,6 +358,7 @@
 			files = (
 				591FC9E82A5CFDFA006EA871 /* LivesView.swift in Sources */,
 				4E3F47142A4A737900915B7F /* ScrollViewOffsetModifier.swift in Sources */,
+				4EB709C12A5D72A1004C2BED /* HowtoplayView.swift in Sources */,
 				0B0B77802A455D8600B10F99 /* SailingMasterView.swift in Sources */,
 				4C4AC29D2A555DB700D589CD /* Peer.swift in Sources */,
 				0B228A262A42A04A0078D22A /* HelmsmanView.swift in Sources */,

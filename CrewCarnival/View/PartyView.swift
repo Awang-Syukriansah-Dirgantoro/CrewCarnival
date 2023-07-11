@@ -33,7 +33,11 @@ struct PartyView: View {
         NavigationStack {
             if gameService.currentPlayer.name == "" {
                 ZStack{
-                    Image("MenuBackground").resizable().scaledToFill().ignoresSafeArea()
+                    GeometryReader{proxy in
+                        let size = proxy.size
+                        
+                        Image("MenuBackground").resizable().aspectRatio(contentMode: .fill).frame(width: size.width, height: size.height)
+                    }.ignoresSafeArea()
                     VStack {
                         Spacer()
                         Image("EnterName")

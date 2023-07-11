@@ -16,9 +16,16 @@ struct MenuView: View {
             PartyView(menu: $menu)
         } else if menu == 1 {
             AllRole(menu: $menu)
-        } else {
+        } else if menu == 2 {
+            HowtoplayView(menu: $menu)
+        }
+        else {
             ZStack{
-                Image("MenuBackground").resizable().scaledToFill().ignoresSafeArea()
+                GeometryReader{proxy in
+                    let size = proxy.size
+                    
+                    Image("MenuBackground").resizable().aspectRatio(contentMode: .fill).frame(width: size.width, height: size.height)
+                }.ignoresSafeArea()
                 VStack {
                     Spacer()
                     Button {
@@ -50,7 +57,7 @@ struct MenuView: View {
                             )
                     }
                     Button {
-                        menu = 1
+                        menu = 2
                     } label: {
                         Rectangle()
                             .foregroundColor(.clear)
