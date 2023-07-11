@@ -255,14 +255,10 @@ struct LookoutView: View {
                     print("Masuk loop")
                     if player.role == Role.lookout {
                         if player.event.objective == Objective.lookLeft {
-                            looks = "Lookout2"
-                        } else if player.event.objective == Objective.lookRight {
-                            looks = "Lookout3"
+                            looks = "LookoutLeft"
                         } else {
-                            looks = "Lookout1"
+                            looks = "LookoutRight"
                         }
-                    }else{
-                        looks = "Test"
                     }
                 }
 //                looks = "Lookout3"
@@ -352,20 +348,17 @@ struct LookoutView: View {
                     if player.role == Role.lookout {
                         if player.event.objective == Objective.lookLeft {
                             if newDirection == "Left" {
-                                looks = "Lookout2"
 //                                print(looks)
                                 gameService.party.players[index].event.instruction = "Our Left is Clear!\nQuickly Turn the Ship!"
                                 //                                    gameService.parties[index].triggerHelmsmanInstruction()
                             }
                         } else if player.event.objective == Objective.lookRight {
                             if newDirection == "Right" {
-                                looks = "Lookout3"
                                 gameService.party.players[index].event.instruction = "Our Right is Clear!\nQuickly Turn the Ship!"
                                 //                                    gameService.parties[index].triggerHelmsmanInstruction()
                             }
                         } else {
                             if newDirection == "Front" {
-                                looks = "Lookout1"
                                 gameService.party.players[index].event.instruction = "Our Front is Clear!\nQuickly Turn the Ship!"
                                 //                                    gameService.parties[index].triggerHelmsmanInstruction()
                             }
