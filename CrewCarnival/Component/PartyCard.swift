@@ -6,111 +6,55 @@
 //
 
 import SwiftUI
+import MultipeerConnectivity
 
 struct PartyCard: View {
-    var partyIndex: Int
-    var party: Party
-    @Binding var name: String
+    var peer: Peer
     @EnvironmentObject var gameService: GameService
-    @State var cardText = ""
-    
-    let columns = [
-        GridItem(.flexible()),
-                GridItem(.flexible()),
-        ]
+    var random = Int.random(in: 0...4)
     
     var body: some View {
-        if party.isPlaying {
+        NavigationLink {
+            ReadyView()
+        } label: {
             VStack {
-                LazyVGrid(columns: columns, spacing: 20) {
-                    ForEach(Array(party.players.enumerated()), id: \.offset) { index, player in
-                        Text("\(player.name)")
+                ZStack{
+                    Image("Room").resizable().frame(width: 340, height: 120)
+                    if random == 0 {
+                        Image("SailMaster")
+                            .resizable().frame(width: 35, height: 80)
+                    } else if random == 1 {
+                        Image("Blacksmith")
+                            .resizable().frame(width: 35, height: 80)
+                    } else if random == 2 {
+                        Image("CabinBoy")
+                            .resizable().frame(width: 35, height: 80)
+                    } else if random == 3 {
+                        Image("Lookout")
+                            .resizable().frame(width: 35, height: 80)
+                    } else {
+                        Image("Helmsman")
+                            .resizable().frame(width: 35, height: 80)
                     }
                 }
-                .padding(16)
-                .background(.white)
-                .cornerRadius(16)
                 .shadow(radius: 4)
-                Text(cardText)
-            }
-            .onAppear {
-                if party.isPlaying {
-                    cardText = "Currently Playing"
-                } else {
-                    if party.players.count == 1 {
-                        cardText = "\(party.players.count) Player"
-                    } else {
-                        cardText = "\(party.players.count) Players"
-                    }
-                }
-            }
-            .onChange(of: party) { party in
-                if party.isPlaying {
-                    cardText = "Currently Playing"
-                } else {
-                    if party.players.count == 1 {
-                        cardText = "Join - \(party.players.count) Player"
-                    } else {
-                        cardText = "Join - \(party.players.count) Players"
-                    }
-                }
-            }
-        } else {
-            NavigationLink {
-                ReadyView(partyId: party.id)
-                    .environmentObject(self.gameService)
-            } label: {
-                VStack {
-                    ZStack{
-                        Image("Room").resizable().frame(width: 280, height: 120).ignoresSafeArea()
-                        ForEach(Array(party.players.enumerated()), id: \.offset) { index, player in
-                            Text("\(player.name)")
-                        }
-                    }
-                    .padding(16)
-                    .cornerRadius(16)
-                    .shadow(radius: 4)
-                    Text(cardText)
-                }
-            }
-            .simultaneousGesture(TapGesture().onEnded {
-                print(partyIndex)
-                gameService.currentPlayer.name = name
-                gameService.currentPlayer.role = Role.lookout
-                
-                gameService.party.players.append(gameService.currentPlayer)
-                
-                self.gameService.send(party: gameService.party)
-            })
-            .onAppear {
-                if party.isPlaying {
-                    cardText = "Currently Playing"
-                } else {
-                    if party.players.count == 1 {
-                        cardText = "\(party.players.count) Player"
-                    } else {
-                        cardText = "\(party.players.count) Players"
-                    }
-                }
-            }
-            .onChange(of: party) { party in
-                if party.isPlaying {
-                    cardText = "Currently Playing"
-                } else {
-                    if party.players.count == 1 {
-                        cardText = "Join - \(party.players.count) Player"
-                    } else {
-                        cardText = "Join - \(party.players.count) Players"
-                    }
-                }
+                Text("Join \(peer.name)'s Crew")
+                    .font(.custom("Gasoek One", size: 18))
+                    .foregroundColor(.orange)
+                    .shadow(color: Color.black.opacity(0.2), radius: 4)
             }
         }
+        .buttonStyle(PlainButtonStyle())
+        .simultaneousGesture(TapGesture().onEnded {
+            gameService.party.id = peer.partyId
+            gameService.serviceBrowser.stopBrowsingForPeers()
+            gameService.serviceBrowser.startBrowsingForPeers()
+        })
     }
 }
 
 struct PartyCard_Previews: PreviewProvider {
     static var previews: some View {
-        PartyCard(partyIndex: 0, party: Party(players: []), name: .constant(""))
-            .environmentObject(GameService())
+        PartyCard(peer: Peer(partyId: UUID(), name: "A"))
     }
 }

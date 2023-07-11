@@ -12,7 +12,7 @@ struct LookoutView: View {
     @State private var instructionProgress = 100.0
     @State private var instructionProgressMax = 100.0
     @State private var roleExplain = false
-    @State var timeExplain = 70
+    @State var timeExplain = 7.9
     @State private var showPopUp: Bool = false
     @State private var lives = 0
     @State private var gradient = LinearGradient(
@@ -20,27 +20,35 @@ struct LookoutView: View {
         startPoint: .topLeading,
         endPoint: .bottomTrailing
     )
-    @State private var xOffset:CGFloat = -391
+    @State private var xOffset:CGFloat = -225
     @State private var isMove = false
     @State private var direction = "Forward"
     @State private var isLeftAble = true
     @State private var isRightAble = true
-    @State private var listView = ["ViewRight","ViewForward","ViewLeft"]
-    @State private var views = ""
     @EnvironmentObject var gameService: GameService
     @Binding var isStartGame: Bool
+    @State var eventblacksmith = false
     let timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
     
     var body: some View {
         if roleExplain == false{
             GeometryReader{proxy in
                 let size = proxy.size
-                
-                Image("lookoutExplain").resizable().aspectRatio(contentMode: .fill).frame(width: size.width, height: size.height).onReceive(timer) { _ in
-                    timeExplain -= 1
-                    if timeExplain == 0 {
-                        roleExplain = true
+                ZStack {
+                    Image("lookoutExplain").resizable().aspectRatio(contentMode: .fill).frame(width: size.width, height: size.height).onReceive(timer) { _ in
+                        timeExplain -= 0.1
+                        if timeExplain <= 1.1 {
+                            timeExplain = 0
+                            roleExplain = true
+                        }
                     }
+                    Text("Sailing In... \(String(String(timeExplain).first!))")
+                        .font(.custom("Gasoek One", size: 20))
+                        .foregroundColor(.white)
+                        .shadow(color: Color.black.opacity(0.2), radius: 4)
+                        .position(x: size.width / 2, y: 215)
+                        .multilineTextAlignment(.center)
+                      
                 }
             }.ignoresSafeArea()
         }else{
@@ -50,9 +58,13 @@ struct LookoutView: View {
                 caption: ""
             )
             ZStack{
-                GeometryReader { geometry in
-                    Image(views).resizable().scaledToFill().ignoresSafeArea(.all).offset(x:xOffset)
+                GeometryReader { geo in
+                    PlayerView()
+                        .scaledToFill()
+                        .aspectRatio(contentMode: .fill)
+                        .offset(x: xOffset)
                 }
+                .ignoresSafeArea()
                 VStack{
                     HStack{
                         Text("Lookout")
@@ -97,15 +109,27 @@ struct LookoutView: View {
                     VStack{
                         ForEach(Array(gameService.party.players.enumerated()), id: \.offset) { index, player in
                             if gameService.currentPlayer.id == player.id {
-                                Text("\(player.event.instruction)")
-                                    .font(Font.custom("Gasoek One", size: 20))
-                                    .multilineTextAlignment(.center)
-                                    .frame(maxWidth: .infinity)
-                                    .padding(.vertical, 20)
-                                    .foregroundColor(Color(red: 0.95, green: 0.74, blue: 0))
-                                    .background(
-                                        Rectangle()
-                                            .opacity(0.5))
+                                if eventblacksmith == false {
+                                    Text("\(player.event.instruction)")
+                                        .font(Font.custom("Gasoek One", size: 20))
+                                        .multilineTextAlignment(.center)
+                                        .frame(maxWidth: .infinity)
+                                        .padding(.vertical, 20)
+                                        .foregroundColor(Color(red: 0.95, green: 0.74, blue: 0))
+                                        .background(
+                                            Rectangle()
+                                                .opacity(0.5))
+                                } else {
+                                    Text("Your steer is broken")
+                                        .font(Font.custom("Gasoek One", size: 20))
+                                        .multilineTextAlignment(.center)
+                                        .frame(maxWidth: .infinity)
+                                        .padding(.vertical, 20)
+                                        .foregroundColor(Color(red: 0.95, green: 0.74, blue: 0))
+                                        .background(
+                                            Rectangle()
+                                                .opacity(0.5))
+                                }
                             }
                         }
                         ProgressView("", value: instructionProgress, total: instructionProgressMax)
@@ -129,8 +153,8 @@ struct LookoutView: View {
                                     .frame(width: 247, height: 66)
                                     .clipped()
                             )
-                        Text("You are looking at: \(direction) Direction")
-                            .font(Font.custom("Krub-Regular", size: 20))
+                        Text("You Are Facing \(direction)")
+                            .font(Font.custom("Krub-Regular", size: 18))
                             .multilineTextAlignment(.center)
                             .foregroundColor(.white).frame(width: 247, height: 66)
                     }
@@ -141,9 +165,9 @@ struct LookoutView: View {
                             isLeftAble = false
                             isRightAble = false
                             withAnimation (Animation.easeOut (duration: 3)){
-                                xOffset = xOffset + 393
+                                xOffset = xOffset + 225
                             }
-                            if xOffset == -391 {
+                            if xOffset == -225 {
                                 direction = "Forward"
                                 isLeftAble = true
                                 isRightAble = true
@@ -163,16 +187,16 @@ struct LookoutView: View {
                                         .frame(width: 125.5172348022461, height: 129.99998474121094)
                                         .clipped()
                                 )
-                        }.disabled(!isLeftAble)
+                        }.disabled(!isLeftAble).disabled(eventblacksmith)
                         Spacer()
                         Button{
                             isMove = true
                             isLeftAble = false
                             isRightAble = false
                             withAnimation (Animation.easeOut (duration: 3)){
-                                xOffset = xOffset - 393
+                                xOffset = xOffset - 225
                             }
-                            if xOffset == -391 {
+                            if xOffset == -225 {
                                 direction = "Forward"
                                 isLeftAble = true
                                 isRightAble = true
@@ -192,26 +216,33 @@ struct LookoutView: View {
                                         .frame(width: 125.5172348022461, height: 129.99998474121094)
                                         .clipped()
                                 )
-                        }.disabled(!isRightAble)
+                        }.disabled(!isRightAble).disabled(eventblacksmith)
                         Spacer()
                     }
                 }
                 .padding(.vertical,50)
                 RecapSceneView(lives: $lives, show: $showPopUp, isStartGame: $isStartGame)
             }
-            .onAppear {
-                views = listView.randomElement()!
+            
+            .onAppear{
+//                self.views = listView.randomElement()!
+//                print("videoNamelook: \(self.views)")
                 for (index, player) in gameService.party.players.enumerated() {
                     if player.role == Role.lookout {
                         instructionProgress = gameService.party.players[index].event.duration
                         instructionProgressMax = gameService.party.players[index].event.duration
                     }
                 }
-                xOffset = -391
-                isMove = false
-                direction = "Forward"
-                isLeftAble = true
-                isRightAble = true
+                for (index, player) in gameService.party.players.enumerated() {
+                    if player.role == Role.blackSmith {
+                        let obj = gameService.party.players[index].event.objective
+                        if obj == Objective.binocular{
+                            eventblacksmith = true
+                        } else {
+                            eventblacksmith = false
+                        }
+                    }
+                }
                 gameService.send(party: gameService.party)
             }
             .onChange(of: gameService.party, perform: { newValue in
@@ -224,6 +255,13 @@ struct LookoutView: View {
                     //                            gameService.parties[index].reset()
                     //                            isStartGame = false
                     //                            gameService.send(parties: gameService.parties)
+                }
+                for (index, player) in gameService.party.players.enumerated() {
+                    if player.role == Role.blackSmith {
+                        if gameService.party.players[index].event.isCompleted == true {
+                            eventblacksmith = false
+                        }
+                    }
                 }
                 
                 var allEventsCompleted = true
@@ -241,7 +279,17 @@ struct LookoutView: View {
                             instructionProgressMax = gameService.party.players[index].event.duration
                         }
                     }
-                    xOffset = -391
+                    for (index, player) in gameService.party.players.enumerated() {
+                        if player.role == Role.blackSmith {
+                            let obj = gameService.party.players[index].event.objective
+                            if obj == Objective.binocular{
+                                eventblacksmith = true
+                            } else {
+                                eventblacksmith = false
+                            }
+                        }
+                    }
+                    xOffset = -225
                     isMove = false
                     direction = "Forward"
                     isLeftAble = true
@@ -262,6 +310,11 @@ struct LookoutView: View {
                     gameService.party.generateLHSEvent()
                     if gameService.party.lives > 0 {
                         gameService.party.lives -= 1
+                        xOffset = -225
+                        isMove = false
+                        direction = "Forward"
+                        isLeftAble = true
+                        isRightAble = true
                     }
                     gameService.send(party: gameService.party)
                     if gameService.party.lives <= 0 {
@@ -298,6 +351,7 @@ struct LookoutView: View {
                     }
                 }
             }
+            
         }
     }
 }

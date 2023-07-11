@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import OneFingerRotation
 
 struct HelmsmanView: View {
     @State private var partyProgress = 0.0
@@ -13,13 +14,13 @@ struct HelmsmanView: View {
     @State private var instructionProgressMax = 100.0
     @State private var isTurnProgressCompleted: Objective?
     @State private var roleExplain = false
-    @State var timeExplain = 70
+    @State var timeExplain = 7.9
     @State private var showPopUp: Bool = false
     @State private var lives = 0
     @EnvironmentObject var gameService: GameService
     
     let timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
-
+    
     @State private var gradient = LinearGradient(
         gradient: Gradient(colors: [Color(red: 0, green: 0.82, blue: 0.23)]),
         startPoint: .topLeading,
@@ -32,16 +33,28 @@ struct HelmsmanView: View {
     @Binding var isStartGame: Bool
     @State private var text = "Turn Progress"
     
+    @State private var knobValue: Double = 0.5
+    @State var eventblacksmith = false
+    
     var body: some View {
         if roleExplain == false{
             GeometryReader{proxy in
                 let size = proxy.size
-                
-                Image("helmsmanExplain").resizable().aspectRatio(contentMode: .fill).frame(width: size.width, height: size.height).onReceive(timer) { _ in
-                    timeExplain -= 1
-                    if timeExplain == 0 {
-                        roleExplain = true
+                ZStack {
+                    Image("helmsmanExplain").resizable().aspectRatio(contentMode: .fill).frame(width: size.width, height: size.height).onReceive(timer) { _ in
+                        timeExplain -= 0.1
+                        if timeExplain <= 1.1 {
+                            timeExplain = 0
+                            roleExplain = true
+                        }
                     }
+                    Text("Sailing In... \(String(String(timeExplain).first!))")
+                        .font(.custom("Gasoek One", size: 20))
+                        .foregroundColor(.white)
+                        .shadow(color: Color.black.opacity(0.2), radius: 4)
+                        .position(x: size.width / 2, y: 215)
+                        .multilineTextAlignment(.center)
+                    
                 }
             }.ignoresSafeArea()
         }else{
@@ -54,14 +67,7 @@ struct HelmsmanView: View {
                 
                 ZStack {
                     Image("ShipHelmsman").resizable().scaledToFill().ignoresSafeArea(.all)
-                    Button(action: {
-                        gameService.party.lives -= 1
-                        gameService.send(party: gameService.party)
-                    }) {
-                        Image(systemName: "minus.circle")
-                            .font(.system(size: 50))
-                            .foregroundColor(.red)
-                    }.offset(y:-100)
+                    
                     
                     VStack{
                         HStack{
@@ -70,7 +76,7 @@ struct HelmsmanView: View {
                                 .foregroundColor(.white)
                             Spacer()
                             HStack {
-                               if gameService.party.lives > 0 {
+                                if gameService.party.lives > 0 {
                                     ForEach((0...gameService.party.lives - 1), id: \.self) { _ in
                                         Rectangle()
                                             .foregroundColor(.clear)
@@ -109,15 +115,28 @@ struct HelmsmanView: View {
                         VStack{
                             ForEach(Array(gameService.party.players.enumerated()), id: \.offset) { index, player in
                                 if gameService.currentPlayer.id == player.id {
-                                    Text("\(player.event.instruction)")
-                                        .font(Font.custom("Gasoek One", size: 20))
-                                        .multilineTextAlignment(.center)
-                                        .frame(maxWidth: .infinity)
-                                        .padding(.vertical, 20)
-                                        .foregroundColor(Color(red: 0.95, green: 0.74, blue: 0))
-                                        .background(
-                                            Rectangle()
-                                                .opacity(0.5))
+                                    if eventblacksmith == false {
+                                        Text("\(player.event.instruction)")
+                                            .font(Font.custom("Gasoek One", size: 20))
+                                            .multilineTextAlignment(.center)
+                                            .frame(maxWidth: .infinity)
+                                            .padding(.vertical, 20)
+                                            .foregroundColor(Color(red: 0.95, green: 0.74, blue: 0))
+                                            .background(
+                                                Rectangle()
+                                                    .opacity(0.5))
+                                    } else {
+                                        Text("Your steer is broken")
+                                            .font(Font.custom("Gasoek One", size: 20))
+                                            .multilineTextAlignment(.center)
+                                            .frame(maxWidth: .infinity)
+                                            .padding(.vertical, 20)
+                                            .foregroundColor(Color(red: 0.95, green: 0.74, blue: 0))
+                                            .background(
+                                                Rectangle()
+                                                    .opacity(0.5))
+                                    }
+                                    
                                 }
                             }
                             ProgressView("", value: instructionProgress, total: instructionProgressMax)
@@ -129,41 +148,99 @@ struct HelmsmanView: View {
                                 .progressViewStyle(LinearProgressViewStyle(tint: Color(red: 0, green: 0.82, blue: 0.23)))
                                 .padding(.top, -30)
                         }
-                        Image("StearingWheel")
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 300, height: 300)
-                            .rotationEffect(
-                                .degrees(Double(self.angle)))
-                            .gesture(DragGesture()
-                                .onChanged{ v in
-                                    let theta = (atan2(v.location.x - self.length / 2, self.length / 2 - v.location.y) - atan2(v.startLocation.x - self.length / 2, self.length / 2 - v.startLocation.y)) * 180 / .pi
-                                    self.angle = theta + self.lastAngle
-                                    print(self.angle)
-                                    
-                                    if (self.angle > 300){
-                                        self.angle = 300
-                                        self.progress = self.angle
-                                        isTurnProgressCompleted = Objective.turnRight
-                                    } else if (self.angle < 0){
-                                        if (self.angle < -300){
-                                            self.angle = -300
-                                            self.progress = 300
-                                            isTurnProgressCompleted = Objective.turnLeft
+                        if eventblacksmith == false{
+                            ForEach(Array(gameService.party.players.enumerated()), id: \.offset) { index, player in
+                                if gameService.currentPlayer.id == player.id {
+                                    if player.role == Role.helmsman {
+                                        if player.event.objective == Objective.turnLeft {
+                                            Image("StearingWheel")
+                                                .resizable()
+                                                .scaledToFill()
+                                                .frame(width: 300, height: 300)
+                                                .knobRotation(
+                                                    knobValue: $knobValue,
+                                                    minAngle: -360,
+                                                    maxAngle: +360,
+                                                    onKnobValueChanged: { newValue in
+                                                        knobValue = newValue
+                                                    },
+                                                    animation: .spring()
+                                                )
+                                                .onAppear{
+                                                    knobValue = 1
+                                                }
+                                                .onChange(of: knobValue, perform: { newValue in
+                                                    var value = "\(knobValue)"
+                                                    self.progress = (Double(value)! - 1) * -100
+                                                    //                                                var value = "\(knobValue)"
+                                                    //                                                if Double(value)! > 0.5 {
+                                                    //                                                    self.progress = (Double(value)! - 0.5) * 200
+                                                    //                                                } else {
+                                                    //                                                    self.progress = ((1 - Double(value)!) - 0.5) * 200
+                                                    //                                                }
+                                                })
                                         } else {
-                                            self.progress = self.angle * (-1)
+                                            Image("StearingWheel")
+                                                .resizable()
+                                                .scaledToFill()
+                                                .frame(width: 300, height: 300)
+                                                .knobRotation(
+                                                    knobValue: $knobValue,
+                                                    minAngle: -360,
+                                                    maxAngle: +360,
+                                                    onKnobValueChanged: { newValue in
+                                                        knobValue = newValue
+                                                    },
+                                                    animation: .spring()
+                                                )
+                                                .onAppear{
+                                                    knobValue = 0
+                                                }
+                                                .onChange(of: knobValue, perform: { newValue in
+                                                    var value = "\(knobValue)"
+                                                    self.progress = Double(value)! * 100
+                                                })
                                         }
                                     }
-                                    else {
-                                        self.progress = self.angle
-                                    }
-                                    print(self.angle)
                                 }
-                                .onEnded { v in
-                                    self.lastAngle = self.angle
-                                }
-                            )
-                            .offset(y: 150)
+                            }
+                        }else{
+                            Image("StearingWheel")
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: 300, height: 300)
+                        }
+                        
+                        //                            .rotationEffect(
+                        //                                .degrees(Double(self.angle)))
+                        //                            .gesture(DragGesture()
+                        //                                .onChanged{ v in
+                        //                                    let theta = (atan2(v.location.x - self.length / 2, self.length / 2 - v.location.y) - atan2(v.startLocation.x - self.length / 2, self.length / 2 - v.startLocation.y)) * 180 / .pi
+                        //                                    self.angle = theta + self.lastAngle
+                        //                                    print(self.angle)
+                        //
+                        //                                    if (self.angle > 300){
+                        //                                        self.angle = 300
+                        //                                        self.progress = self.angle
+                        //                                        isTurnProgressCompleted = Objective.turnRight
+                        //                                    } else if (self.angle < 0){
+                        //                                        if (self.angle < -300){
+                        //                                            self.angle = -300
+                        //                                            self.progress = 300
+                        //                                            isTurnProgressCompleted = Objective.turnLeft
+                        //                                        } else {
+                        //                                            self.progress = self.angle * (-1)
+                        //                                        }
+                        //                                    }
+                        //                                    else {
+                        //                                        self.progress = self.angle
+                        //                                    }
+                        //                                    print(self.angle)
+                        //                                }
+                        //                                .onEnded { v in
+                        //                                    self.lastAngle = self.angle
+                        //                                }
+                        //                            )
                         
                         Spacer()
                             .frame(height: 180)
@@ -200,6 +277,16 @@ struct HelmsmanView: View {
                         instructionProgressMax = gameService.party.players[index].event.duration
                     }
                 }
+                for (index, player) in gameService.party.players.enumerated() {
+                    if player.role == Role.blackSmith {
+                        let obj = gameService.party.players[index].event.objective
+                        if obj == Objective.steer{
+                            eventblacksmith = true
+                        } else {
+                            eventblacksmith = false
+                        }
+                    }
+                }
                 progress = 0
                 angle = 0
                 lastAngle = 0
@@ -217,6 +304,13 @@ struct HelmsmanView: View {
                     //                            isStartGame = false
                     //                            gameService.send(parties: gameService.parties)
                 }
+                for (index, player) in gameService.party.players.enumerated() {
+                    if player.role == Role.blackSmith {
+                        if gameService.party.players[index].event.isCompleted == true {
+                            eventblacksmith = false
+                        }
+                    }
+                }
                 
                 var allEventsCompleted = true
                 for (_, player) in gameService.party.players.enumerated() {
@@ -231,6 +325,16 @@ struct HelmsmanView: View {
                         if player.role == Role.helmsman {
                             instructionProgress = gameService.party.players[index].event.duration
                             instructionProgressMax = gameService.party.players[index].event.duration
+                        }
+                    }
+                    for (index, player) in gameService.party.players.enumerated() {
+                        if player.role == Role.blackSmith {
+                            let obj = gameService.party.players[index].event.objective
+                            if obj == Objective.steer{
+                                eventblacksmith = true
+                            } else {
+                                eventblacksmith = false
+                            }
                         }
                     }
                     progress = 0
