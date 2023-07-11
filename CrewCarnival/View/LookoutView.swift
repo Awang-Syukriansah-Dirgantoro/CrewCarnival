@@ -23,13 +23,14 @@ struct LookoutView: View {
     @State private var xOffset:CGFloat = -225
     @State private var isMove = false
     @State private var direction = "Forward"
+    @State  var looks:String = ""
     @State private var isLeftAble = true
     @State private var isRightAble = true
     @EnvironmentObject var gameService: GameService
     @Binding var isStartGame: Bool
     @State var eventblacksmith = false
     let timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
-    
+    @State var ganti = 1
     var body: some View {
         if roleExplain == false{
             GeometryReader{proxy in
@@ -59,10 +60,10 @@ struct LookoutView: View {
             )
             ZStack{
                 GeometryReader { geo in
-                    PlayerView()
-                        .scaledToFill()
-                        .aspectRatio(contentMode: .fill)
-                        .offset(x: xOffset)
+                    PlayerView(look: $looks)
+                                    .scaledToFill()
+                                    .aspectRatio(contentMode: .fill)
+                                    .offset(x: xOffset)
                 }
                 .ignoresSafeArea()
                 VStack{
@@ -205,6 +206,11 @@ struct LookoutView: View {
                                 isLeftAble = true
                                 isRightAble = false
                             }
+//                            ganti = ganti + 1
+//                            if ganti > 3{
+//                                ganti = 1
+//                            }
+//                            looks = "Lookout\(ganti)"
                         } label: {
                             Rectangle()
                                 .foregroundColor(.clear)
@@ -224,7 +230,7 @@ struct LookoutView: View {
                 RecapSceneView(lives: $lives, show: $showPopUp, isStartGame: $isStartGame)
             }
             
-            .onAppear{
+            .task{
 //                self.views = listView.randomElement()!
 //                print("videoNamelook: \(self.views)")
                 for (index, player) in gameService.party.players.enumerated() {
@@ -244,6 +250,23 @@ struct LookoutView: View {
                     }
                 }
                 gameService.send(party: gameService.party)
+//                print(looks)
+                for (_, player) in gameService.party.players.enumerated() {
+                    print("Masuk loop")
+                    if player.role == Role.lookout {
+                        if player.event.objective == Objective.lookLeft {
+                            looks = "Lookout2"
+                        } else if player.event.objective == Objective.lookRight {
+                            looks = "Lookout3"
+                        } else {
+                            looks = "Lookout1"
+                        }
+                    }else{
+                        looks = "Test"
+                    }
+                }
+//                looks = "Lookout3"
+//                print("Luar",looks)
             }
             .onChange(of: gameService.party, perform: { newValue in
                 if gameService.party.lives <= 0 {
@@ -329,16 +352,20 @@ struct LookoutView: View {
                     if player.role == Role.lookout {
                         if player.event.objective == Objective.lookLeft {
                             if newDirection == "Left" {
+                                looks = "Lookout2"
+//                                print(looks)
                                 gameService.party.players[index].event.instruction = "Our Left is Clear!\nQuickly Turn the Ship!"
                                 //                                    gameService.parties[index].triggerHelmsmanInstruction()
                             }
                         } else if player.event.objective == Objective.lookRight {
                             if newDirection == "Right" {
+                                looks = "Lookout3"
                                 gameService.party.players[index].event.instruction = "Our Right is Clear!\nQuickly Turn the Ship!"
                                 //                                    gameService.parties[index].triggerHelmsmanInstruction()
                             }
                         } else {
                             if newDirection == "Front" {
+                                looks = "Lookout1"
                                 gameService.party.players[index].event.instruction = "Our Front is Clear!\nQuickly Turn the Ship!"
                                 //                                    gameService.parties[index].triggerHelmsmanInstruction()
                             }

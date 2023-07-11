@@ -99,6 +99,48 @@ struct Party: Codable, Identifiable, Equatable {
         }
     }
     
+    mutating func generateSideEvent(){
+        for (index, player) in players.enumerated() {
+            if player.role == Role.cabinBoy {
+                let randomInt = Int.random(in: 0...2)
+//                var randomInt = 0
+                var objective = Objective.sail
+                
+                switch randomInt {
+                case 0:
+                    objective = Objective.sail
+                    break
+                case 1:
+                    objective = Objective.steer
+                    break
+                case 2:
+                    objective = Objective.binocular
+                    break
+                    
+                default:
+                    objective = Objective.sail
+                }
+                players[index].event = Event(duration: 10, instruction: "Team mate need your help!", objective: objective)
+            }
+            
+            if player.role == Role.sailingMaster {
+//                let randomInt = Int.random(in: 0...2)
+                var randomInt = 0
+                var objective = Objective.sail
+                
+                switch randomInt {
+                case 0:
+                    objective = Objective.sail
+                    break
+                    
+                default:
+                    objective = Objective.sail
+                }
+                players[index].event = Event(duration: 10, instruction: "Ohh nooo, sail is broke!", objective: objective)
+            }
+        }
+    }
+    
     mutating func setEventCompleted(role: Role) {
         for (index, player) in players.enumerated() {
             if player.role == role {
