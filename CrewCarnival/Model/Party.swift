@@ -16,6 +16,7 @@ struct Party: Codable, Identifiable, Equatable {
     var players = [Player]()
     var isPlaying = false
     var lives = 3
+    var partyProg = 0.0
     
     mutating func generateLHSEvent() {
         var randomInt = Int.random(in: 0...1)
@@ -208,6 +209,7 @@ struct Party: Codable, Identifiable, Equatable {
         }
         
         self.lives = 3
+        self.partyProg = 0.0
         
         assignRoles()
     }

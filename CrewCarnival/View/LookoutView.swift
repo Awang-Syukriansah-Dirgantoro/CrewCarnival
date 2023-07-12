@@ -105,8 +105,10 @@ struct LookoutView: View {
                             )
                         ProgressView("", value: partyProgress, total: 100).progressViewStyle(gradientStyle).padding(.horizontal,9)
                             .onReceive(timer) { _ in
-                                if partyProgress < 100 {
+                                if partyProgress < 100 && showPopUp == false{
                                     partyProgress += 0.1
+                                    gameService.party.partyProg = partyProgress
+
                                 }
                             }
                     }.padding(.bottom,20).padding(.horizontal,30)
@@ -270,9 +272,11 @@ struct LookoutView: View {
 //                print("Luar",looks)
             }
             .onChange(of: gameService.party, perform: { newValue in
-                if gameService.party.lives <= 0 {
+                if gameService.party.lives == 0 {
+                    gameService.send(party: gameService.party)
                     withAnimation(.linear(duration: 0.5)) {
                         lives = gameService.party.lives
+                        
                         showPopUp = true
                         
                     }
@@ -330,6 +334,7 @@ struct LookoutView: View {
             })
             .onChange(of: partyProgress, perform: { newValue in
                 if partyProgress >= 100{
+                    gameService.send(party: gameService.party)
                     withAnimation(.linear(duration: 0.5)) {
                         lives = gameService.party.lives
                         showPopUp = true
