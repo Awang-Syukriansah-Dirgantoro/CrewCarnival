@@ -30,6 +30,7 @@ struct LookoutView: View {
     @EnvironmentObject var gameService: GameService
     @Binding var isStartGame: Bool
     @State var eventblacksmith = false
+    @State var showSuccessOverlay = false
     let timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
     @State var ganti = 1
     var body: some View {
@@ -233,20 +234,38 @@ struct LookoutView: View {
                 }
                 }
                 .ignoresSafeArea()
-                
-                if gameService.party.flashred{
-                    Color.red.edgesIgnoringSafeArea(.all).opacity(gameService.party.flashred ? 0.8 : 0.0).onAppear{
-                        withAnimation(Animation.spring().speed(0.2)){
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2){
-                                gameService.party.flashred = false
-                                gameService.send(party: gameService.party)
-                            }
-                        }
-                    }
-                }
                 RecapSceneView(lives: $lives, show: $showPopUp, isStartGame: $isStartGame)
             }
-            
+            .overlay(content: {
+                if showSuccessOverlay {
+                    VStack {
+                        Text("SAFE!")
+                            .font(.custom("Gasoek One", size: 40))
+                    }
+                    .onAppear {
+                        withAnimation(.easeOut(duration: 1)) {
+                            showSuccessOverlay = false
+                        }
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(.green)
+                }
+                
+                if gameService.party.flashred {
+                    VStack {
+                        Text("OUCH!")
+                            .font(.custom("Gasoek One", size: 40))
+                    }
+                    .onAppear {
+                        withAnimation(.easeOut(duration: 1)) {
+                            gameService.party.flashred = false
+                            gameService.send(party: gameService.party)
+                        }
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(.red)
+                }
+            })
             .task{
 //                self.views = listView.randomElement()!
 //                print("videoNamelook: \(self.views)")
@@ -304,6 +323,7 @@ struct LookoutView: View {
                 }
                 
                 if allEventsCompleted {
+                    showSuccessOverlay = true
                     gameService.party.generateLHSEvent()
                     for (index, player) in gameService.party.players.enumerated() {
                         if player.role == Role.lookout {

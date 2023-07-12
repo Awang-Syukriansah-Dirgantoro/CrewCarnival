@@ -21,6 +21,7 @@ struct BlacksmithView: View {
     @Binding var isStartGame: Bool
     @State private var isPuzzleCompleted = false
     @State var objct: Objective?
+    @State var showSuccessOverlay = false
     @State private var gradient = LinearGradient(
         gradient: Gradient(colors: [Color(red: 0, green: 0.82, blue: 0.23)]),
         startPoint: .topLeading,
@@ -137,18 +138,38 @@ struct BlacksmithView: View {
                     .environmentObject(vm)
                     Spacer()
                 }
-                if gameService.party.flashred{
-                    Color.red.edgesIgnoringSafeArea(.all).opacity(gameService.party.flashred ? 0.8 : 0.0).onAppear{
-                        withAnimation(Animation.spring().speed(0.2)){
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2){
-                                gameService.party.flashred = false
-                                gameService.send(party: gameService.party)
-                            }
-                        }
-                    }
-                }
                 RecapSceneView(lives: $lives, show: $showPopUp, isStartGame: $isStartGame)
             }
+            .overlay(content: {
+                if showSuccessOverlay {
+                    VStack {
+                        Text("SAFE!")
+                            .font(.custom("Gasoek One", size: 40))
+                    }
+                    .onAppear {
+                        withAnimation(.easeOut(duration: 1)) {
+                            showSuccessOverlay = false
+                        }
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(.green)
+                }
+                
+                if gameService.party.flashred {
+                    VStack {
+                        Text("OUCH!")
+                            .font(.custom("Gasoek One", size: 40))
+                    }
+                    .onAppear {
+                        withAnimation(.easeOut(duration: 1)) {
+                            gameService.party.flashred = false
+                            gameService.send(party: gameService.party)
+                        }
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(.red)
+                }
+            })
             .onAppear {
                 for (index, player) in gameService.party.players.enumerated() {
                     if player.role == Role.blackSmith {
@@ -183,6 +204,7 @@ struct BlacksmithView: View {
                 }
                 
                 if allEventsCompleted {
+                    showSuccessOverlay = true
                     for (index, player) in gameService.party.players.enumerated() {
                         if player.role == Role.blackSmith {
                             instructionProgress = gameService.party.players[index].event.duration
