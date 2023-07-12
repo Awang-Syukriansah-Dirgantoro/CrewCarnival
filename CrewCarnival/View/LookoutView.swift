@@ -105,8 +105,10 @@ struct LookoutView: View {
                             )
                         ProgressView("", value: partyProgress, total: 100).progressViewStyle(gradientStyle).padding(.horizontal,9)
                             .onReceive(timer) { _ in
-                                if partyProgress < 100 {
+                                if partyProgress < 100 && showPopUp == false{
                                     partyProgress += 0.1
+                                    gameService.party.partyProg = partyProgress
+
                                 }
                             }
                     }.padding(.bottom,20).padding(.horizontal,30)
@@ -232,7 +234,16 @@ struct LookoutView: View {
                 }
                 .ignoresSafeArea()
                 
-                    
+                if gameService.party.flashred{
+                    Color.red.edgesIgnoringSafeArea(.all).opacity(gameService.party.flashred ? 0.8 : 0.0).onAppear{
+                        withAnimation(Animation.spring().speed(0.2)){
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2){
+                                gameService.party.flashred = false
+                                gameService.send(party: gameService.party)
+                            }
+                        }
+                    }
+                }
                 RecapSceneView(lives: $lives, show: $showPopUp, isStartGame: $isStartGame)
             }
             
@@ -270,9 +281,11 @@ struct LookoutView: View {
 //                print("Luar",looks)
             }
             .onChange(of: gameService.party, perform: { newValue in
-                if gameService.party.lives <= 0 {
+                if gameService.party.lives == 0 {
+                    gameService.send(party: gameService.party)
                     withAnimation(.linear(duration: 0.5)) {
                         lives = gameService.party.lives
+                        
                         showPopUp = true
                         
                     }
@@ -330,6 +343,7 @@ struct LookoutView: View {
             })
             .onChange(of: partyProgress, perform: { newValue in
                 if partyProgress >= 100{
+                    gameService.send(party: gameService.party)
                     withAnimation(.linear(duration: 0.5)) {
                         lives = gameService.party.lives
                         showPopUp = true
@@ -342,6 +356,7 @@ struct LookoutView: View {
                     if gameService.party.lives > 0 {
                         withAnimation(Animation.spring()) {
                             gameService.party.lives -= 1
+                            gameService.party.flashred = true
                             isMove = false
                             direction = "Forward"
                             isLeftAble = true

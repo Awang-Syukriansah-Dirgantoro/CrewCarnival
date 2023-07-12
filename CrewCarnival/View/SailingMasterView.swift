@@ -450,6 +450,17 @@ struct SailingMasterView: View {
                     Spacer()
                 }
                 .padding(.top,50)
+                
+                if gameService.party.flashred{
+                    Color.red.edgesIgnoringSafeArea(.all).opacity(gameService.party.flashred ? 0.8 : 0.0).onAppear{
+                        withAnimation(Animation.spring().speed(0.2)){
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2){
+                                gameService.party.flashred = false
+                                gameService.send(party: gameService.party)
+                            }
+                        }
+                    }
+                }
                 RecapSceneView(lives: $lives, show: $showPopUp, isStartGame: $isStartGame)
             }
             .onAppear {
@@ -472,7 +483,7 @@ struct SailingMasterView: View {
                 gameService.send(party: gameService.party)
             }
             .onChange(of: gameService.party, perform: { newValue in
-                if gameService.party.lives <= 0 {
+                if gameService.party.lives == 0 {
                     withAnimation(.linear(duration: 0.5)) {
                         lives = gameService.party.lives
                         showPopUp = true
