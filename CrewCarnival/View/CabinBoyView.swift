@@ -256,7 +256,6 @@ struct CabinBoyView: View {
                 }
                 
                 if allEventsCompleted {
-                    gameService.party.generateLHSEvent()
                     for (index, player) in gameService.party.players.enumerated() {
                         if player.role == Role.helmsman {
                             instructionProgress = gameService.party.players[index].event.duration

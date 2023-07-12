@@ -301,6 +301,11 @@ struct LookoutView: View {
                         if player.role == Role.lookout {
                             instructionProgress = gameService.party.players[index].event.duration
                             instructionProgressMax = gameService.party.players[index].event.duration
+                            if player.event.objective == Objective.lookLeft {
+                                looks = "LookoutLeft"
+                            } else {
+                                looks = "LookoutRight"
+                            }
                         }
                     }
                     for (index, player) in gameService.party.players.enumerated() {
@@ -349,6 +354,11 @@ struct LookoutView: View {
                     
                     for (index, player) in gameService.party.players.enumerated() {
                         if player.role == Role.lookout {
+                            if player.event.objective == Objective.lookLeft {
+                                looks = "LookoutLeft"
+                            } else {
+                                looks = "LookoutRight"
+                            }
                             instructionProgress = gameService.party.players[index].event.duration
                         }
                     }
