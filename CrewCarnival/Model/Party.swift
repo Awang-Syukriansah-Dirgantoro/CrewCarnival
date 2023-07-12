@@ -18,34 +18,24 @@ struct Party: Codable, Identifiable, Equatable {
     var lives = 3
     
     mutating func generateLHSEvent() {
+        var randomInt = Int.random(in: 0...1)
+        
         for (index, player) in players.enumerated() {
             if player.role == Role.lookout {
-//                while true {
-//                    var randomInt = Int.random(in: 0...2)
-                    var randomInt = 0
-                    var objective = Objective.lookLeft
-                    
-                    switch randomInt {
-                    case 0:
-                        objective = Objective.lookLeft
-                        break
-                    case 1:
-                        objective = Objective.lookFront
-                        break
-                    default:
-                        objective = Objective.lookRight
-                    }
-                    
-//                    if player.event.objective != objective {
-                        players[index].event = Event(duration: 30, instruction: "There are obstacles nearby!", objective: objective)
-//                        break
-//                    }
-//                }
+                var objective = Objective.lookLeft
+                
+                switch randomInt {
+                case 0:
+                    objective = Objective.lookLeft
+                    break
+                default:
+                    objective = Objective.lookRight
+                }
+                
+                players[index].event = Event(duration: 10, instruction: "There are obstacles nearby!", objective: objective)
             }
             
             if player.role == Role.helmsman {
-//                var randomInt = Int.random(in: 0...1)
-                var randomInt = 0
                 var objective = Objective.turnLeft
                 
                 switch randomInt {
@@ -56,11 +46,11 @@ struct Party: Codable, Identifiable, Equatable {
                     objective = Objective.turnRight
                 }
                 
-                players[index].event = Event(duration: 30, instruction: "There are obstacles nearby!", objective: objective)
+                players[index].event = Event(duration: 10, instruction: "There are obstacles nearby!", objective: objective)
             }
             
             if player.role == Role.sailingMaster {
-                var randomInt = Int.random(in: 0...2)
+                randomInt = Int.random(in: 0...2)
                 var objective = Objective.slow10
                 
                 switch randomInt {
@@ -74,10 +64,10 @@ struct Party: Codable, Identifiable, Equatable {
                     objective = Objective.slow30
                 }
                 
-                players[index].event = Event(duration: 30, instruction: "There are obstacles nearby!", objective: objective)
+                players[index].event = Event(duration: 10, instruction: "There are obstacles nearby!", objective: objective)
             }
             if player.role == Role.blackSmith {
-                var randomInt = Int.random(in: 0...2)
+                randomInt = Int.random(in: 0...2)
                 var objective = Objective.steer
                 
                 switch randomInt {
@@ -94,7 +84,49 @@ struct Party: Codable, Identifiable, Equatable {
                     objective = Objective.steer
                 }
                 
-                players[index].event = Event(duration: 30, instruction: "Drag and fix the object", objective: objective, isCompleted: false)
+                players[index].event = Event(duration: 10, instruction: "Drag and fix the object", objective: objective, isCompleted: false)
+            }
+        }
+    }
+    
+    mutating func generateSideEvent(){
+        for (index, player) in players.enumerated() {
+            if player.role == Role.cabinBoy {
+                let randomInt = Int.random(in: 0...2)
+//                var randomInt = 0
+                var objective = Objective.sail
+                
+                switch randomInt {
+                case 0:
+                    objective = Objective.sail
+                    break
+                case 1:
+                    objective = Objective.steer
+                    break
+                case 2:
+                    objective = Objective.binocular
+                    break
+                    
+                default:
+                    objective = Objective.sail
+                }
+                players[index].event = Event(duration: 10, instruction: "Team mate need your help!", objective: objective)
+            }
+            
+            if player.role == Role.sailingMaster {
+//                let randomInt = Int.random(in: 0...2)
+                var randomInt = 0
+                var objective = Objective.sail
+                
+                switch randomInt {
+                case 0:
+                    objective = Objective.sail
+                    break
+                    
+                default:
+                    objective = Objective.sail
+                }
+                players[index].event = Event(duration: 10, instruction: "Ohh nooo, sail is broke!", objective: objective)
             }
         }
     }
@@ -170,13 +202,12 @@ struct Party: Codable, Identifiable, Equatable {
     }
     
     mutating func reset() {
-        self.isPlaying = false
-        self.lives = 3
-        
         for (index, _) in self.players.enumerated() {
             self.players[index].isReady = false
             self.players[index].role = nil
         }
+        
+        self.lives = 3
         
         assignRoles()
     }

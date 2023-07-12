@@ -46,8 +46,8 @@ struct RecapSceneView: View {
                 HStack(spacing: 10){
                     Button {
                         gameService.party.reset()
+//                        gameService.send(party: gameService.party)
                         isStartGame = false
-                        gameService.send(party: gameService.party)
                     } label: {
                         Image("okrecap").resizable().frame(width: 100, height: 40).opacity(isAnimate)
                     }

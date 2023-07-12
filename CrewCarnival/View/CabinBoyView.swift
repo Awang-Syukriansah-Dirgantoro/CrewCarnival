@@ -29,7 +29,10 @@ struct CabinBoyView: View {
     @State var showingPopup = false
     @EnvironmentObject var gameService: GameService
     @Binding var isStartGame: Bool
-    var partyId: UUID
+    
+    let timerSideEvent = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+    @State private var counter = 0
+    
     let timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
     var body: some View {
         if roleExplain == false{
@@ -51,6 +54,11 @@ struct CabinBoyView: View {
                         .multilineTextAlignment(.center)
                       
                 }
+                Text("The Game Will Start In \(String(String(timeExplain).first!))")
+                    .font(.custom("Gasoek One", size: 20))
+                    .foregroundColor(.black)
+                    .position(x: size.width / 2, y: 250)
+                    .multilineTextAlignment(.center)
             }.ignoresSafeArea()
         }else{
             let gradientStyle = GradientProgressStyle(
@@ -140,36 +148,20 @@ struct CabinBoyView: View {
                             .foregroundColor(.white)
                         Spacer()
                         HStack {
-                            Rectangle()
-                                .foregroundColor(.clear)
-                                .frame(width: 25, height: 19)
-                                .background(
-                                    Image("Heart")
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fill)
+                            if gameService.party.lives > 0 {
+                                ForEach((0...gameService.party.lives - 1), id: \.self) { _ in
+                                    Rectangle()
+                                        .foregroundColor(.clear)
                                         .frame(width: 25, height: 19)
-                                        .clipped()
-                                )
-                            Rectangle()
-                                .foregroundColor(.clear)
-                                .frame(width: 25, height: 19)
-                                .background(
-                                    Image("Heart")
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fill)
-                                        .frame(width: 25, height: 19)
-                                        .clipped()
-                                )
-                            Rectangle()
-                                .foregroundColor(.clear)
-                                .frame(width: 25, height: 19)
-                                .background(
-                                    Image("Heart")
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fill)
-                                        .frame(width: 25, height: 19)
-                                        .clipped()
-                                )
+                                        .background(
+                                            Image("Heart")
+                                                .resizable()
+                                                .aspectRatio(contentMode: .fill)
+                                                .frame(width: 25, height: 19)
+                                                .clipped()
+                                        )
+                                }
+                            }
                         }
                     }.padding(.bottom).padding(.horizontal,30)
                     ZStack{
@@ -186,26 +178,32 @@ struct CabinBoyView: View {
                         ProgressView("", value: partyProgress, total: 100).progressViewStyle(gradientStyle).padding(.horizontal,9)
                             .onReceive(timer) { _ in
                                 if partyProgress < 100 {
-                                    partyProgress += 2
+                                    partyProgress += 0.1
                                 }
                             }
                     }.padding(.bottom,20).padding(.horizontal,30)
-                    ZStack{
-                        Rectangle().frame(height: 60).opacity(0.5)
+                    VStack{
                         ForEach(Array(gameService.party.players.enumerated()), id: \.offset) { index, player in
                             if gameService.currentPlayer.id == player.id {
-                                Text("\(gameService.party.players[index].event.instruction)")
+                                Text("\(player.event.instruction)")
                                     .font(Font.custom("Gasoek One", size: 20))
                                     .multilineTextAlignment(.center)
+                                    .frame(maxWidth: .infinity)
+                                    .padding(.vertical, 20)
                                     .foregroundColor(Color(red: 0.95, green: 0.74, blue: 0))
+                                    .background(
+                                        Rectangle()
+                                            .opacity(0.5))
                             }
                         }
-                        ProgressView("", value: instructionProgress, total: instructionProgressMax).progressViewStyle(gradientStyle).padding(.horizontal,9)
+                        ProgressView("", value: instructionProgress, total: instructionProgressMax)
                             .onReceive(timer) { _ in
                                 if instructionProgress > 0 {
                                     instructionProgress -= 0.1
                                 }
-                            }.frame(width: 400 ,height: 60,alignment:.bottom).ignoresSafeArea(.all)
+                            }
+                            .progressViewStyle(LinearProgressViewStyle(tint: Color(red: 0, green: 0.82, blue: 0.23)))
+                            .padding(.top, -30)
                     }
                     Spacer()
                     Spacer()
@@ -219,6 +217,23 @@ struct CabinBoyView: View {
                         instructionProgress = gameService.party.players[index].event.duration
                         instructionProgressMax = gameService.party.players[index].event.duration
                     }
+                }
+            }
+            .onReceive(timerSideEvent){ time in
+                var allEventsCompleted = true
+                if allEventsCompleted {
+                    if counter == 10 {
+                        gameService.party.generateSideEvent()
+                        for (index, player) in gameService.party.players.enumerated() {
+                            if player.role == Role.helmsman {
+                                instructionProgress = gameService.party.players[index].event.duration
+                                instructionProgressMax = gameService.party.players[index].event.duration
+                            }
+                        }
+                        gameService.send(party: gameService.party)
+                        counter = 0
+                    }
+                    counter += 1
                 }
             }
             .onChange(of: gameService.party, perform: { newValue in
@@ -259,6 +274,24 @@ struct CabinBoyView: View {
                     }
                 }
             })
+            .onChange(of: instructionProgress, perform: { newValue in
+                if instructionProgress <= 0 {
+                    gameService.party.generateLHSEvent()
+                    if gameService.party.lives > 0 {
+                        gameService.party.lives -= 1
+                    }
+                    gameService.send(party: gameService.party)
+                    if gameService.party.lives <= 0 {
+                        gameService.party.reset()
+                        gameService.send(party: gameService.party)
+                        isStartGame = false
+                    }
+                    
+                    for (index, _) in gameService.party.players.enumerated() {
+                        instructionProgress = gameService.party.players[index].event.duration
+                    }
+                }
+            })
         }
         
     }
@@ -268,88 +301,70 @@ struct CabinBoyView: View {
             Rectangle().opacity(0.5).ignoresSafeArea()
             switch choose {
             case "sailingmaster":
-                Rectangle()
-                    .foregroundColor(.clear)
-                    .frame(width: 348, height: 514)
-                    .background(
-                        Image("VerticalMap")
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
-                            .frame(width: 348, height: 514)
-                            .clipped()
-                    ).offset(y:70)
                 Button{
                     
                 } label: {
-                    Rectangle()
-                        .foregroundColor(.clear)
-                        .frame(width: 224.93666, height: 57.58378)
-                        .background(
-                            ZStack{
-                                Image("InfoBox")
+                    ZStack{
+                        Rectangle()
+                            .foregroundColor(.clear)
+                            .frame(width: 165, height: 171)
+                            .background(
+                                Image("Box")
                                     .resizable()
                                     .aspectRatio(contentMode: .fill)
-                                    .frame(width: 224.93666076660156, height: 57.58378219604492)
+                                    .frame(width: 165, height: 171)
                                     .clipped()
-                                Text("Fix Sail 1")
-                                    .font(
-                                        Font.custom("Krub-Regular", size: 24)
-                                            .weight(.semibold)
-                                    )
-                                    .multilineTextAlignment(.center)
-                                    .foregroundColor(.white)
-                                    .frame(width: 127.11892, height: 35.85405, alignment: .top)
-                            }
-                        )
-                }.offset(y:-30)
+                            )
+                    }
+                }.offset(x:-100)
                 Button{
                     
                 } label: {
-                    Rectangle()
-                        .foregroundColor(.clear)
-                        .frame(width: 224.93666, height: 57.58378)
-                        .background(
-                            ZStack{
-                                Image("InfoBox")
+                    ZStack{
+                        Rectangle()
+                            .foregroundColor(.clear)
+                            .frame(width: 165, height: 171)
+                            .background(
+                                Image("Box")
                                     .resizable()
                                     .aspectRatio(contentMode: .fill)
-                                    .frame(width: 224.93666076660156, height: 57.58378219604492)
+                                    .frame(width: 165, height: 171)
                                     .clipped()
-                                Text("Fix Sail 2")
-                                    .font(
-                                        Font.custom("Krub-Regular", size: 24)
-                                            .weight(.semibold)
-                                    )
-                                    .multilineTextAlignment(.center)
-                                    .foregroundColor(.white)
-                                    .frame(width: 127.11892, height: 35.85405, alignment: .top)
-                            }
-                        )
-                }.offset(y:50)
+                            )
+                    }
+                }.offset(x:100)
                 Button{
                     
                 } label: {
-                    Rectangle()
-                        .foregroundColor(.clear)
-                        .frame(width: 224.93666, height: 57.58378)
-                        .background(
-                            ZStack{
-                                Image("InfoBox")
+                    ZStack{
+                        Rectangle()
+                            .foregroundColor(.clear)
+                            .frame(width: 165, height: 171)
+                            .background(
+                                Image("Box")
                                     .resizable()
                                     .aspectRatio(contentMode: .fill)
-                                    .frame(width: 224.93666076660156, height: 57.58378219604492)
+                                    .frame(width: 165, height: 171)
                                     .clipped()
-                                Text("Fix Sail 3")
-                                    .font(
-                                        Font.custom("Krub-Regular", size: 24)
-                                            .weight(.semibold)
-                                    )
-                                    .multilineTextAlignment(.center)
-                                    .foregroundColor(.white)
-                                    .frame(width: 127.11892, height: 35.85405, alignment: .top)
-                            }
-                        )
-                }.offset(y:130)
+                            )
+                    }
+                }.offset(x:-100,y:200)
+                Button{
+                    
+                } label: {
+                    ZStack{
+                        Rectangle()
+                            .foregroundColor(.clear)
+                            .frame(width: 165, height: 171)
+                            .background(
+                                Image("Box")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width: 165, height: 171)
+                                    .clipped()
+                            )
+                    }
+                }.offset(x:100,y:200)
                 
             case "helmsman":
                 Button{
@@ -483,7 +498,7 @@ struct CabinBoyView: View {
                     }
                 }.offset(x:100,y:200)
                 
-            case "lookput":
+            case "lookout":
                 Button{
                     
                 } label: {
@@ -572,6 +587,6 @@ struct CabinBoyView: View {
 
 struct CabinBoyView_Previews: PreviewProvider {
     static var previews: some View {
-        CabinBoyView(isStartGame: .constant(false), partyId: UUID()).environmentObject(GameService())
+        CabinBoyView(isStartGame: .constant(false)).environmentObject(GameService())
     }
 }

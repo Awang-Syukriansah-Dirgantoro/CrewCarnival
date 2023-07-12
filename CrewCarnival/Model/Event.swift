@@ -16,5 +16,5 @@ struct Event: Codable, Equatable {
 }
 
 enum Objective: Codable {
-  case lookLeft, lookFront, lookRight, turnLeft, turnRight, slow10, slow20, slow30, steer, sail, binocular
+  case lookLeft, lookRight, turnLeft, turnRight, slow10, slow20, slow30, steer, sail, binocular
 }
