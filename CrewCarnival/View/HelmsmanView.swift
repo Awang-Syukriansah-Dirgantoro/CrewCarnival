@@ -154,7 +154,7 @@ struct HelmsmanView: View {
                                 ForEach(Array(gameService.party.players.enumerated()), id: \.offset) { index, player in
                                     if gameService.currentPlayer.id == player.id {
                                         if player.role == Role.helmsman {
-                                            if player.event.objective == Objective.turnLeft {
+//                                            if player.event.objective == Objective.turnLeft {
                                                 Image("StearingWheel")
                                                     .resizable()
                                                     .scaledToFill()
@@ -168,15 +168,29 @@ struct HelmsmanView: View {
                                                         },
                                                         animation: .spring()
                                                     )
-                                                    .onAppear{
-                                                        knobValue = 1
-                                                    }
+//                                                    .onAppear{
+//                                                        knobValue = 1
+//                                                    }
                                                     .onChange(of: knobValue, perform: { newValue in
                                                         var value = "\(knobValue)"
-                                                        self.progress = (Double(value)! - 1) * -100
-                                                        if self.progress >= 100 {
-                                                            isTurnProgressCompleted = Objective.turnLeft
-                                                            lockSteer = true
+                                                        
+                                                        if player.event.objective == Objective.turnLeft {
+                                                            if Double(value)! <= 0.5 {
+                                                                self.progress = (1 - Double(value)! - 0.5) * 200
+                                                                
+                                                                if self.progress >= 100 {
+                                                                    isTurnProgressCompleted = Objective.turnLeft
+                                                                    lockSteer = true
+                                                                }
+                                                            }
+                                                        } else {
+                                                            if Double(value)! >= 0.5 {
+                                                                self.progress = (Double(value)! - 0.5) * 200
+                                                                if self.progress >= 100 {
+                                                                    isTurnProgressCompleted = Objective.turnRight
+                                                                    lockSteer = true
+                                                                }
+                                                            }
                                                         }
                                                         //                                                var value = "\(knobValue)"
                                                         //                                                if Double(value)! > 0.5 {
@@ -185,33 +199,34 @@ struct HelmsmanView: View {
                                                         //                                                    self.progress = ((1 - Double(value)!) - 0.5) * 200
                                                         //                                                }
                                                     })
-                                            } else {
-                                                Image("StearingWheel")
-                                                    .resizable()
-                                                    .scaledToFill()
-                                                    .frame(width: 300, height: 300)
-                                                    .knobRotation(
-                                                        knobValue: $knobValue,
-                                                        minAngle: -360,
-                                                        maxAngle: +360,
-                                                        onKnobValueChanged: { newValue in
-                                                            knobValue = newValue
-                                                            lockSteer = true
-                                                        },
-                                                        animation: .spring()
-                                                    )
-                                                    .onAppear{
-                                                        knobValue = 0
-                                                    }
-                                                    .onChange(of: knobValue, perform: { newValue in
-                                                        var value = "\(knobValue)"
-                                                        self.progress = Double(value)! * 100
-                                                        if self.progress >= 100 {
-                                                            isTurnProgressCompleted = Objective.turnRight
-                                                            lockSteer = true
-                                                        }
-                                                    })
-                                            }
+//                                            }
+//                                            else {
+//                                                Image("StearingWheel")
+//                                                    .resizable()
+//                                                    .scaledToFill()
+//                                                    .frame(width: 300, height: 300)
+//                                                    .knobRotation(
+//                                                        knobValue: $knobValue,
+//                                                        minAngle: -360,
+//                                                        maxAngle: +360,
+//                                                        onKnobValueChanged: { newValue in
+//                                                            knobValue = newValue
+//                                                            lockSteer = true
+//                                                        },
+//                                                        animation: .spring()
+//                                                    )
+//                                                    .onAppear{
+//                                                        knobValue = 0
+//                                                    }
+//                                                    .onChange(of: knobValue, perform: { newValue in
+//                                                        var value = "\(knobValue)"
+//                                                        self.progress = Double(value)! * 100
+//                                                        if self.progress >= 100 {
+//                                                            isTurnProgressCompleted = Objective.turnRight
+//                                                            lockSteer = true
+//                                                        }
+//                                                    })
+//                                            }
                                         }
                                     }
                                 }
