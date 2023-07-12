@@ -11,7 +11,7 @@ struct LookoutView: View {
     @State private var partyProgress = 0.0
     @State private var instructionProgress = 100.0
     @State private var instructionProgressMax = 100.0
-    @State private var roleExplain = false
+    @State private var roleExplain = true
     @State var timeExplain = 7.9
     @State private var showPopUp: Bool = false
     @State private var lives = 0
@@ -20,7 +20,7 @@ struct LookoutView: View {
         startPoint: .topLeading,
         endPoint: .bottomTrailing
     )
-    @State private var xOffset:CGFloat = -225
+    @State private var xOffset:CGFloat = -1
     @State private var isMove = false
     @State private var direction = "Forward"
     @State  var looks:String = ""
@@ -59,13 +59,12 @@ struct LookoutView: View {
                 caption: ""
             )
             ZStack{
-                GeometryReader { geo in
-                    PlayerView(look: $looks)
-                                    .scaledToFill()
-                                    .aspectRatio(contentMode: .fill)
-                                    .offset(x: xOffset)
-                }
-                .ignoresSafeArea()
+                GeometryReader {proxy in
+                    let size = proxy.size
+                    PlayerView(look: $looks).frame(width: size.width * 3, height: size.height).offset(x: xOffset).onAppear{
+                        xOffset = -size.width
+                    }
+                
                 VStack{
                     HStack{
                         Text("Lookout")
@@ -88,7 +87,8 @@ struct LookoutView: View {
                                 }
                             }
                         }
-                    }.padding(.bottom).padding(.horizontal,30)
+                    }.padding(.horizontal, 30)
+                        .padding(.top, 50)
                     ZStack{
                         Rectangle()
                             .foregroundColor(.clear)
@@ -121,7 +121,7 @@ struct LookoutView: View {
                                             Rectangle()
                                                 .opacity(0.5))
                                 } else {
-                                    Text("Your steer is broken")
+                                    Text("Your binocular is broken")
                                         .font(Font.custom("Gasoek One", size: 20))
                                         .multilineTextAlignment(.center)
                                         .frame(maxWidth: .infinity)
@@ -166,9 +166,9 @@ struct LookoutView: View {
                             isLeftAble = false
                             isRightAble = false
                             withAnimation (Animation.easeOut (duration: 3)){
-                                xOffset = xOffset + 225
+                                xOffset += size.width
                             }
-                            if xOffset == -225 {
+                            if xOffset == -size.width {
                                 direction = "Forward"
                                 isLeftAble = true
                                 isRightAble = true
@@ -195,9 +195,9 @@ struct LookoutView: View {
                             isLeftAble = false
                             isRightAble = false
                             withAnimation (Animation.easeOut (duration: 3)){
-                                xOffset = xOffset - 225
+                                xOffset -= size.width
                             }
-                            if xOffset == -225 {
+                            if xOffset == -size.width {
                                 direction = "Forward"
                                 isLeftAble = true
                                 isRightAble = true
@@ -224,9 +224,12 @@ struct LookoutView: View {
                                 )
                         }.disabled(!isRightAble).disabled(eventblacksmith)
                         Spacer()
-                    }
+                    }.padding(.bottom, 50)
                 }
-                .padding(.vertical,50)
+                }
+                .ignoresSafeArea()
+                
+                    
                 RecapSceneView(lives: $lives, show: $showPopUp, isStartGame: $isStartGame)
             }
             
