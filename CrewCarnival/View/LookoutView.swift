@@ -298,7 +298,7 @@ struct LookoutView: View {
                 if allEventsCompleted {
                     gameService.party.generateLHSEvent()
                     for (index, player) in gameService.party.players.enumerated() {
-                        if player.role == Role.helmsman {
+                        if player.role == Role.lookout {
                             instructionProgress = gameService.party.players[index].event.duration
                             instructionProgressMax = gameService.party.players[index].event.duration
                         }
@@ -313,11 +313,13 @@ struct LookoutView: View {
                             }
                         }
                     }
-                    isMove = false
-                    direction = "Forward"
-                    isLeftAble = true
-                    isRightAble = true
-                    xOffset = xOffsettengah
+                    withAnimation(Animation.spring()) {
+                        isMove = false
+                        direction = "Forward"
+                        isLeftAble = true
+                        isRightAble = true
+                        xOffset = xOffsettengah
+                    }
                     gameService.send(party: gameService.party)
                 }
             })
@@ -333,46 +335,49 @@ struct LookoutView: View {
                 if instructionProgress <= 0 {
                     gameService.party.generateLHSEvent()
                     if gameService.party.lives > 0 {
-                        gameService.party.lives -= 1
-                        isMove = false
-                        direction = "Forward"
-                        isLeftAble = true
-                        isRightAble = true
-                        xOffset = xOffsettengah
+                        withAnimation(Animation.spring()) {
+                            gameService.party.lives -= 1
+                            isMove = false
+                            direction = "Forward"
+                            isLeftAble = true
+                            isRightAble = true
+                            xOffset = xOffsettengah
+                        }
                     }
                     gameService.send(party: gameService.party)
                     
                     
-                    for (index, _) in gameService.party.players.enumerated() {
-                        instructionProgress = gameService.party.players[index].event.duration
+                    for (index, player) in gameService.party.players.enumerated() {
+                        if player.role == Role.lookout {
+                            instructionProgress = gameService.party.players[index].event.duration
+                        }
                     }
                 }
             })
             .onChange(of: direction) { newDirection in
+                print("dir \(direction)")
                 for (index, player) in gameService.party.players.enumerated() {
                     if player.role == Role.lookout {
                         if player.event.objective == Objective.lookLeft {
                             if newDirection == "Left" {
-//                                print(looks)
-                                gameService.party.players[index].event.instruction = "Our Left is Clear!\nQuickly Turn the Ship!"
-                                //                                    gameService.parties[index].triggerHelmsmanInstruction()
-                            }
-                        } else if player.event.objective == Objective.lookRight {
-                            if newDirection == "Right" {
-                                gameService.party.players[index].event.instruction = "Our Right is Clear!\nQuickly Turn the Ship!"
-                                //                                    gameService.parties[index].triggerHelmsmanInstruction()
+                                withAnimation(Animation.spring().delay(3)) {
+                                    gameService.party.players[index].event.instruction = "Our Left is Clear!\nQuickly Turn the Ship!"
+                                    gameService.party.setEventCompleted(role: Role.lookout)
+                                    gameService.send(party: gameService.party)
+                                }
                             }
                         } else {
-                            if newDirection == "Front" {
-                                gameService.party.players[index].event.instruction = "Our Front is Clear!\nQuickly Turn the Ship!"
-                                //                                    gameService.parties[index].triggerHelmsmanInstruction()
+                            if newDirection == "Right" {
+                                withAnimation(Animation.spring().delay(3)) {
+                                    gameService.party.players[index].event.instruction = "Our Right is Clear!\nQuickly Turn the Ship!"
+                                    gameService.party.setEventCompleted(role: Role.lookout)
+                                    gameService.send(party: gameService.party)
+                                }
                             }
                         }
-                        gameService.send(party: gameService.party)
                     }
                 }
             }
-            
         }
     }
 }

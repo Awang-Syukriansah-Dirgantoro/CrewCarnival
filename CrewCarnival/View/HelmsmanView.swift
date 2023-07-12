@@ -354,6 +354,7 @@ struct HelmsmanView: View {
                             }
                         }
                     }
+                    lockSteer = false
                     progress = 0
                     angle = 0
                     lastAngle = 0
@@ -371,18 +372,16 @@ struct HelmsmanView: View {
             })
             .onChange(of: instructionProgress, perform: { newValue in
                 if instructionProgress <= 0 {
-                    gameService.party.generateLHSEvent()
+                    for (index, player) in gameService.party.players.enumerated() {
+                        if player.role == Role.helmsman {
+                            instructionProgress = gameService.party.players[index].event.duration
+                        }
+                    }
                     lockSteer = false
-                    if gameService.party.lives > 0 {
-                        gameService.party.lives -= 1
-                        
-                    }
-                    gameService.send(party: gameService.party)
-                    
-                    
-                    for (index, _) in gameService.party.players.enumerated() {
-                        instructionProgress = gameService.party.players[index].event.duration
-                    }
+                    progress = 0
+                    angle = 0
+                    lastAngle = 0
+                    isTurnProgressCompleted = nil
                 }
             })
             .onChange(of: isTurnProgressCompleted) { newValue in
@@ -396,23 +395,41 @@ struct HelmsmanView: View {
                                         if player2.role == Role.sailingMaster {
                                             if player2.event.objective == Objective.slow10 {
                                                 gameService.party.players[index].event.instruction = "The Ship is Tilting,\nSlow Down 10 Knots!"
+                                                gameService.party.setEventCompleted(role: Role.helmsman)
+                                                gameService.send(party: gameService.party)
                                             } else if player2.event.objective == Objective.slow20 {
                                                 gameService.party.players[index].event.instruction = "The Ship is Tilting,\nSlow Down 20 Knots!"
+                                                gameService.party.setEventCompleted(role: Role.helmsman)
+                                                gameService.send(party: gameService.party)
                                             } else {
                                                 gameService.party.players[index].event.instruction = "The Ship is Tilting,\nSlow Down 30 Knots!"
+                                                gameService.party.setEventCompleted(role: Role.helmsman)
+                                                gameService.send(party: gameService.party)
                                             }
                                         }
                                     }
-                                    //                                        gameService.parties[index].triggerSailingMasterInstruction()
                                 }
                             } else {
                                 if isTurnProgressCompleted == Objective.turnRight {
-                                    gameService.party.players[index].event.instruction = "The Ship is Tilting,\nSlow Down 10 Knots!"
-                                    //                                        gameService.parties[index].triggerSailingMasterInstruction()
+                                    for (_, player2) in gameService.party.players.enumerated() {
+                                        if player2.role == Role.sailingMaster {
+                                            if player2.event.objective == Objective.slow10 {
+                                                gameService.party.players[index].event.instruction = "The Ship is Tilting,\nSlow Down 10 Knots!"
+                                                gameService.party.setEventCompleted(role: Role.helmsman)
+                                                gameService.send(party: gameService.party)
+                                            } else if player2.event.objective == Objective.slow20 {
+                                                gameService.party.players[index].event.instruction = "The Ship is Tilting,\nSlow Down 20 Knots!"
+                                                gameService.party.setEventCompleted(role: Role.helmsman)
+                                                gameService.send(party: gameService.party)
+                                            } else {
+                                                gameService.party.players[index].event.instruction = "The Ship is Tilting,\nSlow Down 30 Knots!"
+                                                gameService.party.setEventCompleted(role: Role.helmsman)
+                                                gameService.send(party: gameService.party)
+                                            }
+                                        }
+                                    }
                                 }
                             }
-                            gameService.party.setEventCompleted(role: Role.lookout)
-                            gameService.send(party: gameService.party)
                         }
                     }
                 }
