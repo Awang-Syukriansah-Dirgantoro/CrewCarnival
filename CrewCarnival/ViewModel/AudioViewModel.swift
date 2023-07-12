@@ -9,7 +9,7 @@ import SwiftUI
 import AVKit
 
 class AudioViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
-    
+    static var shared = AudioViewModel()
     var audioPlayer: AVAudioPlayer!
     
     func playSound(url: String){

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct FirstView: View {
-    @ObservedObject var vm = AudioViewModel()
+    @StateObject var vm = AudioViewModel()
     @State private var showLight = false
     @State private var play = false
     @State private var animation = 1.0
@@ -54,17 +54,18 @@ struct FirstView: View {
                             animation += 0.5
                         }
                         .offset(y:-240)
+                    
                     Button{
                         play = true
                     } label : {
                         Rectangle()
+                            .frame(width: 175, height: 170)
                             .foregroundColor(.clear)
                             .background(
                                 Image("ButtonPlay")
                                     .resizable()
                                     .frame(width: 175, height: 170)
                             )
-                            .offset(y: 20)
                     }
                 }
             }

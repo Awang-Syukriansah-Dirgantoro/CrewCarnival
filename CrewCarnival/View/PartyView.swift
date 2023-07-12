@@ -33,7 +33,11 @@ struct PartyView: View {
         NavigationStack {
             if gameService.currentPlayer.name == "" {
                 ZStack{
-                    Image("MenuBackground").resizable().scaledToFill().ignoresSafeArea()
+                    GeometryReader{proxy in
+                        let size = proxy.size
+                        
+                        Image("MenuBackground").resizable().aspectRatio(contentMode: .fill).frame(width: size.width, height: size.height)
+                    }.ignoresSafeArea()
                     VStack {
                         Spacer()
                         Image("EnterName")
@@ -115,7 +119,7 @@ struct PartyView: View {
                                     Image("SelectRoom")
                                         .resizable()
                                         .frame(width: 320, height: 105)
-                                        .padding(.top, 50)
+                                        .padding(.top, 100)
                                 }
                             }
                             NavigationLink {
