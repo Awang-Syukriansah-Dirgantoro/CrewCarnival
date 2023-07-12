@@ -21,6 +21,7 @@ struct LookoutView: View {
         endPoint: .bottomTrailing
     )
     @State private var xOffset:CGFloat = -1
+    @State private var xOffsettengah:CGFloat = 0
     @State private var isMove = false
     @State private var direction = "Forward"
     @State  var looks:String = ""
@@ -61,8 +62,10 @@ struct LookoutView: View {
             ZStack{
                 GeometryReader {proxy in
                     let size = proxy.size
+                   
                     PlayerView(look: $looks).frame(width: size.width * 3, height: size.height).offset(x: xOffset).onAppear{
                         xOffset = -size.width
+                        xOffsettengah = -size.width
                     }
                 
                 VStack{
@@ -255,7 +258,6 @@ struct LookoutView: View {
                 gameService.send(party: gameService.party)
 //                print(looks)
                 for (_, player) in gameService.party.players.enumerated() {
-                    print("Masuk loop")
                     if player.role == Role.lookout {
                         if player.event.objective == Objective.lookLeft {
                             looks = "LookoutLeft"
@@ -311,11 +313,11 @@ struct LookoutView: View {
                             }
                         }
                     }
-                    xOffset = -225
                     isMove = false
                     direction = "Forward"
                     isLeftAble = true
                     isRightAble = true
+                    xOffset = xOffsettengah
                     gameService.send(party: gameService.party)
                 }
             })
@@ -332,11 +334,11 @@ struct LookoutView: View {
                     gameService.party.generateLHSEvent()
                     if gameService.party.lives > 0 {
                         gameService.party.lives -= 1
-                        xOffset = -225
                         isMove = false
                         direction = "Forward"
                         isLeftAble = true
                         isRightAble = true
+                        xOffset = xOffsettengah
                     }
                     gameService.send(party: gameService.party)
                     
