@@ -33,7 +33,7 @@ struct SailingMasterView: View {
     @EnvironmentObject var gameService: GameService
     @Binding var isStartGame: Bool
     @State var eventblacksmith = false
-    
+    @State private var isSlowProgressCompleted: Objective?
     @State private var totalAngleOne: Double = 0.0
     @State private var totalAngleTwo: Double = 0.0
     @State private var totalAngleThree: Double = 0.0
@@ -56,11 +56,18 @@ struct SailingMasterView: View {
                     sailOneHeight = 112
                 } else if sailOneHeight < 0 {
                     sailOneHeight = 0
+                    for player in gameService.party.players {
+                        if player.role == Role.sailingMaster {
+                            if player.event.objective == Objective.slow10 {
+                                isSlowProgressCompleted = Objective.slow10
+                                break
+                            }
+                        }
+                    }
                 } else {
                     totalAngleOne = newAngle
                 }
             }
-            
         case 2:
             if totalAngleTwo > newAngle {
                 sailTwoHeight += 1
@@ -77,6 +84,14 @@ struct SailingMasterView: View {
                     sailTwoHeight = 160
                 } else if sailTwoHeight < 0 {
                     sailTwoHeight = 0
+                    for player in gameService.party.players {
+                        if player.role == Role.sailingMaster {
+                            if player.event.objective == Objective.slow20 {
+                                isSlowProgressCompleted = Objective.slow20
+                                break
+                            }
+                        }
+                    }
                 } else {
                     totalAngleTwo = newAngle
                 }
@@ -98,6 +113,14 @@ struct SailingMasterView: View {
                     sailThreeHeight = 260
                 } else if sailThreeHeight < 0 {
                     sailThreeHeight = 0
+                    for player in gameService.party.players {
+                        if player.role == Role.sailingMaster {
+                            if player.event.objective == Objective.slow30 {
+                                isSlowProgressCompleted = Objective.slow30
+                                break
+                            }
+                        }
+                    }
                 } else {
                     totalAngleThree = newAngle
                 }
@@ -491,7 +514,12 @@ struct SailingMasterView: View {
                             }
                         }
                     }
-                    
+                    totalAngleOne = 0.0
+                    totalAngleTwo = 0.0
+                    totalAngleThree = 0.0
+                    sailOneHeight = 112
+                    sailTwoHeight = 160
+                    sailThreeHeight = 260
                     gameService.send(party: gameService.party)
                 }
             })
@@ -505,41 +533,25 @@ struct SailingMasterView: View {
             })
             .onChange(of: instructionProgress, perform: { newValue in
                 if instructionProgress <= 0 {
-                    gameService.party.generateLHSEvent()
-                    if gameService.party.lives > 0 {
-                        gameService.party.lives -= 1
-                        
-                    }
-                    gameService.send(party: gameService.party)
-                    
-                    
-                    for (index, _) in gameService.party.players.enumerated() {
-                        instructionProgress = gameService.party.players[index].event.duration
+                    for (index, player) in gameService.party.players.enumerated() {
+                        if player.role == Role.sailingMaster {
+                            instructionProgress = gameService.party.players[index].event.duration
+                        }
                     }
                 }
             })
-            //            .onChange(of: progress) { newValue in
-            //                print(progress)
-            //                for (index, party) in gameService.parties.enumerated() {
-            //                    if party.id == partyId {
-            //                        for (index2, player) in gameService.parties[index].players.enumerated() {
-            //                            if player.role == Role.sailingMaster {
-            //                                if player.event.objective == Objective.turnLeft {
-            //                                    if newValue < -100 {
-            //                                        gameService.parties[index].players[index2].event.instruction = "Our Left is Clear!\nQuickly Turn the Ship!"
-            //                                        gameService.parties[index].triggerSailingMasterInstruction()
-            //                                    }
-            //                                } else {
-            //                                    if newValue > 100 {
-            //                                        gameService.parties[index].players[index2].event.instruction = "Our Front is Clear!\nQuickly Turn the Ship!"
-            //                                        gameService.parties[index].triggerSailingMasterInstruction()
-            //                                    }
-            //                                }
-            //                            }
-            //                        }
-            //                    }
-            //                }
-            //            }
+            .onChange(of: isSlowProgressCompleted) { newValue in
+                if isSlowProgressCompleted != nil {
+                    for (_, player) in gameService.party.players.enumerated() {
+                        if player.role == Role.sailingMaster {
+                            if isSlowProgressCompleted == player.event.objective {
+                                gameService.party.setEventCompleted(role: Role.sailingMaster)
+                                gameService.send(party: gameService.party)
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }

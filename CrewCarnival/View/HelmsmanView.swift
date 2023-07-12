@@ -197,103 +197,80 @@ struct HelmsmanView: View {
                             VStack{
                                 ForEach(Array(gameService.party.players.enumerated()), id: \.offset) { index, player in
                                     if gameService.currentPlayer.id == player.id {
-                                        if eventblacksmith == false {
-                                            Text("\(player.event.instruction)")
-                                                .font(Font.custom("Gasoek One", size: 20))
-                                                .multilineTextAlignment(.center)
-                                                .frame(maxWidth: .infinity)
-                                                .padding(.vertical, 20)
-                                                .foregroundColor(Color(red: 0.95, green: 0.74, blue: 0))
-                                                .background(
-                                                    Rectangle()
-                                                        .opacity(0.5))
-                                        } else {
-                                            Text("Your steer is broken")
-                                                .font(Font.custom("Gasoek One", size: 20))
-                                                .multilineTextAlignment(.center)
-                                                .frame(maxWidth: .infinity)
-                                                .padding(.vertical, 20)
-                                                .foregroundColor(Color(red: 0.95, green: 0.74, blue: 0))
-                                                .background(
-                                                    Rectangle()
-                                                        .opacity(0.5))
-                                        }
-                                        
-                                    }
-                                }
-                                ProgressView("", value: instructionProgress, total: instructionProgressMax)
-                                    .onReceive(timer) { _ in
-                                        if instructionProgress > 0 {
-                                            instructionProgress -= 0.1
-                                        }
-                                    }
-                                    .progressViewStyle(LinearProgressViewStyle(tint: Color(red: 0, green: 0.82, blue: 0.23)))
-                                    .padding(.top, -30)
-                            }
-                            if eventblacksmith == false{
-                                if lockSteer == false {
-                                    ForEach(Array(gameService.party.players.enumerated()), id: \.offset) { index, player in
-                                        if gameService.currentPlayer.id == player.id {
-                                            if player.role == Role.helmsman {
-                                                if player.event.objective == Objective.turnLeft {
-                                                    Image("StearingWheel")
-                                                        .resizable()
-                                                        .scaledToFill()
-                                                        .frame(width: 300, height: 300)
-                                                        .knobRotation(
-                                                            knobValue: $knobValue,
-                                                            minAngle: -360,
-                                                            maxAngle: +360,
-                                                            onKnobValueChanged: { newValue in
-                                                                knobValue = newValue
-                                                            },
-                                                            animation: .spring()
-                                                        )
-                                                        .onAppear{
-                                                            knobValue = 1
-                                                        }
-                                                        .onChange(of: knobValue, perform: { newValue in
-                                                            var value = "\(knobValue)"
-                                                            self.progress = (Double(value)! - 1) * -100
-                                                            if self.progress >= 100 {
-                                                                isTurnProgressCompleted = Objective.turnLeft
-                                                                lockSteer = true
+                                        if player.role == Role.helmsman {
+//                                            if player.event.objective == Objective.turnLeft {
+                                                Image("StearingWheel")
+                                                    .resizable()
+                                                    .scaledToFill()
+                                                    .frame(width: 300, height: 300)
+                                                    .knobRotation(
+                                                        knobValue: $knobValue,
+                                                        minAngle: -360,
+                                                        maxAngle: +360,
+                                                        onKnobValueChanged: { newValue in
+                                                            knobValue = newValue
+                                                        },
+                                                        animation: .spring()
+                                                    )
+//                                                    .onAppear{
+//                                                        knobValue = 1
+//                                                    }
+                                                    .onChange(of: knobValue, perform: { newValue in
+                                                        var value = "\(knobValue)"
+                                                        
+                                                        if player.event.objective == Objective.turnLeft {
+                                                            if Double(value)! <= 0.5 {
+                                                                self.progress = (1 - Double(value)! - 0.5) * 200
+                                                                
+                                                                if self.progress >= 100 {
+                                                                    isTurnProgressCompleted = Objective.turnLeft
+                                                                    lockSteer = true
+                                                                }
                                                             }
-                                                            //                                                var value = "\(knobValue)"
-                                                            //                                                if Double(value)! > 0.5 {
-                                                            //                                                    self.progress = (Double(value)! - 0.5) * 200
-                                                            //                                                } else {
-                                                            //                                                    self.progress = ((1 - Double(value)!) - 0.5) * 200
-                                                            //                                                }
-                                                        })
-                                                } else {
-                                                    Image("StearingWheel")
-                                                        .resizable()
-                                                        .scaledToFill()
-                                                        .frame(width: 300, height: 300)
-                                                        .knobRotation(
-                                                            knobValue: $knobValue,
-                                                            minAngle: -360,
-                                                            maxAngle: +360,
-                                                            onKnobValueChanged: { newValue in
-                                                                knobValue = newValue
-                                                                lockSteer = true
-                                                            },
-                                                            animation: .spring()
-                                                        )
-                                                        .onAppear{
-                                                            knobValue = 0
-                                                        }
-                                                        .onChange(of: knobValue, perform: { newValue in
-                                                            var value = "\(knobValue)"
-                                                            self.progress = Double(value)! * 100
-                                                            if self.progress >= 100 {
-                                                                isTurnProgressCompleted = Objective.turnRight
-                                                                lockSteer = true
+                                                        } else {
+                                                            if Double(value)! >= 0.5 {
+                                                                self.progress = (Double(value)! - 0.5) * 200
+                                                                if self.progress >= 100 {
+                                                                    isTurnProgressCompleted = Objective.turnRight
+                                                                    lockSteer = true
+                                                                }
                                                             }
-                                                        })
-                                                }
-                                            }
+                                                        }
+                                                        //                                                var value = "\(knobValue)"
+                                                        //                                                if Double(value)! > 0.5 {
+                                                        //                                                    self.progress = (Double(value)! - 0.5) * 200
+                                                        //                                                } else {
+                                                        //                                                    self.progress = ((1 - Double(value)!) - 0.5) * 200
+                                                        //                                                }
+                                                    })
+//                                            }
+//                                            else {
+//                                                Image("StearingWheel")
+//                                                    .resizable()
+//                                                    .scaledToFill()
+//                                                    .frame(width: 300, height: 300)
+//                                                    .knobRotation(
+//                                                        knobValue: $knobValue,
+//                                                        minAngle: -360,
+//                                                        maxAngle: +360,
+//                                                        onKnobValueChanged: { newValue in
+//                                                            knobValue = newValue
+//                                                            lockSteer = true
+//                                                        },
+//                                                        animation: .spring()
+//                                                    )
+//                                                    .onAppear{
+//                                                        knobValue = 0
+//                                                    }
+//                                                    .onChange(of: knobValue, perform: { newValue in
+//                                                        var value = "\(knobValue)"
+//                                                        self.progress = Double(value)! * 100
+//                                                        if self.progress >= 100 {
+//                                                            isTurnProgressCompleted = Objective.turnRight
+//                                                            lockSteer = true
+//                                                        }
+//                                                    })
+//                                            }
                                         }
                                     }
                                 } else {
@@ -385,115 +362,84 @@ struct HelmsmanView: View {
                             }
                         }
                     }
+                    lockSteer = false
                     progress = 0
                     angle = 0
                     lastAngle = 0
                     isTurnProgressCompleted = nil
                     gameService.send(party: gameService.party)
                 }
-                .onChange(of: gameService.party, perform: { newValue in
-                    if gameService.party.lives <= 0 {
-                        withAnimation(.linear(duration: 0.5)) {
-                            lives = gameService.party.lives
-                            showPopUp = true
-                            
+            })
+            .onChange(of: partyProgress, perform: { newValue in
+                if partyProgress >= 100{
+                    withAnimation(.linear(duration: 0.5)) {
+                        lives = gameService.party.lives
+                        showPopUp = true
+                    }
+                }
+            })
+            .onChange(of: instructionProgress, perform: { newValue in
+                if instructionProgress <= 0 {
+                    for (index, player) in gameService.party.players.enumerated() {
+                        if player.role == Role.helmsman {
+                            instructionProgress = gameService.party.players[index].event.duration
                         }
                         //                            gameService.parties[index].reset()
                         //                            isStartGame = false
                         //                            gameService.send(parties: gameService.parties)
                     }
+                    lockSteer = false
+                    progress = 0
+                    angle = 0
+                    lastAngle = 0
+                    isTurnProgressCompleted = nil
+                }
+            })
+            .onChange(of: isTurnProgressCompleted) { newValue in
+                print(progress)
+                if (isTurnProgressCompleted != nil) {
                     for (index, player) in gameService.party.players.enumerated() {
-                        if player.role == Role.blackSmith {
-                            if gameService.party.players[index].event.isCompleted == true {
-                                eventblacksmith = false
-                            }
-                        }
-                    }
-                    
-                    var allEventsCompleted = true
-                    for (_, player) in gameService.party.players.enumerated() {
-                        if !player.event.isCompleted {
-                            allEventsCompleted = false
-                        }
-                    }
-                    
-                    if allEventsCompleted {
-                        gameService.party.generateLHSEvent()
-                        for (index, player) in gameService.party.players.enumerated() {
-                            if player.role == Role.helmsman {
-                                instructionProgress = gameService.party.players[index].event.duration
-                                instructionProgressMax = gameService.party.players[index].event.duration
-                            }
-                        }
-                        for (index, player) in gameService.party.players.enumerated() {
-                            if player.role == Role.blackSmith {
-                                let obj = gameService.party.players[index].event.objective
-                                if obj == Objective.steer{
-                                    eventblacksmith = true
-                                } else {
-                                    eventblacksmith = false
-                                }
-                            }
-                        }
-                        progress = 0
-                        angle = 0
-                        lastAngle = 0
-                        isTurnProgressCompleted = nil
-                        gameService.send(party: gameService.party)
-                    }
-                })
-                .onChange(of: partyProgress, perform: { newValue in
-                    if partyProgress >= 100{
-                        withAnimation(.linear(duration: 0.5)) {
-                            lives = gameService.party.lives
-                            showPopUp = true
-                        }
-                    }
-                })
-                .onChange(of: instructionProgress, perform: { newValue in
-                    if instructionProgress <= 0 {
-                        gameService.party.generateLHSEvent()
-                        lockSteer = false
-                        if gameService.party.lives > 0 {
-                            gameService.party.lives -= 1
-                            
-                        }
-                        gameService.send(party: gameService.party)
-                        
-                        
-                        for (index, _) in gameService.party.players.enumerated() {
-                            instructionProgress = gameService.party.players[index].event.duration
-                        }
-                    }
-                })
-                .onChange(of: isTurnProgressCompleted) { newValue in
-                    print(progress)
-                    if (isTurnProgressCompleted != nil) {
-                        for (index, player) in gameService.party.players.enumerated() {
-                            if player.role == Role.helmsman {
-                                if player.event.objective == Objective.turnLeft {
-                                    if isTurnProgressCompleted == Objective.turnLeft {
-                                        for (_, player2) in gameService.party.players.enumerated() {
-                                            if player2.role == Role.sailingMaster {
-                                                if player2.event.objective == Objective.slow10 {
-                                                    gameService.party.players[index].event.instruction = "The Ship is Tilting,\nSlow Down 10 Knots!"
-                                                } else if player2.event.objective == Objective.slow20 {
-                                                    gameService.party.players[index].event.instruction = "The Ship is Tilting,\nSlow Down 20 Knots!"
-                                                } else {
-                                                    gameService.party.players[index].event.instruction = "The Ship is Tilting,\nSlow Down 30 Knots!"
-                                                }
+                        if player.role == Role.helmsman {
+                            if player.event.objective == Objective.turnLeft {
+                                if isTurnProgressCompleted == Objective.turnLeft {
+                                    for (_, player2) in gameService.party.players.enumerated() {
+                                        if player2.role == Role.sailingMaster {
+                                            if player2.event.objective == Objective.slow10 {
+                                                gameService.party.players[index].event.instruction = "The Ship is Tilting,\nSlow Down 10 Knots!"
+                                                gameService.party.setEventCompleted(role: Role.helmsman)
+                                                gameService.send(party: gameService.party)
+                                            } else if player2.event.objective == Objective.slow20 {
+                                                gameService.party.players[index].event.instruction = "The Ship is Tilting,\nSlow Down 20 Knots!"
+                                                gameService.party.setEventCompleted(role: Role.helmsman)
+                                                gameService.send(party: gameService.party)
+                                            } else {
+                                                gameService.party.players[index].event.instruction = "The Ship is Tilting,\nSlow Down 30 Knots!"
+                                                gameService.party.setEventCompleted(role: Role.helmsman)
+                                                gameService.send(party: gameService.party)
                                             }
                                         }
-                                        //                                        gameService.parties[index].triggerSailingMasterInstruction()
-                                    }
-                                } else {
-                                    if isTurnProgressCompleted == Objective.turnRight {
-                                        gameService.party.players[index].event.instruction = "The Ship is Tilting,\nSlow Down 10 Knots!"
-                                        //                                        gameService.parties[index].triggerSailingMasterInstruction()
                                     }
                                 }
-                                gameService.party.setEventCompleted(role: Role.lookout)
-                                gameService.send(party: gameService.party)
+                            } else {
+                                if isTurnProgressCompleted == Objective.turnRight {
+                                    for (_, player2) in gameService.party.players.enumerated() {
+                                        if player2.role == Role.sailingMaster {
+                                            if player2.event.objective == Objective.slow10 {
+                                                gameService.party.players[index].event.instruction = "The Ship is Tilting,\nSlow Down 10 Knots!"
+                                                gameService.party.setEventCompleted(role: Role.helmsman)
+                                                gameService.send(party: gameService.party)
+                                            } else if player2.event.objective == Objective.slow20 {
+                                                gameService.party.players[index].event.instruction = "The Ship is Tilting,\nSlow Down 20 Knots!"
+                                                gameService.party.setEventCompleted(role: Role.helmsman)
+                                                gameService.send(party: gameService.party)
+                                            } else {
+                                                gameService.party.players[index].event.instruction = "The Ship is Tilting,\nSlow Down 30 Knots!"
+                                                gameService.party.setEventCompleted(role: Role.helmsman)
+                                                gameService.send(party: gameService.party)
+                                            }
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
