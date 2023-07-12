@@ -155,16 +155,13 @@ struct BlacksmithView: View {
                         instructionProgress = gameService.party.players[index].event.duration
                         instructionProgressMax = gameService.party.players[index].event.duration
                     }
-                }
-//                vm.shuffleEvent()
-                for (index, player) in gameService.party.players.enumerated() {
+                    
                     if player.role == Role.blackSmith {
                         objct = gameService.party.players[index].event.objective
                     }
                 }
                 vm.shuffleArray(objct: objct)
                 isPuzzleCompleted = false
-                gameService.send(party: gameService.party)
             }
             .onChange(of: gameService.party, perform: { newValue in
                 if gameService.party.lives == 0 {
@@ -190,17 +187,11 @@ struct BlacksmithView: View {
                         if player.role == Role.blackSmith {
                             instructionProgress = gameService.party.players[index].event.duration
                             instructionProgressMax = gameService.party.players[index].event.duration
-                        }
-                    }
-//                    vm.shuffleEvent()
-                    for (index, player) in gameService.party.players.enumerated() {
-                        if player.role == Role.blackSmith {
                             objct = gameService.party.players[index].event.objective
                         }
                     }
                     vm.shuffleArray(objct: objct)
                     isPuzzleCompleted = false
-                    gameService.send(party: gameService.party)
                 }
             })
             .onChange(of: partyProgress, perform: { newValue in

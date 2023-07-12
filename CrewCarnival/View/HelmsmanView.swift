@@ -317,8 +317,7 @@ struct HelmsmanView: View {
                         instructionProgress = gameService.party.players[index].event.duration
                         instructionProgressMax = gameService.party.players[index].event.duration
                     }
-                }
-                for (index, player) in gameService.party.players.enumerated() {
+                    
                     if player.role == Role.blackSmith {
                         let obj = gameService.party.players[index].event.objective
                         if obj == Objective.steer{
@@ -328,11 +327,11 @@ struct HelmsmanView: View {
                         }
                     }
                 }
+         
                 progress = 0
                 angle = 0
                 lastAngle = 0
                 isTurnProgressCompleted = nil
-                gameService.send(party: gameService.party)
             }
             .onChange(of: gameService.party, perform: { newValue in
                 if gameService.party.lives == 0 {
@@ -345,16 +344,15 @@ struct HelmsmanView: View {
                     //                            isStartGame = false
                     //                            gameService.send(parties: gameService.parties)
                 }
+                
+                var allEventsCompleted = true
                 for (index, player) in gameService.party.players.enumerated() {
                     if player.role == Role.blackSmith {
                         if gameService.party.players[index].event.isCompleted == true {
                             eventblacksmith = false
                         }
                     }
-                }
-                
-                var allEventsCompleted = true
-                for (_, player) in gameService.party.players.enumerated() {
+                    
                     if !player.event.isCompleted {
                         allEventsCompleted = false
                     }
@@ -366,8 +364,7 @@ struct HelmsmanView: View {
                             instructionProgress = gameService.party.players[index].event.duration
                             instructionProgressMax = gameService.party.players[index].event.duration
                         }
-                    }
-                    for (index, player) in gameService.party.players.enumerated() {
+                        
                         if player.role == Role.blackSmith {
                             let obj = gameService.party.players[index].event.objective
                             if obj == Objective.steer{
@@ -377,11 +374,13 @@ struct HelmsmanView: View {
                             }
                         }
                     }
-                    lockSteer = false
-                    progress = 0
-                    angle = 0
-                    lastAngle = 0
-                    isTurnProgressCompleted = nil
+                    withAnimation(Animation.spring()) {
+                        lockSteer = false
+                        progress = 0
+                        angle = 0
+                        lastAngle = 0
+                        isTurnProgressCompleted = nil
+                    }
                 }
             })
             .onChange(of: partyProgress, perform: { newValue in
@@ -399,11 +398,13 @@ struct HelmsmanView: View {
                             instructionProgress = gameService.party.players[index].event.duration
                         }
                     }
-                    lockSteer = false
-                    progress = 0
-                    angle = 0
-                    lastAngle = 0
-                    isTurnProgressCompleted = nil
+                    withAnimation(Animation.spring()) {
+                        lockSteer = false
+                        progress = 0
+                        angle = 0
+                        lastAngle = 0
+                        isTurnProgressCompleted = nil
+                    }
                 }
             })
             .onChange(of: isTurnProgressCompleted) { newValue in

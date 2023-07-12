@@ -266,7 +266,6 @@ struct LookoutView: View {
                         }
                     }
                 }
-                gameService.send(party: gameService.party)
 //                print(looks)
                 for (_, player) in gameService.party.players.enumerated() {
                     if player.role == Role.lookout {
@@ -289,20 +288,16 @@ struct LookoutView: View {
                         showPopUp = true
                         
                     }
-                    //                            gameService.parties[index].reset()
-                    //                            isStartGame = false
-                    //                            gameService.send(parties: gameService.parties)
                 }
+               
+                var allEventsCompleted = true
                 for (index, player) in gameService.party.players.enumerated() {
                     if player.role == Role.blackSmith {
                         if gameService.party.players[index].event.isCompleted == true {
                             eventblacksmith = false
                         }
                     }
-                }
-                
-                var allEventsCompleted = true
-                for (_, player) in gameService.party.players.enumerated() {
+                    
                     if !player.event.isCompleted {
                         allEventsCompleted = false
                     }
@@ -320,8 +315,7 @@ struct LookoutView: View {
                                 looks = "LookoutRight"
                             }
                         }
-                    }
-                    for (index, player) in gameService.party.players.enumerated() {
+                        
                         if player.role == Role.blackSmith {
                             let obj = gameService.party.players[index].event.objective
                             if obj == Objective.binocular{
@@ -331,6 +325,7 @@ struct LookoutView: View {
                             }
                         }
                     }
+
                     withAnimation(Animation.spring()) {
                         isMove = false
                         direction = "Forward"
