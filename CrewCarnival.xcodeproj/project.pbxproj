@@ -26,6 +26,9 @@
 		0B9EFFF72A4AA25200BEF546 /* PuzzleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9EFFF62A4AA25200BEF546 /* PuzzleViewModel.swift */; };
 		0B9EFFFA2A4AA2B300BEF546 /* Drag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9EFFF92A4AA2B300BEF546 /* Drag.swift */; };
 		0B9EFFFC2A4AA2C600BEF546 /* Drop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9EFFFB2A4AA2C600BEF546 /* Drop.swift */; };
+		0BFC5E2D2A5E544900FF3CD6 /* scene2.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 0BFC5E2C2A5E544000FF3CD6 /* scene2.mp4 */; };
+		0BFC5E332A5E547800FF3CD6 /* scene1.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 0BFC5E2E2A5E545400FF3CD6 /* scene1.mp4 */; };
+		0BFC5E352A5E60A400FF3CD6 /* scene4.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 0BFC5E342A5E603600FF3CD6 /* scene4.mp4 */; };
 		4C2509172A4946D000721A03 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C2509162A4946D000721A03 /* GameView.swift */; };
 		4C25091B2A496C7400721A03 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C25091A2A496C7400721A03 /* Event.swift */; };
 		4C4AC29D2A555DB700D589CD /* Peer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C4AC29C2A555DB700D589CD /* Peer.swift */; };
@@ -74,6 +77,9 @@
 		0B9EFFF62A4AA25200BEF546 /* PuzzleViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuzzleViewModel.swift; sourceTree = "<group>"; };
 		0B9EFFF92A4AA2B300BEF546 /* Drag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Drag.swift; sourceTree = "<group>"; };
 		0B9EFFFB2A4AA2C600BEF546 /* Drop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Drop.swift; sourceTree = "<group>"; };
+		0BFC5E2C2A5E544000FF3CD6 /* scene2.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = scene2.mp4; sourceTree = "<group>"; };
+		0BFC5E2E2A5E545400FF3CD6 /* scene1.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = scene1.mp4; sourceTree = "<group>"; };
+		0BFC5E342A5E603600FF3CD6 /* scene4.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = scene4.mp4; sourceTree = "<group>"; };
 		4C2509162A4946D000721A03 /* GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
 		4C25091A2A496C7400721A03 /* Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 		4C4AC29C2A555DB700D589CD /* Peer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Peer.swift; sourceTree = "<group>"; };
@@ -238,6 +244,9 @@
 		59117DDE2A414F2600701627 /* CrewCarnival */ = {
 			isa = PBXGroup;
 			children = (
+				0BFC5E2C2A5E544000FF3CD6 /* scene2.mp4 */,
+				0BFC5E2E2A5E545400FF3CD6 /* scene1.mp4 */,
+				0BFC5E342A5E603600FF3CD6 /* scene4.mp4 */,
 				4CD675E62A5D7E0800A4809F /* LookoutLeft.mp4 */,
 				4CD675E52A5D7E0800A4809F /* LookoutRight.mp4 */,
 				0B4F5B0F2A4BD91800D55948 /* Sound */,
@@ -328,6 +337,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0BFC5E352A5E60A400FF3CD6 /* scene4.mp4 in Resources */,
+				0BFC5E332A5E547800FF3CD6 /* scene1.mp4 in Resources */,
+				0BFC5E2D2A5E544900FF3CD6 /* scene2.mp4 in Resources */,
 				4CD675E82A5D7E0800A4809F /* LookoutLeft.mp4 in Resources */,
 				0B4F5B0E2A4BD7DB00D55948 /* story.mp3 in Resources */,
 				4CD675E72A5D7E0800A4809F /* LookoutRight.mp4 in Resources */,
