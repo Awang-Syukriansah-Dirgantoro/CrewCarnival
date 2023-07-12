@@ -17,6 +17,7 @@ struct Party: Codable, Identifiable, Equatable {
     var isPlaying = false
     var lives = 3
     var partyProg = 0.0
+    var flashred = false
     
     mutating func generateLHSEvent() {
         var randomInt = Int.random(in: 0...1)

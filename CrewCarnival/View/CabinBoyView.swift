@@ -209,6 +209,16 @@ struct CabinBoyView: View {
                     Spacer()
                 }
                 .padding(.vertical,50)
+                if gameService.party.flashred{
+                    Color.red.edgesIgnoringSafeArea(.all).opacity(gameService.party.flashred ? 0.8 : 0.0).onAppear{
+                        withAnimation(Animation.spring().speed(0.2)){
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2){
+                                gameService.party.flashred = false
+                                gameService.send(party: gameService.party)
+                            }
+                        }
+                    }
+                }
                 RecapSceneView(lives: $lives, show: $showPopUp, isStartGame: $isStartGame)
             }
             .onAppear {
