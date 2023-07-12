@@ -11,7 +11,7 @@ struct LookoutView: View {
     @State private var partyProgress = 0.0
     @State private var instructionProgress = 100.0
     @State private var instructionProgressMax = 100.0
-    @State private var roleExplain = true
+    @State private var roleExplain = false
     @State var timeExplain = 7.9
     @State private var showPopUp: Bool = false
     @State private var lives = 0
