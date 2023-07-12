@@ -19,6 +19,7 @@ struct HelmsmanView: View {
     @State private var lives = 0
     @State private var lockSteer = false
     @EnvironmentObject var gameService: GameService
+    @State var showSuccessOverlay = false
     
     let timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
     
@@ -352,6 +353,7 @@ struct HelmsmanView: View {
                 }
                 
                 if allEventsCompleted {
+                    showSuccessOverlay = true
                     for (index, player) in gameService.party.players.enumerated() {
                         if player.role == Role.helmsman {
                             instructionProgress = gameService.party.players[index].event.duration
@@ -373,6 +375,21 @@ struct HelmsmanView: View {
                     angle = 0
                     lastAngle = 0
                     isTurnProgressCompleted = nil
+                }
+            })
+            .overlay(content: {
+                if showSuccessOverlay {
+                    VStack {
+                        Text("SAFE!")
+                            .font(.custom("Gasoek One", size: 40))
+                    }
+                    .onAppear {
+                        withAnimation(.easeOut(duration: 1)) {
+                            showSuccessOverlay = false
+                        }
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(.green)
                 }
             })
             .onChange(of: partyProgress, perform: { newValue in

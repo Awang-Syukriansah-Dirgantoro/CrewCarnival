@@ -30,6 +30,7 @@ struct LookoutView: View {
     @EnvironmentObject var gameService: GameService
     @Binding var isStartGame: Bool
     @State var eventblacksmith = false
+    @State var showSuccessOverlay = false
     let timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
     @State var ganti = 1
     var body: some View {
@@ -231,11 +232,23 @@ struct LookoutView: View {
                 }
                 }
                 .ignoresSafeArea()
-                
-                    
                 RecapSceneView(lives: $lives, show: $showPopUp, isStartGame: $isStartGame)
             }
-            
+            .overlay(content: {
+                if showSuccessOverlay {
+                    VStack {
+                        Text("SAFE!")
+                            .font(.custom("Gasoek One", size: 40))
+                    }
+                    .onAppear {
+                        withAnimation(.easeOut(duration: 1)) {
+                            showSuccessOverlay = false
+                        }
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(.green)
+                }
+            })
             .task{
 //                self.views = listView.randomElement()!
 //                print("videoNamelook: \(self.views)")
@@ -296,6 +309,7 @@ struct LookoutView: View {
                 }
                 
                 if allEventsCompleted {
+                    showSuccessOverlay = true
                     gameService.party.generateLHSEvent()
                     for (index, player) in gameService.party.players.enumerated() {
                         if player.role == Role.lookout {
