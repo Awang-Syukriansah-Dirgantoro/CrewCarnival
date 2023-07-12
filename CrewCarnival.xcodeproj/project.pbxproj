@@ -29,6 +29,8 @@
 		0BFC5E2D2A5E544900FF3CD6 /* scene2.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 0BFC5E2C2A5E544000FF3CD6 /* scene2.mp4 */; };
 		0BFC5E332A5E547800FF3CD6 /* scene1.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 0BFC5E2E2A5E545400FF3CD6 /* scene1.mp4 */; };
 		0BFC5E352A5E60A400FF3CD6 /* scene4.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 0BFC5E342A5E603600FF3CD6 /* scene4.mp4 */; };
+		0BFC5E382A5E668200FF3CD6 /* scene5.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 0BFC5E372A5E65FB00FF3CD6 /* scene5.mp4 */; };
+		0BFC5E392A5E668200FF3CD6 /* scene6.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 0BFC5E362A5E65FA00FF3CD6 /* scene6.mp4 */; };
 		4C2509172A4946D000721A03 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C2509162A4946D000721A03 /* GameView.swift */; };
 		4C25091B2A496C7400721A03 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C25091A2A496C7400721A03 /* Event.swift */; };
 		4C4AC29D2A555DB700D589CD /* Peer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C4AC29C2A555DB700D589CD /* Peer.swift */; };
@@ -80,6 +82,8 @@
 		0BFC5E2C2A5E544000FF3CD6 /* scene2.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = scene2.mp4; sourceTree = "<group>"; };
 		0BFC5E2E2A5E545400FF3CD6 /* scene1.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = scene1.mp4; sourceTree = "<group>"; };
 		0BFC5E342A5E603600FF3CD6 /* scene4.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = scene4.mp4; sourceTree = "<group>"; };
+		0BFC5E362A5E65FA00FF3CD6 /* scene6.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = scene6.mp4; sourceTree = "<group>"; };
+		0BFC5E372A5E65FB00FF3CD6 /* scene5.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = scene5.mp4; sourceTree = "<group>"; };
 		4C2509162A4946D000721A03 /* GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
 		4C25091A2A496C7400721A03 /* Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 		4C4AC29C2A555DB700D589CD /* Peer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Peer.swift; sourceTree = "<group>"; };
@@ -247,6 +251,8 @@
 				0BFC5E2C2A5E544000FF3CD6 /* scene2.mp4 */,
 				0BFC5E2E2A5E545400FF3CD6 /* scene1.mp4 */,
 				0BFC5E342A5E603600FF3CD6 /* scene4.mp4 */,
+				0BFC5E372A5E65FB00FF3CD6 /* scene5.mp4 */,
+				0BFC5E362A5E65FA00FF3CD6 /* scene6.mp4 */,
 				4CD675E62A5D7E0800A4809F /* LookoutLeft.mp4 */,
 				4CD675E52A5D7E0800A4809F /* LookoutRight.mp4 */,
 				0B4F5B0F2A4BD91800D55948 /* Sound */,
@@ -337,6 +343,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0BFC5E382A5E668200FF3CD6 /* scene5.mp4 in Resources */,
+				0BFC5E392A5E668200FF3CD6 /* scene6.mp4 in Resources */,
 				0BFC5E352A5E60A400FF3CD6 /* scene4.mp4 in Resources */,
 				0BFC5E332A5E547800FF3CD6 /* scene1.mp4 in Resources */,
 				0BFC5E2D2A5E544900FF3CD6 /* scene2.mp4 in Resources */,
