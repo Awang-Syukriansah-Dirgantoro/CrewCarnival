@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct FirstView: View {
-    @ObservedObject var vm = AudioViewModel()
+    @StateObject var vm = AudioViewModel()
     @State private var showLight = false
     @State private var play = false
     @State private var animation = 1.0

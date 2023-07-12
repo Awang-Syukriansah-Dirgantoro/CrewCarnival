@@ -9,6 +9,7 @@ import SwiftUI
 import AVKit
 
 struct GameView: View {
+    @StateObject var vm = AudioViewModel()
     @EnvironmentObject var gameService: GameService
     @Binding var isStartGame: Bool
     
@@ -31,6 +32,7 @@ struct GameView: View {
             }
         }
         .onAppear {
+            vm.playSound(url: "game")
             gameService.party.generateLHSEvent()
             gameService.send(party: gameService.party)
         }
