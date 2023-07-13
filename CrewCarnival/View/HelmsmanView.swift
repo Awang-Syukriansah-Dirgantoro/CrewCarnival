@@ -371,6 +371,7 @@ struct HelmsmanView: View {
                         progress = 0
                         angle = 0
                         lastAngle = 0
+                        knobValue = 0.5
                         isTurnProgressCompleted = nil
                     }
                 }
@@ -425,6 +426,7 @@ struct HelmsmanView: View {
                         progress = 0
                         angle = 0
                         lastAngle = 0
+                        knobValue = 0.5
                         isTurnProgressCompleted = nil
                     }
                 }
