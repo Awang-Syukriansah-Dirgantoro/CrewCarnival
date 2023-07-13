@@ -358,9 +358,11 @@ struct LookoutView: View {
             })
             .onChange(of: partyProgress, perform: { newValue in
                 if partyProgress >= 100{
+                    gameService.party.popup = true
                     gameService.send(party: gameService.party)
                     withAnimation(.linear(duration: 0.5)) {
                         lives = gameService.party.lives
+                        
                         showPopUp = true
                     }
                 }

@@ -195,7 +195,12 @@ struct BlacksmithView: View {
                     //                            isStartGame = false
                     //                            gameService.send(parties: gameService.parties)
                 }
-                
+                if gameService.party.popup == true{
+                    withAnimation(.linear(duration: 0.5)) {
+                        lives = gameService.party.lives
+                        showPopUp = true
+                    }
+                }
                 var allEventsCompleted = true
                 for (_, player) in gameService.party.players.enumerated() {
                     if !player.event.isCompleted {
@@ -214,14 +219,6 @@ struct BlacksmithView: View {
                     }
                     vm.shuffleArray(objct: objct)
                     isPuzzleCompleted = false
-                }
-            })
-            .onChange(of: partyProgress, perform: { newValue in
-                if partyProgress >= 100{
-                    withAnimation(.linear(duration: 0.5)) {
-                        lives = gameService.party.lives
-                        showPopUp = true
-                    }
                 }
             })
             .onChange(of: instructionProgress, perform: { newValue in
