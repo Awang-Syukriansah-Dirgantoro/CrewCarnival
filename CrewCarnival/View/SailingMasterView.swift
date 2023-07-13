@@ -150,7 +150,7 @@ struct SailingMasterView: View {
                         .shadow(color: Color.black.opacity(0.2), radius: 4)
                         .position(x: size.width / 2, y: 215)
                         .multilineTextAlignment(.center)
-                      
+                    
                 }
             }.ignoresSafeArea()
         } else {
@@ -245,10 +245,17 @@ struct SailingMasterView: View {
                                 .frame(maxWidth: 350, maxHeight: 112)
                                 .background(
                                     VStack{
-                                        Image("Sail")
-                                            .resizable()
-                                            .frame(maxWidth: 350, maxHeight: sailOneHeight)
-                                            .padding(.vertical, -5)
+                                        if eventblacksmith == false {
+                                            Image("Sail")
+                                                .resizable()
+                                                .frame(maxWidth: 350, maxHeight: sailOneHeight)
+                                                .padding(.vertical, -5)
+                                        } else {
+                                            Image("SailBroke")
+                                                .resizable()
+                                                .frame(maxWidth: 350, maxHeight: 112)
+                                                .padding(.vertical, -5)
+                                        }
                                         Spacer()
                                     }
                                 ).offset(y:32)
@@ -257,10 +264,17 @@ struct SailingMasterView: View {
                                 .frame(maxWidth: 440, maxHeight: 160)
                                 .background(
                                     VStack{
-                                        Image("Sail")
-                                            .resizable()
-                                            .frame(maxWidth: 440, maxHeight: sailTwoHeight)
-                                            .padding(.bottom, -5)
+                                        if eventblacksmith == false {
+                                            Image("Sail")
+                                                .resizable()
+                                                .frame(maxWidth: 440, maxHeight: sailTwoHeight)
+                                                .padding(.bottom, -5)
+                                        } else {
+                                            Image("SailBroke")
+                                                .resizable()
+                                                .frame(maxWidth: 440, maxHeight: 160)
+                                                .padding(.vertical, -5)
+                                        }
                                         Spacer()
                                     }
                                 ).offset(y:32)
@@ -269,10 +283,17 @@ struct SailingMasterView: View {
                                 .frame(maxWidth: 590, maxHeight: 260)
                                 .background(
                                     VStack{
-                                        Image("Sail")
-                                            .resizable()
-                                            .frame(maxWidth: 590, maxHeight: sailThreeHeight)
-                                            .padding(.bottom, 20)
+                                        if eventblacksmith == false {
+                                            Image("Sail")
+                                                .resizable()
+                                                .frame(maxWidth: 590, maxHeight: sailThreeHeight)
+                                                .padding(.bottom, 20)
+                                        } else {
+                                            Image("SailBroke")
+                                                .resizable()
+                                                .frame(maxWidth: 590, maxHeight: 260)
+                                                .padding(.vertical, -5)
+                                        }
                                         Spacer()
                                     }
                                 ).offset(y:32)
@@ -294,7 +315,7 @@ struct SailingMasterView: View {
                                 Image("Tuas2")
                                     .resizable()
                                     .frame(width: 60, height: 60)
-                                if eventblacksmith == false{
+                                if eventblacksmith == false {
                                     Image("Tuas1")
                                         .resizable()
                                         .frame(width: 24, height: 63)
@@ -320,7 +341,7 @@ struct SailingMasterView: View {
                                 Image("Tuas2")
                                     .resizable()
                                     .frame(width: 60, height: 60)
-                                if eventblacksmith == false{
+                                if eventblacksmith == false {
                                     Image("Tuas1")
                                         .resizable()
                                         .frame(width: 24, height: 63)
@@ -344,7 +365,7 @@ struct SailingMasterView: View {
                                 Image("Tuas2")
                                     .resizable()
                                     .frame(width: 60, height: 60)
-                                if eventblacksmith == false{
+                                if eventblacksmith == false {
                                     Image("Tuas1")
                                         .resizable()
                                         .frame(width: 24, height: 63)
@@ -490,8 +511,9 @@ struct SailingMasterView: View {
                         instructionProgress = gameService.party.players[index].event.duration
                         instructionProgressMax = gameService.party.players[index].event.duration
                     }
-                    
-                    if player.role == Role.blackSmith {
+                }
+                for (index, player) in gameService.party.players.enumerated() {
+                    if player.role == Role.cabinBoy {
                         let obj = gameService.party.players[index].event.objective
                         if obj == Objective.sail{
                             eventblacksmith = true
@@ -501,8 +523,27 @@ struct SailingMasterView: View {
                     }
                 }
             }
+            .onChange(of: gameService.party.isSideEvent, perform: {
+                newValue in
+                if gameService.party.isSideEvent == true {
+                    for (index, player) in gameService.party.players.enumerated() {
+                        //                        print("Player Role", player.role)
+                        //                        print("Objective", gameService.party.players[index].event.objective)
+                        if player.role == Role.cabinBoy {
+                            if gameService.party.players[index].event.objective == Objective.sail {
+                                eventblacksmith = true
+                            }
+                        }
+                    }
+                    //                    print("masuk sini loh \(eventblacksmith)")
+                } else {
+                    eventblacksmith = false
+                    //                                        print("masuk sini lih \(eventblacksmith)")
+                }
+            })
             .onChange(of: gameService.party, perform: { newValue in
-                if gameService.party.lives == 0 {
+                //                print("masuk sini")
+                if gameService.party.lives <= 0 {
                     withAnimation(.linear(duration: 0.5)) {
                         lives = gameService.party.lives
                         showPopUp = true
@@ -520,16 +561,25 @@ struct SailingMasterView: View {
                 }
                 var allEventsCompleted = true
                 for (index, player) in gameService.party.players.enumerated() {
-                    if player.role == Role.blackSmith {
-                        if gameService.party.players[index].event.isCompleted == true {
-                            eventblacksmith = false
-                        }
-                    }
-                    
                     if !player.event.isCompleted {
                         allEventsCompleted = false
                     }
+                    
+                    if player.role == Role.cabinBoy {
+                        if gameService.party.players[index].event.objective == Objective.sail {
+                            eventblacksmith = true
+                        }
+                        else {
+                            eventblacksmith = false
+                        }
+                    }
                 }
+                //                    print("masuk sini \(eventblacksmith)")
+                //                } else {
+                //                    eventblacksmith = false
+                //                    print("masuk sini \(eventblacksmith)")
+                //                }
+                
                 
                 if allEventsCompleted {
                     showSuccessOverlay = true

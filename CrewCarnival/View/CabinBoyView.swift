@@ -14,6 +14,9 @@ struct CabinBoyView: View {
     @State private var roleExplain = false
     @State var timeExplain = 7.9
     @State private var showPopUp: Bool = false
+    @State private var isHelemsmanDeactive: Bool = true
+    @State private var isSailingMasterDeactive: Bool = true
+    @State private var isLookoutDeactive: Bool = true
     @State private var lives = 0
     @State private var gradient = LinearGradient(
         gradient: Gradient(colors: [Color(red: 0, green: 0.82, blue: 0.23)]),
@@ -26,15 +29,18 @@ struct CabinBoyView: View {
     @State private var isLeftAble = true
     @State private var isRightAble = true
     @State private var choose = "helmsman"
+    @State private var available = "sailingmaster"
     @State var showingPopup = false
     @EnvironmentObject var gameService: GameService
     @Binding var isStartGame: Bool
     @State var showSuccessOverlay = false
     
-    let timerSideEvent = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+    @State private var yOffsetChar: CGFloat = 0
+    
+    @State var timerSideEvent = Timer.publish(every: 1, on: .main, in: .default)
     @State private var counter = 0
     
-    let timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
+    @State var timer = Timer.publish(every: 0.1, on: .main, in: .default)
     var body: some View {
         if roleExplain == false{
             GeometryReader{proxy in
@@ -48,18 +54,16 @@ struct CabinBoyView: View {
                             roleExplain = true
                         }
                     }
-                    Text("The Game Will Start In \(String(String(timeExplain).first!))")
+                    Text("Sailing In... \(String(String(timeExplain).first!))")
                         .font(.custom("Gasoek One", size: 20))
-                        .foregroundColor(.black)
-                        .position(x: size.width / 2, y: 250)
+                        .foregroundColor(.white)
+                        .shadow(color: Color.black.opacity(0.2), radius: 4)
+                        .position(x: size.width / 2, y: 215)
                         .multilineTextAlignment(.center)
-                      
+                    
+                }.onAppear{
+                    _ = timer.connect()
                 }
-                Text("The Game Will Start In \(String(String(timeExplain).first!))")
-                    .font(.custom("Gasoek One", size: 20))
-                    .foregroundColor(.black)
-                    .position(x: size.width / 2, y: 250)
-                    .multilineTextAlignment(.center)
             }.ignoresSafeArea()
         }else{
             let gradientStyle = GradientProgressStyle(
@@ -72,18 +76,26 @@ struct CabinBoyView: View {
                 Button{
                     showingPopup = true
                     choose = "helmsman"
+                    gameService.party.chose = true
                 } label: {
                     Rectangle()
                         .foregroundColor(.clear)
-                        .frame(width: 174, height: 237)
+                        .frame(width: 174, height: 257)
                         .background(
-                            Image("CharHelmsman")
-                                .resizable()
-                                .aspectRatio(contentMode: .fill)
-                                .frame(width: 174, height: 237)
-                                .clipped()
+                            VStack{
+                                Text("Helmsman")
+                                    .font(.custom("Gasoek One", size: 20))
+                                    .foregroundColor(.white)
+                                    .shadow(color: Color.black.opacity(0.2), radius: 4)
+                                    .offset(y:yOffsetChar)
+                                Image("CharHelmsman")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width: 174, height: 237)
+                                    .clipped()
+                            }
                         )
-                }.offset(x:-50,y:-60).disabled(showingPopup)
+                }.offset(x:-50,y:-90).disabled(showingPopup || isHelemsmanDeactive)
                 Rectangle()
                     .foregroundColor(.clear)
                     .frame(width: 335, height: 262)
@@ -96,49 +108,50 @@ struct CabinBoyView: View {
                     ).offset(y:92)
                 Button{
                     showingPopup = true
-                    choose = "blacksmith"
-                } label: {
-                    Rectangle()
-                        .foregroundColor(.clear)
-                        .frame(width: 101, height: 252)
-                        .background(
-                            Image("CharBlacksmith")
-                                .resizable()
-                                .aspectRatio(contentMode: .fill)
-                                .frame(width: 101, height: 252)
-                                .clipped()
-                        )
-                }.offset(y:140).disabled(showingPopup)
-                Button{
-                    showingPopup = true
                     choose = "sailingmaster"
+                    gameService.party.chose = true
                 } label: {
                     Rectangle()
                         .foregroundColor(.clear)
-                        .frame(width: 110, height: 247)
+                        .frame(width: 170, height: 247)
                         .background(
-                            Image("CharSailingMaster")
-                                .resizable()
-                                .aspectRatio(contentMode: .fill)
-                                .frame(width: 110, height: 247)
-                                .clipped()
+                            VStack{
+                                Text("Sailing Master")
+                                    .font(.custom("Gasoek One", size: 20))
+                                    .foregroundColor(.white)
+                                    .shadow(color: Color.black.opacity(0.2), radius: 4)
+                                    .offset(y:yOffsetChar)
+                                Image("CharSailingMaster")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width: 110, height: 247)
+                                    .clipped()
+                            }
                         )
-                }.offset(x:-130,y:190).disabled(showingPopup)
+                }.offset(x:-100,y:160).disabled(showingPopup || isSailingMasterDeactive)
                 Button{
                     showingPopup = true
                     choose = "lookout"
+                    gameService.party.chose = true
                 } label: {
                     Rectangle()
                         .foregroundColor(.clear)
                         .frame(width: 121, height: 216)
                         .background(
-                            Image("CharLookout")
-                                .resizable()
-                                .aspectRatio(contentMode: .fill)
-                                .frame(width: 121, height: 216)
-                                .clipped()
+                            VStack{
+                                Text("Lookout")
+                                    .font(.custom("Gasoek One", size: 20))
+                                    .foregroundColor(.white)
+                                    .shadow(color: Color.black.opacity(0.2), radius: 4)
+                                    .offset(y:yOffsetChar)
+                                Image("CharLookout")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width: 121, height: 216)
+                                    .clipped()
+                            }
                         )
-                }.offset(x:130,y:240).disabled(showingPopup)
+                }.offset(x:110,y:200).disabled(showingPopup || isLookoutDeactive)
                 if showingPopup {
                     popUpView
                 }
@@ -243,28 +256,67 @@ struct CabinBoyView: View {
                 }
             })
             .onAppear {
+                _ = timerSideEvent.connect()
+                withAnimation (Animation.easeInOut (duration: 1).repeatForever()){
+                    yOffsetChar += 12
+                }
                 for (index, player) in gameService.party.players.enumerated() {
-                    if player.role == Role.lookout {
+                    if player.role == Role.cabinBoy {
                         instructionProgress = gameService.party.players[index].event.duration
                         instructionProgressMax = gameService.party.players[index].event.duration
+                        for (index2, player2) in gameService.party.players.enumerated() {
+                            if player2.role == Role.blackSmith {
+                                let obj = gameService.party.players[index2].event.objective
+                                if obj == Objective.sail {
+                                    gameService.party.players[index].event.instruction = "Talk to Sailing Master"
+                                    available = "sailingmaster"
+                                } else if obj == Objective.steer {
+                                    gameService.party.players[index].event.instruction = "Talk to Helmsman"
+                                    available = "helmsman"
+                                } else {
+                                    gameService.party.players[index].event.instruction = "Talk to Lookout"
+                                    available = "lookout"
+                                }
+                            }
+                        }
                     }
+                }
+                gameService.send(party: gameService.party)
+                if available == "sailingmaster" {
+                    isSailingMasterDeactive = false
+                } else if available == "helmsman" {
+                    isHelemsmanDeactive = false
+                } else if available == "lookout" {
+                    isLookoutDeactive = false
                 }
             }
             .onReceive(timerSideEvent){ time in
+                //                print("Pos dede")
                 var allEventsCompleted = true
+                for (_, player) in gameService.party.players.enumerated() {
+                    if !player.event.isCompleted {
+                        allEventsCompleted = false
+                    }
+                }
                 if allEventsCompleted {
                     showSuccessOverlay = true
-                    if counter == 10 {
+                }
+                
+                if !allEventsCompleted && !gameService.party.isSideEvent {
+                    if counter == 5 {
                         gameService.party.generateSideEvent()
-                        for (index, player) in gameService.party.players.enumerated() {
-                            if player.role == Role.helmsman {
-                                instructionProgress = gameService.party.players[index].event.duration
-                                instructionProgressMax = gameService.party.players[index].event.duration
-                            }
-                        }
+//                        for (index, player) in gameService.party.players.enumerated() {
+//                            if player.role == Role.cabinBoy {
+//                                instructionProgress = gameService.party.players[index].event.duration
+//                                instructionProgressMax = gameService.party.players[index].event.duration
+//                            }
+//                        }
+                        gameService.party.isSideEvent = true
                         gameService.send(party: gameService.party)
                         counter = 0
+                        //                        print("")
                     }
+                    print("masuk disini")
                     counter += 1
                 }
             }
@@ -294,9 +346,21 @@ struct CabinBoyView: View {
                 
                 if allEventsCompleted {
                     for (index, player) in gameService.party.players.enumerated() {
-                        if player.role == Role.helmsman {
+                        if player.role == Role.cabinBoy {
                             instructionProgress = gameService.party.players[index].event.duration
                             instructionProgressMax = gameService.party.players[index].event.duration
+//                            for (index2, player2) in gameService.party.players.enumerated() {
+//                                if player2.role == Role.blackSmith {
+//                                    let obj = gameService.party.players[index2].event.objective
+//                                    if obj == Objective.sail {
+//                                        gameService.party.players[index].event.instruction = "Talk to Sailing Master"
+//                                    } else if obj == Objective.steer {
+//                                        gameService.party.players[index].event.instruction = "Talk to Helmsman"
+//                                    } else {
+//                                        gameService.party.players[index].event.instruction = "Talk to Lookout"
+//                                    }
+//                                }
+//                            }
                         }
                     }
                     gameService.send(party: gameService.party)
@@ -321,7 +385,8 @@ struct CabinBoyView: View {
             switch choose {
             case "sailingmaster":
                 Button{
-                    
+                    gameService.party.chose = true
+                    gameService.send(party: gameService.party)
                 } label: {
                     ZStack{
                         Rectangle()
@@ -332,6 +397,16 @@ struct CabinBoyView: View {
                                     .resizable()
                                     .aspectRatio(contentMode: .fill)
                                     .frame(width: 165, height: 171)
+                                    .clipped()
+                            )
+                        Rectangle()
+                            .foregroundColor(.clear)
+                            .frame(width: 106, height: 106)
+                            .background(
+                                Image("Sail")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(width: 106, height: 106)
                                     .clipped()
                             )
                     }
@@ -387,7 +462,8 @@ struct CabinBoyView: View {
                 
             case "helmsman":
                 Button{
-                    
+                    gameService.party.chose = true
+                    gameService.send(party: gameService.party)
                 } label: {
                     ZStack{
                         Rectangle()
@@ -398,6 +474,16 @@ struct CabinBoyView: View {
                                     .resizable()
                                     .aspectRatio(contentMode: .fill)
                                     .frame(width: 165, height: 171)
+                                    .clipped()
+                            )
+                        Rectangle()
+                            .foregroundColor(.clear)
+                            .frame(width: 106, height: 106)
+                            .background(
+                                Image("StearingWheel")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(width: 106, height: 106)
                                     .clipped()
                             )
                     }
@@ -519,7 +605,8 @@ struct CabinBoyView: View {
                 
             case "lookout":
                 Button{
-                    
+                    gameService.party.chose = true
+                    gameService.send(party: gameService.party)
                 } label: {
                     ZStack{
                         Rectangle()
@@ -530,6 +617,16 @@ struct CabinBoyView: View {
                                     .resizable()
                                     .aspectRatio(contentMode: .fill)
                                     .frame(width: 165, height: 171)
+                                    .clipped()
+                            )
+                        Rectangle()
+                            .foregroundColor(.clear)
+                            .frame(width: 106, height: 106)
+                            .background(
+                                Image("binocular")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(width: 106, height: 106)
                                     .clipped()
                             )
                     }

@@ -19,10 +19,13 @@ struct GameView: View {
                 if player.id == gameService.currentPlayer.id {
                     if player.role == Role.lookout {
                         LookoutView(isStartGame: $isStartGame)
+//                        CabinBoyView(isStartGame: $isStartGame)
                     } else if player.role == Role.helmsman  {
                         HelmsmanView(isStartGame: $isStartGame)
+//                        CabinBoyView(isStartGame: $isStartGame)
                     } else if player.role == Role.sailingMaster  {
                         SailingMasterView(isStartGame: $isStartGame)
+//                        CabinBoyView(isStartGame: $isStartGame)
                     } else if player.role == Role.cabinBoy  {
                         CabinBoyView(isStartGame: $isStartGame)
                     } else {
@@ -42,6 +45,6 @@ struct GameView: View {
 
 struct GameView_Previews: PreviewProvider {
     static var previews: some View {
-        GameView(isStartGame: .constant(false))
+        GameView(isStartGame: .constant(false)).environmentObject(GameService())
     }
 }

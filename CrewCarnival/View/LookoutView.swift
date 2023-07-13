@@ -298,6 +298,24 @@ struct LookoutView: View {
 //                looks = "Lookout3"
 //                print("Luar",looks)
             }
+            .onChange(of: gameService.party.isSideEvent, perform: {
+                newValue in
+                if gameService.party.isSideEvent == true {
+                    for (index, player) in gameService.party.players.enumerated() {
+                        //                        print("Player Role", player.role)
+                        //                        print("Objective", gameService.party.players[index].event.objective)
+                        if player.role == Role.cabinBoy {
+                            if gameService.party.players[index].event.objective == Objective.sail {
+                                eventblacksmith = true
+                            }
+                        }
+                    }
+                    //                    print("masuk sini loh \(eventblacksmith)")
+                } else {
+                    eventblacksmith = false
+                    //                                        print("masuk sini lih \(eventblacksmith)")
+                }
+            })
             .onChange(of: gameService.party, perform: { newValue in
                 if gameService.party.lives == 0 {
                     gameService.send(party: gameService.party)
@@ -311,8 +329,11 @@ struct LookoutView: View {
                
                 var allEventsCompleted = true
                 for (index, player) in gameService.party.players.enumerated() {
-                    if player.role == Role.blackSmith {
-                        if gameService.party.players[index].event.isCompleted == true {
+                    if player.role == Role.cabinBoy {
+                        if gameService.party.players[index].event.objective == Objective.sail {
+                            eventblacksmith = true
+                        }
+                        else {
                             eventblacksmith = false
                         }
                     }
@@ -335,17 +356,17 @@ struct LookoutView: View {
                                 looks = "LookoutRight"
                             }
                         }
-                        
-                        if player.role == Role.blackSmith {
-                            let obj = gameService.party.players[index].event.objective
-                            if obj == Objective.binocular{
-                                eventblacksmith = true
-                            } else {
-                                eventblacksmith = false
-                            }
-                        }
                     }
-
+//                    for (index, player) in gameService.party.players.enumerated() {
+//                        if player.role == Role.blackSmith {
+//                            let obj = gameService.party.players[index].event.objective
+//                            if obj == Objective.binocular{
+//                                eventblacksmith = true
+//                            } else {
+//                                eventblacksmith = false
+//                            }
+//                        }
+//                    }
                     withAnimation(Animation.spring()) {
                         isMove = false
                         direction = "Forward"
