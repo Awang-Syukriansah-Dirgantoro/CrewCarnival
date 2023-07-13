@@ -170,6 +170,7 @@ struct HelmsmanView: View {
                                                         },
                                                         animation: .spring()
                                                     )
+                                                    .offset(y: UIScreen.screenHeight / 6)
                                                     .onAppear{
                                                         knobValue = 0.5
                                                     }
@@ -239,12 +240,14 @@ struct HelmsmanView: View {
                                     .resizable()
                                     .scaledToFill()
                                     .frame(width: 300, height: 300)
+                                    .offset(y: UIScreen.screenHeight / 6)
                             }
                         }else{
                             Image("StearingWheel")
                                 .resizable()
                                 .scaledToFill()
                                 .frame(width: 300, height: 300)
+                                .offset(y: UIScreen.screenHeight / 6)
                         }
                         
                         //                            .rotationEffect(
@@ -281,11 +284,6 @@ struct HelmsmanView: View {
                         Spacer()
                             .frame(height: 180)
                         VStack{
-                            Text(text)
-                                .foregroundColor(.white)
-                                .onShake {
-                                    text = "shaken at \(Date())"
-                                }
                             Text("Turn Progress")
                                 .font(Font.custom("Krub-Regular", size: 14))
                                 .multilineTextAlignment(.center)
@@ -512,4 +510,8 @@ struct HelmsmanView_Previews: PreviewProvider {
         HelmsmanView(isStartGame: .constant(false))
             .environmentObject(GameService())
     }
+}
+
+extension UIScreen{
+   static let screenHeight = UIScreen.main.bounds.size.height
 }
