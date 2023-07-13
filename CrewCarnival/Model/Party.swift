@@ -52,10 +52,8 @@ struct Party: Codable, Identifiable, Equatable {
                         }
                         
                         players[index2].event = Event(duration: 15, instruction: "There are obstacles nearby!", objective: objective)
-                        break
                     }
                 }
-                break
             }
             
             if player.role == Role.sailingMaster {
