@@ -11,6 +11,8 @@
 	<array>
 		<string>Krub-Regular.ttf</string>
 		<string>GasoekOne-Regular.ttf</string>
+		<string>Krub-SemiBold.ttf</string>
+		<string>Krub-Bold.ttf</string>
 	</array>
 </dict>
 </plist>
