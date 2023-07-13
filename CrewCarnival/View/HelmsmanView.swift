@@ -19,6 +19,7 @@ struct HelmsmanView: View {
     @State private var lives = 0
     @State private var lockSteer = false
     @EnvironmentObject var gameService: GameService
+    @State var showSuccessOverlay = false
     
     let timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
     
@@ -321,74 +322,126 @@ struct HelmsmanView: View {
                                     .scaledToFill()
                                     .frame(width: 300, height: 300)
                             }
-                            
-                            //                            .rotationEffect(
-                            //                                .degrees(Double(self.angle)))
-                            //                            .gesture(DragGesture()
-                            //                                .onChanged{ v in
-                            //                                    let theta = (atan2(v.location.x - self.length / 2, self.length / 2 - v.location.y) - atan2(v.startLocation.x - self.length / 2, self.length / 2 - v.startLocation.y)) * 180 / .pi
-                            //                                    self.angle = theta + self.lastAngle
-                            //                                    print(self.angle)
-                            //
-                            //                                    if (self.angle > 300){
-                            //                                        self.angle = 300
-                            //                                        self.progress = self.angle
-                            //                                        isTurnProgressCompleted = Objective.turnRight
-                            //                                    } else if (self.angle < 0){
-                            //                                        if (self.angle < -300){
-                            //                                            self.angle = -300
-                            //                                            self.progress = 300
-                            //                                            isTurnProgressCompleted = Objective.turnLeft
-                            //                                        } else {
-                            //                                            self.progress = self.angle * (-1)
-                            //                                        }
-                            //                                    }
-                            //                                    else {
-                            //                                        self.progress = self.angle
-                            //                                    }
-                            //                                    print(self.angle)
-                            //                                }
-                            //                                .onEnded { v in
-                            //                                    self.lastAngle = self.angle
-                            //                                }
-                            //                            )
-                            
-                            Spacer()
-                                .frame(height: 180)
-                            VStack{
-                                Text(text)
-                                    .foregroundColor(.white)
-                                    .onShake {
-                                        text = "shaken at \(Date())"
-                                    }
-                                Text("Turn Progress")
-                                    .font(Font.custom("Krub-Regular", size: 14))
-                                    .multilineTextAlignment(.center)
-                                    .foregroundColor(.white)
-                                    .frame(width: 120, height: 32)
-                                    .background(Image("BgTurnProgress")
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fill)
-                                        .frame(width: 125, height: 32)
-                                        .clipped())
-                                    .cornerRadius(15)
-                                    .padding(.bottom, -15)
-                                
-                                ProgressBar(progress: self.progress)
-                            }
+                        }else{
+                            Image("StearingWheel")
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: 300, height: 300)
                         }
                         
-                        RecapSceneView(lives: $lives, show: $showPopUp, isStartGame: $isStartGame)
-                    }.background(Image("BgHelmsman").resizable().scaledToFit())
+                        //                            .rotationEffect(
+                        //                                .degrees(Double(self.angle)))
+                        //                            .gesture(DragGesture()
+                        //                                .onChanged{ v in
+                        //                                    let theta = (atan2(v.location.x - self.length / 2, self.length / 2 - v.location.y) - atan2(v.startLocation.x - self.length / 2, self.length / 2 - v.startLocation.y)) * 180 / .pi
+                        //                                    self.angle = theta + self.lastAngle
+                        //                                    print(self.angle)
+                        //
+                        //                                    if (self.angle > 300){
+                        //                                        self.angle = 300
+                        //                                        self.progress = self.angle
+                        //                                        isTurnProgressCompleted = Objective.turnRight
+                        //                                    } else if (self.angle < 0){
+                        //                                        if (self.angle < -300){
+                        //                                            self.angle = -300
+                        //                                            self.progress = 300
+                        //                                            isTurnProgressCompleted = Objective.turnLeft
+                        //                                        } else {
+                        //                                            self.progress = self.angle * (-1)
+                        //                                        }
+                        //                                    }
+                        //                                    else {
+                        //                                        self.progress = self.angle
+                        //                                    }
+                        //                                    print(self.angle)
+                        //                                }
+                        //                                .onEnded { v in
+                        //                                    self.lastAngle = self.angle
+                        //                                }
+                        //                            )
+                        
+                        Spacer()
+                            .frame(height: 180)
+                        VStack{
+                            Text(text)
+                                .foregroundColor(.white)
+                                .onShake {
+                                    text = "shaken at \(Date())"
+                                }
+                            Text("Turn Progress")
+                                .font(Font.custom("Krub-Regular", size: 14))
+                                .multilineTextAlignment(.center)
+                                .foregroundColor(.white)
+                                .frame(width: 120, height: 32)
+                                .background(Image("BgTurnProgress")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width: 125, height: 32)
+                                    .clipped())
+                                .cornerRadius(15)
+                                .padding(.bottom, -15)
+                            
+                            ProgressBar(progress: self.progress)
+                        }
+                    }
+                    RecapSceneView(lives: $lives, show: $showPopUp, isStartGame: $isStartGame)
+                }.background(Image("BgHelmsman").resizable().scaledToFit())
+            }
+            .onAppear {
+                for (index, player) in gameService.party.players.enumerated() {
+                    if player.role == Role.helmsman {
+                        instructionProgress = gameService.party.players[index].event.duration
+                        instructionProgressMax = gameService.party.players[index].event.duration
+                    }
+                    
+                    if player.role == Role.blackSmith {
+                        let obj = gameService.party.players[index].event.objective
+                        if obj == Objective.steer{
+                            eventblacksmith = true
+                        } else {
+                            eventblacksmith = false
+                        }
+                    }
                 }
-                .onAppear {
+         
+                progress = 0
+                angle = 0
+                lastAngle = 0
+                isTurnProgressCompleted = nil
+            }
+            .onChange(of: gameService.party, perform: { newValue in
+                if gameService.party.lives == 0 {
+                    withAnimation(.linear(duration: 0.5)) {
+                        lives = gameService.party.lives
+                        showPopUp = true
+                        
+                    }
+                    //                            gameService.parties[index].reset()
+                    //                            isStartGame = false
+                    //                            gameService.send(parties: gameService.parties)
+                }
+                
+                var allEventsCompleted = true
+                for (index, player) in gameService.party.players.enumerated() {
+                    if player.role == Role.blackSmith {
+                        if gameService.party.players[index].event.isCompleted == true {
+                            eventblacksmith = false
+                        }
+                    }
+                    
+                    if !player.event.isCompleted {
+                        allEventsCompleted = false
+                    }
+                }
+                
+                if allEventsCompleted {
+                    showSuccessOverlay = true
                     for (index, player) in gameService.party.players.enumerated() {
                         if player.role == Role.helmsman {
                             instructionProgress = gameService.party.players[index].event.duration
                             instructionProgressMax = gameService.party.players[index].event.duration
                         }
-                    }
-                    for (index, player) in gameService.party.players.enumerated() {
+                        
                         if player.role == Role.blackSmith {
                             let obj = gameService.party.players[index].event.objective
                             if obj == Objective.steer{
@@ -398,128 +451,122 @@ struct HelmsmanView: View {
                             }
                         }
                     }
-                    progress = 0
-                    angle = 0
-                    lastAngle = 0
-                    isTurnProgressCompleted = nil
-                    gameService.send(party: gameService.party)
+                    withAnimation(Animation.spring()) {
+                        lockSteer = false
+                        progress = 0
+                        angle = 0
+                        lastAngle = 0
+                        isTurnProgressCompleted = nil
+                    }
                 }
-                .onChange(of: gameService.party, perform: { newValue in
-                    if gameService.party.lives <= 0 {
-                        withAnimation(.linear(duration: 0.5)) {
-                            lives = gameService.party.lives
-                            showPopUp = true
-                            
-                        }
-                        //                            gameService.parties[index].reset()
-                        //                            isStartGame = false
-                        //                            gameService.send(parties: gameService.parties)
+            })
+            .overlay(content: {
+                if showSuccessOverlay {
+                    VStack {
+                        Text("SAFE!")
+                            .font(.custom("Gasoek One", size: 40))
                     }
+                    .onAppear {
+                        withAnimation(.easeOut(duration: 1)) {
+                            showSuccessOverlay = false
+                        }
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(.green)
+                }
+                
+                if gameService.party.flashred {
+                    VStack {
+                        Text("OUCH!")
+                            .font(.custom("Gasoek One", size: 40))
+                    }
+                    .onAppear {
+                        withAnimation(.easeOut(duration: 1)) {
+                            gameService.party.flashred = false
+                            gameService.send(party: gameService.party)
+                        }
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(.red)
+                }
+            })
+            .onChange(of: partyProgress, perform: { newValue in
+                if partyProgress >= 100{
+                    withAnimation(.linear(duration: 0.5)) {
+                        lives = gameService.party.lives
+                        showPopUp = true
+                    }
+                }
+            })
+            .onChange(of: instructionProgress, perform: { newValue in
+                if instructionProgress <= 0 {
                     for (index, player) in gameService.party.players.enumerated() {
-                        if player.role == Role.blackSmith {
-                            if gameService.party.players[index].event.isCompleted == true {
-                                eventblacksmith = false
-                            }
+                        if player.role == Role.helmsman {
+                            instructionProgress = gameService.party.players[index].event.duration
                         }
                     }
-                    
-                    var allEventsCompleted = true
-                    for (_, player) in gameService.party.players.enumerated() {
-                        if !player.event.isCompleted {
-                            allEventsCompleted = false
-                        }
-                    }
-                    
-                    if allEventsCompleted {
-                        gameService.party.generateLHSEvent()
-                        for (index, player) in gameService.party.players.enumerated() {
-                            if player.role == Role.helmsman {
-                                instructionProgress = gameService.party.players[index].event.duration
-                                instructionProgressMax = gameService.party.players[index].event.duration
-                            }
-                        }
-                        for (index, player) in gameService.party.players.enumerated() {
-                            if player.role == Role.blackSmith {
-                                let obj = gameService.party.players[index].event.objective
-                                if obj == Objective.steer{
-                                    eventblacksmith = true
-                                } else {
-                                    eventblacksmith = false
-                                }
-                            }
-                        }
-                        lockSteer = false
-                        progress = 0
-                        angle = 0
-                        lastAngle = 0
-                        isTurnProgressCompleted = nil
-                        gameService.send(party: gameService.party)
-                    }
-                })
-                .onChange(of: partyProgress, perform: { newValue in
-                    if partyProgress >= 100{
-                        withAnimation(.linear(duration: 0.5)) {
-                            lives = gameService.party.lives
-                            showPopUp = true
-                        }
-                    }
-                })
-                .onChange(of: instructionProgress, perform: { newValue in
-                    if instructionProgress <= 0 {
-                        for (index, player) in gameService.party.players.enumerated() {
-                            if player.role == Role.helmsman {
-                                instructionProgress = gameService.party.players[index].event.duration
-                            }
-                        }
+                    withAnimation(Animation.spring()) {
                         lockSteer = false
                         progress = 0
                         angle = 0
                         lastAngle = 0
                         isTurnProgressCompleted = nil
                     }
-                })
-                .onChange(of: isTurnProgressCompleted) { newValue in
-                    print(progress)
-                    if (isTurnProgressCompleted != nil) {
-                        for (index, player) in gameService.party.players.enumerated() {
-                            if player.role == Role.helmsman {
-                                if player.event.objective == Objective.turnLeft {
-                                    if isTurnProgressCompleted == Objective.turnLeft {
-                                        for (_, player2) in gameService.party.players.enumerated() {
-                                            if player2.role == Role.sailingMaster {
-                                                if player2.event.objective == Objective.slow10 {
+                }
+            })
+            .onChange(of: isTurnProgressCompleted) { newValue in
+                print(progress)
+                if (isTurnProgressCompleted != nil) {
+                    for (index, player) in gameService.party.players.enumerated() {
+                        if player.role == Role.helmsman {
+                            if player.event.objective == Objective.turnLeft {
+                                if isTurnProgressCompleted == Objective.turnLeft {
+                                    for (_, player2) in gameService.party.players.enumerated() {
+                                        if player2.role == Role.sailingMaster {
+                                            if player2.event.objective == Objective.slow10 {
+                                                withAnimation(Animation.spring()) {
                                                     gameService.party.players[index].event.instruction = "The Ship is Tilting,\nSlow Down 10 Knots!"
-                                                    gameService.party.setEventCompleted(role: Role.helmsman)
-                                                    gameService.send(party: gameService.party)
-                                                } else if player2.event.objective == Objective.slow20 {
-                                                    gameService.party.players[index].event.instruction = "The Ship is Tilting,\nSlow Down 20 Knots!"
-                                                    gameService.party.setEventCompleted(role: Role.helmsman)
-                                                    gameService.send(party: gameService.party)
-                                                } else {
-                                                    gameService.party.players[index].event.instruction = "The Ship is Tilting,\nSlow Down 30 Knots!"
-                                                    gameService.party.setEventCompleted(role: Role.helmsman)
-                                                    gameService.send(party: gameService.party)
                                                 }
+                                                gameService.party.setEventCompleted(role: Role.helmsman)
+                                                gameService.send(party: gameService.party)
+                                            } else if player2.event.objective == Objective.slow20 {
+                                                withAnimation(Animation.spring()) {
+                                                    gameService.party.players[index].event.instruction = "The Ship is Tilting,\nSlow Down 20 Knots!"
+                                                }
+                                                gameService.party.setEventCompleted(role: Role.helmsman)
+                                                gameService.send(party: gameService.party)
+                                            } else {
+                                                withAnimation(Animation.spring()) {
+                                                    gameService.party.players[index].event.instruction = "The Ship is Tilting,\nSlow Down 30 Knots!"
+                                                }
+                                                gameService.party.setEventCompleted(role: Role.helmsman)
+                                                gameService.send(party: gameService.party)
                                             }
                                         }
                                     }
-                                } else {
-                                    if isTurnProgressCompleted == Objective.turnRight {
-                                        for (_, player2) in gameService.party.players.enumerated() {
-                                            if player2.role == Role.sailingMaster {
-                                                if player2.event.objective == Objective.slow10 {
+                                }
+                            } else {
+                                if isTurnProgressCompleted == Objective.turnRight {
+                                    for (_, player2) in gameService.party.players.enumerated() {
+                                        if player2.role == Role.sailingMaster {
+                                            if player2.event.objective == Objective.slow10 {
+                                                withAnimation(Animation.spring()) {
                                                     gameService.party.players[index].event.instruction = "The Ship is Tilting,\nSlow Down 10 Knots!"
-                                                    gameService.party.setEventCompleted(role: Role.helmsman)
-                                                    gameService.send(party: gameService.party)
-                                                } else if player2.event.objective == Objective.slow20 {
-                                                    gameService.party.players[index].event.instruction = "The Ship is Tilting,\nSlow Down 20 Knots!"
-                                                    gameService.party.setEventCompleted(role: Role.helmsman)
-                                                    gameService.send(party: gameService.party)
-                                                } else {
-                                                    gameService.party.players[index].event.instruction = "The Ship is Tilting,\nSlow Down 30 Knots!"
-                                                    gameService.party.setEventCompleted(role: Role.helmsman)
-                                                    gameService.send(party: gameService.party)
                                                 }
+                                                gameService.party.setEventCompleted(role: Role.helmsman)
+                                                gameService.send(party: gameService.party)
+                                            } else if player2.event.objective == Objective.slow20 {
+                                                withAnimation(Animation.spring()) {
+                                                    gameService.party.players[index].event.instruction = "The Ship is Tilting,\nSlow Down 20 Knots!"
+                                                }
+                                                gameService.party.setEventCompleted(role: Role.helmsman)
+                                                gameService.send(party: gameService.party)
+                                            } else {
+                                                withAnimation(Animation.spring()) {
+                                                    gameService.party.players[index].event.instruction = "The Ship is Tilting,\nSlow Down 30 Knots!"
+                                                }
+                                                gameService.party.setEventCompleted(role: Role.helmsman)
+                                                gameService.send(party: gameService.party)
                                             }
                                         }
                                     }

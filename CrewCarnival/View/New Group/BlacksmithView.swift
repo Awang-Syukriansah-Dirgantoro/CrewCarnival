@@ -21,6 +21,7 @@ struct BlacksmithView: View {
     @Binding var isStartGame: Bool
     @State private var isPuzzleCompleted = false
     @State var objct: Objective?
+    @State var showSuccessOverlay = false
     @State private var gradient = LinearGradient(
         gradient: Gradient(colors: [Color(red: 0, green: 0.82, blue: 0.23)]),
         startPoint: .topLeading,
@@ -139,25 +140,52 @@ struct BlacksmithView: View {
                 }
                 RecapSceneView(lives: $lives, show: $showPopUp, isStartGame: $isStartGame)
             }
+            .overlay(content: {
+                if showSuccessOverlay {
+                    VStack {
+                        Text("SAFE!")
+                            .font(.custom("Gasoek One", size: 40))
+                    }
+                    .onAppear {
+                        withAnimation(.easeOut(duration: 1)) {
+                            showSuccessOverlay = false
+                        }
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(.green)
+                }
+                
+                if gameService.party.flashred {
+                    VStack {
+                        Text("OUCH!")
+                            .font(.custom("Gasoek One", size: 40))
+                    }
+                    .onAppear {
+                        withAnimation(.easeOut(duration: 1)) {
+                            gameService.party.flashred = false
+                            gameService.send(party: gameService.party)
+                        }
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(.red)
+                }
+            })
             .onAppear {
                 for (index, player) in gameService.party.players.enumerated() {
                     if player.role == Role.blackSmith {
                         instructionProgress = gameService.party.players[index].event.duration
                         instructionProgressMax = gameService.party.players[index].event.duration
                     }
-                }
-//                vm.shuffleEvent()
-                for (index, player) in gameService.party.players.enumerated() {
+                    
                     if player.role == Role.blackSmith {
                         objct = gameService.party.players[index].event.objective
                     }
                 }
                 vm.shuffleArray(objct: objct)
                 isPuzzleCompleted = false
-                gameService.send(party: gameService.party)
             }
             .onChange(of: gameService.party, perform: { newValue in
-                if gameService.party.lives <= 0 {
+                if gameService.party.lives == 0 {
                     withAnimation(.linear(duration: 0.5)) {
                         lives = gameService.party.lives
                         showPopUp = true
@@ -176,22 +204,16 @@ struct BlacksmithView: View {
                 }
                 
                 if allEventsCompleted {
-                    gameService.party.generateLHSEvent()
+                    showSuccessOverlay = true
                     for (index, player) in gameService.party.players.enumerated() {
                         if player.role == Role.blackSmith {
                             instructionProgress = gameService.party.players[index].event.duration
                             instructionProgressMax = gameService.party.players[index].event.duration
-                        }
-                    }
-//                    vm.shuffleEvent()
-                    for (index, player) in gameService.party.players.enumerated() {
-                        if player.role == Role.blackSmith {
                             objct = gameService.party.players[index].event.objective
                         }
                     }
                     vm.shuffleArray(objct: objct)
                     isPuzzleCompleted = false
-                    gameService.send(party: gameService.party)
                 }
             })
             .onChange(of: partyProgress, perform: { newValue in
