@@ -21,6 +21,7 @@ struct LookoutView: View {
         endPoint: .bottomTrailing
     )
     @State private var xOffset:CGFloat = -1
+    @State private var xOffsettengah:CGFloat = 0
     @State private var isMove = false
     @State private var direction = "Forward"
     @State  var looks:String = ""
@@ -29,6 +30,7 @@ struct LookoutView: View {
     @EnvironmentObject var gameService: GameService
     @Binding var isStartGame: Bool
     @State var eventblacksmith = false
+    @State var showSuccessOverlay = false
     let timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
     @State var ganti = 1
     var body: some View {
@@ -61,8 +63,10 @@ struct LookoutView: View {
             ZStack{
                 GeometryReader {proxy in
                     let size = proxy.size
+                   
                     PlayerView(look: $looks).frame(width: size.width * 3, height: size.height).offset(x: xOffset).onAppear{
                         xOffset = -size.width
+                        xOffsettengah = -size.width
                     }
                 
                 VStack{
@@ -102,8 +106,10 @@ struct LookoutView: View {
                             )
                         ProgressView("", value: partyProgress, total: 100).progressViewStyle(gradientStyle).padding(.horizontal,9)
                             .onReceive(timer) { _ in
-                                if partyProgress < 100 {
+                                if partyProgress < 100 && showPopUp == false{
                                     partyProgress += 0.1
+                                    gameService.party.partyProg = partyProgress
+
                                 }
                             }
                     }.padding(.bottom,20).padding(.horizontal,30)
@@ -228,11 +234,38 @@ struct LookoutView: View {
                 }
                 }
                 .ignoresSafeArea()
-                
-                    
                 RecapSceneView(lives: $lives, show: $showPopUp, isStartGame: $isStartGame)
             }
-            
+            .overlay(content: {
+                if showSuccessOverlay {
+                    VStack {
+                        Text("SAFE!")
+                            .font(.custom("Gasoek One", size: 40))
+                    }
+                    .onAppear {
+                        withAnimation(.easeOut(duration: 1)) {
+                            showSuccessOverlay = false
+                        }
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(.green)
+                }
+                
+                if gameService.party.flashred {
+                    VStack {
+                        Text("OUCH!")
+                            .font(.custom("Gasoek One", size: 40))
+                    }
+                    .onAppear {
+                        withAnimation(.easeOut(duration: 1)) {
+                            gameService.party.flashred = false
+                            gameService.send(party: gameService.party)
+                        }
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(.red)
+                }
+            })
             .task{
 //                self.views = listView.randomElement()!
 //                print("videoNamelook: \(self.views)")
@@ -252,10 +285,8 @@ struct LookoutView: View {
                         }
                     }
                 }
-                gameService.send(party: gameService.party)
 //                print(looks)
                 for (_, player) in gameService.party.players.enumerated() {
-                    print("Masuk loop")
                     if player.role == Role.lookout {
                         if player.event.objective == Objective.lookLeft {
                             looks = "LookoutLeft"
@@ -268,40 +299,43 @@ struct LookoutView: View {
 //                print("Luar",looks)
             }
             .onChange(of: gameService.party, perform: { newValue in
-                if gameService.party.lives <= 0 {
+                if gameService.party.lives == 0 {
+                    gameService.send(party: gameService.party)
                     withAnimation(.linear(duration: 0.5)) {
                         lives = gameService.party.lives
+                        
                         showPopUp = true
                         
                     }
-                    //                            gameService.parties[index].reset()
-                    //                            isStartGame = false
-                    //                            gameService.send(parties: gameService.parties)
                 }
+               
+                var allEventsCompleted = true
                 for (index, player) in gameService.party.players.enumerated() {
                     if player.role == Role.blackSmith {
                         if gameService.party.players[index].event.isCompleted == true {
                             eventblacksmith = false
                         }
                     }
-                }
-                
-                var allEventsCompleted = true
-                for (_, player) in gameService.party.players.enumerated() {
+                    
                     if !player.event.isCompleted {
                         allEventsCompleted = false
                     }
                 }
                 
                 if allEventsCompleted {
+                    showSuccessOverlay = true
                     gameService.party.generateLHSEvent()
                     for (index, player) in gameService.party.players.enumerated() {
                         if player.role == Role.lookout {
                             instructionProgress = gameService.party.players[index].event.duration
                             instructionProgressMax = gameService.party.players[index].event.duration
+                            if player.event.objective == Objective.lookLeft {
+                                looks = "LookoutLeft"
+                            } else {
+                                looks = "LookoutRight"
+                            }
                         }
-                    }
-                    for (index, player) in gameService.party.players.enumerated() {
+                        
                         if player.role == Role.blackSmith {
                             let obj = gameService.party.players[index].event.objective
                             if obj == Objective.binocular{
@@ -311,18 +345,20 @@ struct LookoutView: View {
                             }
                         }
                     }
+
                     withAnimation(Animation.spring()) {
-                        xOffset = -225
                         isMove = false
                         direction = "Forward"
                         isLeftAble = true
                         isRightAble = true
+                        xOffset = xOffsettengah
                     }
                     gameService.send(party: gameService.party)
                 }
             })
             .onChange(of: partyProgress, perform: { newValue in
                 if partyProgress >= 100{
+                    gameService.send(party: gameService.party)
                     withAnimation(.linear(duration: 0.5)) {
                         lives = gameService.party.lives
                         showPopUp = true
@@ -335,11 +371,12 @@ struct LookoutView: View {
                     if gameService.party.lives > 0 {
                         withAnimation(Animation.spring()) {
                             gameService.party.lives -= 1
-                            xOffset = -225
+                            gameService.party.flashred = true
                             isMove = false
                             direction = "Forward"
                             isLeftAble = true
                             isRightAble = true
+                            xOffset = xOffsettengah
                         }
                     }
                     gameService.send(party: gameService.party)
@@ -347,6 +384,11 @@ struct LookoutView: View {
                     
                     for (index, player) in gameService.party.players.enumerated() {
                         if player.role == Role.lookout {
+                            if player.event.objective == Objective.lookLeft {
+                                looks = "LookoutLeft"
+                            } else {
+                                looks = "LookoutRight"
+                            }
                             instructionProgress = gameService.party.players[index].event.duration
                         }
                     }

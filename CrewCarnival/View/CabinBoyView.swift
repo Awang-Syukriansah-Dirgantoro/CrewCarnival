@@ -29,6 +29,7 @@ struct CabinBoyView: View {
     @State var showingPopup = false
     @EnvironmentObject var gameService: GameService
     @Binding var isStartGame: Bool
+    @State var showSuccessOverlay = false
     
     let timerSideEvent = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     @State private var counter = 0
@@ -211,6 +212,36 @@ struct CabinBoyView: View {
                 .padding(.vertical,50)
                 RecapSceneView(lives: $lives, show: $showPopUp, isStartGame: $isStartGame)
             }
+            .overlay(content: {
+                if showSuccessOverlay {
+                    VStack {
+                        Text("SAFE!")
+                            .font(.custom("Gasoek One", size: 40))
+                    }
+                    .onAppear {
+                        withAnimation(.easeOut(duration: 1)) {
+                            showSuccessOverlay = false
+                        }
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(.green)
+                }
+                
+                if gameService.party.flashred {
+                    VStack {
+                        Text("OUCH!")
+                            .font(.custom("Gasoek One", size: 40))
+                    }
+                    .onAppear {
+                        withAnimation(.easeOut(duration: 1)) {
+                            gameService.party.flashred = false
+                            gameService.send(party: gameService.party)
+                        }
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(.red)
+                }
+            })
             .onAppear {
                 for (index, player) in gameService.party.players.enumerated() {
                     if player.role == Role.lookout {
@@ -222,6 +253,7 @@ struct CabinBoyView: View {
             .onReceive(timerSideEvent){ time in
                 var allEventsCompleted = true
                 if allEventsCompleted {
+                    showSuccessOverlay = true
                     if counter == 10 {
                         gameService.party.generateSideEvent()
                         for (index, player) in gameService.party.players.enumerated() {
@@ -237,7 +269,7 @@ struct CabinBoyView: View {
                 }
             }
             .onChange(of: gameService.party, perform: { newValue in
-                if gameService.party.lives <= 0 {
+                if gameService.party.lives == 0 {
                     withAnimation(.linear(duration: 0.5)) {
                         lives = gameService.party.lives
                         showPopUp = true
@@ -256,7 +288,6 @@ struct CabinBoyView: View {
                 }
                 
                 if allEventsCompleted {
-                    gameService.party.generateLHSEvent()
                     for (index, player) in gameService.party.players.enumerated() {
                         if player.role == Role.helmsman {
                             instructionProgress = gameService.party.players[index].event.duration

@@ -43,6 +43,10 @@ struct RecapSceneView: View {
                         Image("star").scaleEffect(scaleEff).opacity(isAnimate)
                     }.offset(y: -45)
                 }
+                VStack{
+                    Text("Party Progress").font(.title3).bold()
+                    Text("\(Int(floor(gameService.party.partyProg)))%").font(.largeTitle).bold()
+                }.offset(y:90)
                 HStack(spacing: 10){
                     Button {
                         gameService.party.reset()
