@@ -83,7 +83,11 @@ struct PartyView: View {
                 }
             } else {
                 ZStack{
-                    Image("BackgroundSelect").resizable().scaledToFill().ignoresSafeArea()
+                    GeometryReader{proxy in
+                        let size = proxy.size
+                        
+                        Image("BackgroundSelect").resizable().aspectRatio(contentMode: .fill).frame(width: size.width, height: size.height)
+                    }.ignoresSafeArea()
                     ScrollView{
                         VStack{
                             if gameService.availablePeers.count > 0 {
@@ -106,7 +110,7 @@ struct PartyView: View {
                                         Image("SelectRoom")
                                             .resizable()
                                             .frame(width: 320, height: 105)
-                                            .padding(.top, 50)
+                                            .padding(.top, 30)
                                     }
                                 }
                                 .padding(20)
@@ -135,7 +139,7 @@ struct PartyView: View {
                                 gameService.startAdvertising(partyId: gameService.party.id)
                             })
                             .navigationBarBackButtonHidden(true)
-                        }
+                        }.offset(y:-30)
                         //.background(.green)
                     }
 //                    .toolbar {
