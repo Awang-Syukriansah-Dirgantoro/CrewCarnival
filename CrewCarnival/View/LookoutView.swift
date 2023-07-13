@@ -111,7 +111,7 @@ struct LookoutView: View {
                         ProgressView("", value: partyProgress, total: 100).progressViewStyle(gradientStyle).padding(.horizontal,9)
                             .onReceive(timer) { _ in
                                 if partyProgress < 100 && showPopUp == false{
-                                    partyProgress += 0.1
+                                    partyProgress += 0.15
                                     gameService.party.partyProg = partyProgress
 
                                 }

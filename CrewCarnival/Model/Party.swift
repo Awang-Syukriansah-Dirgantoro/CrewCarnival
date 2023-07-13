@@ -38,20 +38,24 @@ struct Party: Codable, Identifiable, Equatable {
                 }
                 
                 players[index].event = Event(duration: 15, instruction: "There are obstacles nearby!", objective: objective)
-            }
-            
-            if player.role == Role.helmsman {
-                var objective = Objective.turnLeft
                 
-                switch randomInt {
-                case 0:
-                    objective = Objective.turnLeft
-                    break
-                default:
-                    objective = Objective.turnRight
+                for (index2, player2) in players.enumerated() {
+                    if player2.role == Role.helmsman {
+                        var objective = Objective.turnLeft
+                        
+                        switch randomInt {
+                        case 0:
+                            objective = Objective.turnLeft
+                            break
+                        default:
+                            objective = Objective.turnRight
+                        }
+                        
+                        players[index2].event = Event(duration: 15, instruction: "There are obstacles nearby!", objective: objective)
+                        break
+                    }
                 }
-                
-                players[index].event = Event(duration: 15, instruction: "There are obstacles nearby!", objective: objective)
+                break
             }
             
             if player.role == Role.sailingMaster {

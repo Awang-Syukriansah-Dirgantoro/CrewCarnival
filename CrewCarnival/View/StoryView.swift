@@ -28,7 +28,9 @@ struct StoryView: View {
     var body: some View {
         GeometryReader{proxy in
             let size = proxy.size
-            
+            Rectangle()
+                .foregroundColor(.black)
+                .ignoresSafeArea()
             if numStory == 1 {
                 PlayerView(look: $looks).ignoresSafeArea().onReceive(timer) { _ in
                     timeStory -= 0.1

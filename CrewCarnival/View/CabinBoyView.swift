@@ -196,7 +196,7 @@ struct CabinBoyView: View {
                         ProgressView("", value: partyProgress, total: 100).progressViewStyle(gradientStyle).padding(.horizontal,9)
                             .onReceive(timer) { _ in
                                 if partyProgress < 100 {
-                                    partyProgress += 0.1
+                                    partyProgress += 0.15
                                 }
                             }
                     }.padding(.bottom,20).padding(.horizontal,30)
