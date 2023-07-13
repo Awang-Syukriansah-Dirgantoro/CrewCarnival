@@ -126,11 +126,11 @@ struct BlacksmithView: View {
                             .padding(.top, -30)
                     }
                     ZStack {
-                        
-                        Drop(vm: vm, isPuzzleCompleted: $isPuzzleCompleted)
+                        if gameService.party.chose {
+                            Drop(vm: vm, isPuzzleCompleted: $isPuzzleCompleted)
                                 .padding(.vertical,30)
-                        Drag(vm: vm).offset(y: 300)
-                       
+                            Drag(vm: vm).offset(y: 300)
+                        }
                     }
                     .padding()
                     .offset(x: vm.animateWrong ? -30 : 0)
@@ -185,7 +185,7 @@ struct BlacksmithView: View {
                     }
 //                    vm.shuffleEvent()
                     for (index, player) in gameService.party.players.enumerated() {
-                        if player.role == Role.blackSmith {
+                        if player.role == Role.cabinBoy {
                             objct = gameService.party.players[index].event.objective
                         }
                     }
@@ -214,6 +214,8 @@ struct BlacksmithView: View {
             .onChange(of: isPuzzleCompleted) { newValue in
                 if isPuzzleCompleted == true {
                     gameService.party.setEventCompleted(role: Role.blackSmith)
+                    gameService.party.setEventCompleted(role: Role.cabinBoy)
+                    gameService.party.isSideEvent = false
 //                    isPuzzleCompleted = false
 //
 //                    gameService.party.generateLHSEvent()

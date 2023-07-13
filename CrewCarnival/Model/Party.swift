@@ -16,6 +16,8 @@ struct Party: Codable, Identifiable, Equatable {
     var players = [Player]()
     var isPlaying = false
     var lives = 3
+    var chose = false
+    var isSideEvent = false
     
     mutating func generateLHSEvent() {
         var randomInt = Int.random(in: 0...1)
@@ -86,6 +88,27 @@ struct Party: Codable, Identifiable, Equatable {
                 
                 players[index].event = Event(duration: 10, instruction: "Drag and fix the object", objective: objective, isCompleted: false)
             }
+//            if player.role == Role.cabinBoy {
+////                let randomInt = Int.random(in: 0...2)
+//                var randomInt = 0
+//                var objective = Objective.sail
+//
+//                switch randomInt {
+//                case 0:
+//                    objective = Objective.sail
+//                    break
+//                case 1:
+//                    objective = Objective.steer
+//                    break
+//                case 2:
+//                    objective = Objective.binocular
+//                    break
+//
+//                default:
+//                    objective = Objective.sail
+//                }
+//                players[index].event = Event(duration: 10, instruction: "Team mate need your help!", objective: objective)
+//            }
         }
     }
     
@@ -113,21 +136,21 @@ struct Party: Codable, Identifiable, Equatable {
                 players[index].event = Event(duration: 10, instruction: "Team mate need your help!", objective: objective)
             }
             
-            if player.role == Role.sailingMaster {
-//                let randomInt = Int.random(in: 0...2)
-                var randomInt = 0
-                var objective = Objective.sail
-                
-                switch randomInt {
-                case 0:
-                    objective = Objective.sail
-                    break
-                    
-                default:
-                    objective = Objective.sail
-                }
-                players[index].event = Event(duration: 10, instruction: "Ohh nooo, sail is broke!", objective: objective)
-            }
+//            if player.role == Role.sailingMaster {
+////                let randomInt = Int.random(in: 0...2)
+//                var randomInt = 0
+//                var objective = Objective.sail
+//                
+//                switch randomInt {
+//                case 0:
+//                    objective = Objective.sail
+//                    break
+//                    
+//                default:
+//                    objective = Objective.sail
+//                }
+//                players[index].event = Event(duration: 10, instruction: "Ohh nooo, sail is broke!", objective: objective)
+//            }
         }
     }
     
@@ -137,6 +160,10 @@ struct Party: Codable, Identifiable, Equatable {
                 players[index].event.isCompleted = true
             }
         }
+    }
+    
+    mutating func setClick() {
+        chose = true
     }
     
 //    mutating func triggerHelmsmanInstruction() {

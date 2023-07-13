@@ -155,6 +155,7 @@ struct HelmsmanView: View {
                                     if gameService.currentPlayer.id == player.id {
                                         if player.role == Role.helmsman {
 //                                            if player.event.objective == Objective.turnLeft {
+                                            if eventblacksmith == false {
                                                 Image("StearingWheel")
                                                     .resizable()
                                                     .scaledToFill()
@@ -168,9 +169,9 @@ struct HelmsmanView: View {
                                                         },
                                                         animation: .spring()
                                                     )
-//                                                    .onAppear{
-//                                                        knobValue = 1
-//                                                    }
+                                                //                                                    .onAppear{
+                                                //                                                        knobValue = 1
+                                                //                                                    }
                                                     .onChange(of: knobValue, perform: { newValue in
                                                         var value = "\(knobValue)"
                                                         
@@ -199,6 +200,12 @@ struct HelmsmanView: View {
                                                         //                                                    self.progress = ((1 - Double(value)!) - 0.5) * 200
                                                         //                                                }
                                                     })
+                                            } else {
+                                                Image("SteerBroke")
+                                                    .resizable()
+                                                    .scaledToFill()
+                                                    .frame(width: 300, height: 300)
+                                            }
 //                                            }
 //                                            else {
 //                                                Image("StearingWheel")
@@ -325,6 +332,24 @@ struct HelmsmanView: View {
                 isTurnProgressCompleted = nil
                 gameService.send(party: gameService.party)
             }
+            .onChange(of: gameService.party.isSideEvent, perform: {
+                newValue in
+                if gameService.party.isSideEvent == true {
+                    for (index, player) in gameService.party.players.enumerated() {
+                        //                        print("Player Role", player.role)
+                        //                        print("Objective", gameService.party.players[index].event.objective)
+                        if player.role == Role.cabinBoy {
+                            if gameService.party.players[index].event.objective == Objective.sail {
+                                eventblacksmith = true
+                            }
+                        }
+                    }
+                    //                    print("masuk sini loh \(eventblacksmith)")
+                } else {
+                    eventblacksmith = false
+                    //                                        print("masuk sini lih \(eventblacksmith)")
+                }
+            })
             .onChange(of: gameService.party, perform: { newValue in
                 if gameService.party.lives <= 0 {
                     withAnimation(.linear(duration: 0.5)) {
@@ -337,8 +362,11 @@ struct HelmsmanView: View {
                     //                            gameService.send(parties: gameService.parties)
                 }
                 for (index, player) in gameService.party.players.enumerated() {
-                    if player.role == Role.blackSmith {
-                        if gameService.party.players[index].event.isCompleted == true {
+                    if player.role == Role.cabinBoy {
+                        if gameService.party.players[index].event.objective == Objective.sail {
+                            eventblacksmith = true
+                        }
+                        else {
                             eventblacksmith = false
                         }
                     }
@@ -359,16 +387,16 @@ struct HelmsmanView: View {
                             instructionProgressMax = gameService.party.players[index].event.duration
                         }
                     }
-                    for (index, player) in gameService.party.players.enumerated() {
-                        if player.role == Role.blackSmith {
-                            let obj = gameService.party.players[index].event.objective
-                            if obj == Objective.steer{
-                                eventblacksmith = true
-                            } else {
-                                eventblacksmith = false
-                            }
-                        }
-                    }
+//                    for (index, player) in gameService.party.players.enumerated() {
+//                        if player.role == Role.blackSmith {
+//                            let obj = gameService.party.players[index].event.objective
+//                            if obj == Objective.steer{
+//                                eventblacksmith = true
+//                            } else {
+//                                eventblacksmith = false
+//                            }
+//                        }
+//                    }
                     lockSteer = false
                     progress = 0
                     angle = 0
