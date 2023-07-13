@@ -23,7 +23,8 @@ struct SailingMasterView: View {
     @State private var partyProgress = 0.0
     @State private var instructionProgress = 100.0
     @State private var instructionProgressMax = 100.0
-    @State private var roleExplain = false
+    @State private var roleExplain = true
+    @State var showStory = true
     @State var timeExplain = 7.9
     @State var showSuccessOverlay = false
     @State private var gradient = LinearGradient(
@@ -142,6 +143,7 @@ struct SailingMasterView: View {
                         if timeExplain <= 1.1 {
                             timeExplain = 0
                             roleExplain = true
+                            showStory = false
                         }
                     }
                     Text("Sailing In... \(String(String(timeExplain).first!))")
@@ -153,6 +155,8 @@ struct SailingMasterView: View {
                     
                 }
             }.ignoresSafeArea()
+        } else if showStory {
+            StoryView(showStory: $showStory, roleExplain: $roleExplain)
         } else {
             let gradientStyle = GradientProgressStyle(
                 stroke: .clear,
@@ -559,6 +563,26 @@ struct SailingMasterView: View {
                         showPopUp = true
                     }
                 }
+                
+                if gameService.party.flashred {
+                    for (index, player) in gameService.party.players.enumerated() {
+                        if player.role == Role.helmsman {
+                            instructionProgress = gameService.party.players[index].event.duration
+                            instructionProgressMax = gameService.party.players[index].event.duration
+                            withAnimation(Animation.spring()) {
+                                totalAngleOne = 0.0
+                                totalAngleTwo = 0.0
+                                totalAngleThree = 0.0
+                                sailOneHeight = 112
+                                sailTwoHeight = 160
+                                sailThreeHeight = 260
+                                isSlowProgressCompleted = nil
+                            }
+                            
+                        }
+                    }
+                }
+                
                 var allEventsCompleted = true
                 for (index, player) in gameService.party.players.enumerated() {
                     if !player.event.isCompleted {

@@ -13,7 +13,8 @@ struct HelmsmanView: View {
     @State private var instructionProgress = 100.0
     @State private var instructionProgressMax = 100.0
     @State private var isTurnProgressCompleted: Objective?
-    @State private var roleExplain = false
+    @State private var roleExplain = true
+    @State var showStory = true
     @State var timeExplain = 7.9
     @State private var showPopUp: Bool = false
     @State private var lives = 0
@@ -39,19 +40,6 @@ struct HelmsmanView: View {
     @State private var knobValue: Double = 0.5
     @State var eventblacksmith = false
     
-    @State var numStory: Int = 0
-    @State var timeStory = 5.9
-    @State var timeStory2 = 5.9
-    @State var timeStory3 = 5.9
-    @State var timeStory4 = 5.9
-    @State var timeStory5 = 5.9
-    @State var timeStory6 = 7.9
-    @State var looks:String = "scene1"
-    @State var looks2:String = "scene2"
-    @State var looks4:String = "scene4"
-    @State var looks5:String = "scene5"
-    @State var looks6:String = "scene6"
-    
     var body: some View {
         if roleExplain == false{
             GeometryReader{proxy in
@@ -62,7 +50,7 @@ struct HelmsmanView: View {
                         if timeExplain <= 1.1 {
                             timeExplain = 0
                             roleExplain = true
-                            numStory = 1
+                            showStory = false
                         }
                     }
                     Text("Sailing In... \(String(String(timeExplain).first!))")
@@ -74,156 +62,9 @@ struct HelmsmanView: View {
                     
                 }
             }.ignoresSafeArea()
-        }else{
-            //            if numStory == 1 {
-            //                GeometryReader{proxy in
-            //                    let size = proxy.size
-            //                    PlayerView(look: $looks).ignoresSafeArea().onReceive(timer) { _ in
-            //                        timeStory -= 0.1
-            //                        if timeStory <= 1.1 {
-            //                            timeStory = 0
-            //                            numStory = 2
-            //                        }
-            //                    }
-            //                    ZStack{
-            //                        Image("BoxStory")
-            //                            .resizable()
-            //                            .frame(width: size.width - (size.width/10), height: size.height - (size.height/1.2))
-            //                            .padding(.horizontal, 20)
-            //                            .position(x: size.width/2, y: size.height - 70)
-            //                        Text("Your crew is renowned as the wealthiest pirates across the seven seas. You thrive on seeking out treasures brimming with obstacles and challenges. With your unwavering strategy, you have consistently triumphed in discovering every treasure.")
-            //                            .font(Font.custom("Krub-SemiBold", size: 14))
-            //                            .foregroundColor(.white)
-            //                            .frame(width: size.width - (size.width/5))
-            //                            .position(x: size.width/2, y: size.height - 70)
-            //                    }
-            //                }
-            //            } else if numStory == 2 {
-            //                GeometryReader{proxy in
-            //                    let size = proxy.size
-            //                    PlayerView(look: $looks2).ignoresSafeArea().onReceive(timer) { _ in
-            //                        timeStory2 -= 0.1
-            //                        if timeStory2 <= 1.1 {
-            //                            timeStory2 = 0
-            //                            numStory = 3
-            //                        }
-            //                    }
-            //                    ZStack{
-            //                        Image("BoxStory")
-            //                            .resizable()
-            //                            .frame(width: size.width - (size.width/10), height: size.height - (size.height/1.12))
-            //                            .padding(.horizontal, 20)
-            //                            .position(x: size.width/2, y: size.height - 70)
-            //                        Text("One fateful day, your crew received word of an island known as \"The Crush Island\"")
-            //                            .font(Font.custom("Krub-SemiBold", size: 14))
-            //                            .foregroundColor(.white)
-            //                            .frame(width: size.width - (size.width/5))
-            //                            .position(x: size.width/2, y: size.height - 70)
-            //                    }
-            //                }
-            //            } else if numStory == 3 {
-            //                GeometryReader{proxy in
-            //                    let size = proxy.size
-            //
-            //                    ZStack{
-            //                        Image("Scene3").resizable()
-            //                            .scaledToFill().onReceive(timer) { _ in
-            //                                timeStory3 -= 0.1
-            //                                if timeStory3 <= 1.1 {
-            //                                    timeStory3 = 0
-            //                                    numStory = 4
-            //                                }
-            //                            }
-            //                        Image("BoxStory")
-            //                            .resizable()
-            //                            .frame(width: size.width - (size.width/10), height: size.height - (size.height/1.16))
-            //                            .padding(.horizontal, 20)
-            //                            .position(x: size.width/2, y: size.height - 80)
-            //                        Text("Legends whispered that this island safeguarded a treasure passed down through seven generations. The island stands as an extraordinary haven, remarkably secluded and distant from your crew's camp.")
-            //                            .font(Font.custom("Krub-SemiBold", size: 14))
-            //                            .foregroundColor(.white)
-            //                            .frame(width: size.width - (size.width/5))
-            //                            .position(x: size.width/2, y: size.height - 80)
-            //                    }
-            //                }
-            //                .ignoresSafeArea()
-            //            } else if numStory == 4 {
-            //                GeometryReader{proxy in
-            //                    let size = proxy.size
-            //                    PlayerView(look: $looks4).ignoresSafeArea().onReceive(timer) { _ in
-            //                        timeStory4 -= 0.1
-            //                        if timeStory4 <= 1.1 {
-            //                            timeStory4 = 0
-            //                            numStory = 5
-            //                        }
-            //                    }
-            //                    ZStack{
-            //                        Image("BoxStory")
-            //                            .resizable()
-            //                            .frame(width: size.width - (size.width/10), height: size.height - (size.height/1.11))
-            //                            .padding(.horizontal, 20)
-            //                            .position(x: size.width/2, y: size.height - 70)
-            //                        Text("You have treasure, you have power")
-            //                            .font(Font.custom("Krub-Bold", size: 18))
-            //                            .foregroundColor(.white)
-            //                            .frame(width: size.width - (size.width/5))
-            //                            .position(x: size.width/2, y: size.height - 70)
-            //                    }
-            //                }
-            //            } else if numStory == 5 {
-            //                GeometryReader{proxy in
-            //                    let size = proxy.size
-            //                    PlayerView(look: $looks5).ignoresSafeArea().onReceive(timer) { _ in
-            //                        timeStory5 -= 0.1
-            //                        if timeStory5 <= 1.1 {
-            //                            timeStory5 = 0
-            //                            numStory = 6
-            //                        }
-            //                    }
-            //                    ZStack{
-            //                        Image("BoxStory")
-            //                            .resizable()
-            //                            .frame(width: size.width - (size.width/10), height: size.height - (size.height/1.17))
-            //                            .padding(.horizontal, 20)
-            //                            .position(x: size.width/2, y: size.height - 70)
-            //                        Text("You and your crew immediately went off to explore the ocean in search of The Crush Island. Along the journey, multiple obstacles must be overcome, requiring all crew members to collaborate and work together in order to overcome them.")
-            //                            .font(Font.custom("Krub-SemiBold", size: 14))
-            //                            .foregroundColor(.white)
-            //                            .frame(width: size.width - (size.width/5))
-            //                            .position(x: size.width/2, y: size.height - 70)
-            //                    }
-            //                }
-            //            } else if numStory == 6 {
-            //                GeometryReader{proxy in
-            //                    let size = proxy.size
-            //                    PlayerView(look: $looks6).ignoresSafeArea().onReceive(timer) { _ in
-            //                        timeStory6 -= 0.1
-            //                        if timeStory6 <= 1.1 {
-            //                            timeStory6 = 0
-            //                            numStory = 7
-            //                        }
-            //                    }
-            //                    Text("Sailing In... \(String(String(timeStory6).first!))")
-            //                        .font(.custom("Gasoek One", size: 20))
-            //                        .foregroundColor(.white)
-            //                        .shadow(color: Color.black.opacity(0.2), radius: 4)
-            //                        .position(x: size.width / 2, y: size.height - (size.height/1.1))
-            //                        .multilineTextAlignment(.center)
-            //                    ZStack{
-            //                        Image("BoxStory")
-            //                            .resizable()
-            //                            .frame(width: size.width - (size.width/10), height: size.height - (size.height/1.2))
-            //                            .padding(.horizontal, 20)
-            //                            .position(x: size.width/2, y: size.height - 70)
-            //                        Text("Numerous other ships are also in search of The Crush Island, thus necessitating the carnival crew's swift discovery of the island before their competitors. You must effectively collaborate and overcome the obstacles together as fast as possible.")
-            //                            .font(Font.custom("Krub-SemiBold", size: 14))
-            //                            .foregroundColor(.white)
-            //                            .frame(width: size.width - (size.width/5))
-            //                            .position(x: size.width/2, y: size.height - 70)
-            //                    }
-            //                }
-            //            }
-            //            else {
+        } else if showStory {
+            StoryView(showStory: $showStory, roleExplain: $roleExplain)
+        } else {
             let gradientStyle = GradientProgressStyle(
                 stroke: .clear,
                 fill: gradient,
@@ -529,7 +370,23 @@ struct HelmsmanView: View {
                     }
                 }
                 
-                
+                if gameService.party.flashred {
+                    for (index, player) in gameService.party.players.enumerated() {
+                        if player.role == Role.helmsman {
+                            instructionProgress = gameService.party.players[index].event.duration
+                            instructionProgressMax = gameService.party.players[index].event.duration
+                            withAnimation(Animation.spring()) {
+                                lockSteer = false
+                                progress = 0
+                                angle = 0
+                                lastAngle = 0
+                                knobValue = 0.5
+                                isTurnProgressCompleted = nil
+                                isLookoutEventCompleted = false
+                            }
+                        }
+                    }
+                }
                 
                 var allEventsCompleted = true
                 for (index, player) in gameService.party.players.enumerated() {

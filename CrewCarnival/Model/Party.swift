@@ -235,6 +235,7 @@ struct Party: Codable, Identifiable, Equatable {
         for (index, _) in self.players.enumerated() {
             self.players[index].isReady = false
             self.players[index].role = nil
+            self.players[index].isSkipStory = false
         }
         
         self.lives = 3

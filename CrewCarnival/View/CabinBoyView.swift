@@ -11,7 +11,8 @@ struct CabinBoyView: View {
     @State private var partyProgress = 0.0
     @State private var instructionProgress = 100.0
     @State private var instructionProgressMax = 100.0
-    @State private var roleExplain = false
+    @State private var roleExplain = true
+    @State var showStory = true
     @State var timeExplain = 7.9
     @State private var showPopUp: Bool = false
     @State private var isHelemsmanDeactive: Bool = true
@@ -52,6 +53,7 @@ struct CabinBoyView: View {
                         if timeExplain <= 1.1 {
                             timeExplain = 0
                             roleExplain = true
+                            showStory = false
                         }
                     }
                     Text("Sailing In... \(String(String(timeExplain).first!))")
@@ -65,6 +67,8 @@ struct CabinBoyView: View {
                     _ = timer.connect()
                 }
             }.ignoresSafeArea()
+        } else if showStory {
+            StoryView(showStory: $showStory, roleExplain: $roleExplain)
         }else{
             let gradientStyle = GradientProgressStyle(
                 stroke: .clear,

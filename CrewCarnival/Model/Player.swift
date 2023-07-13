@@ -9,7 +9,7 @@ import Foundation
 
 struct Player: Codable, Identifiable, Equatable {
     static func == (lhs: Player, rhs: Player) -> Bool {
-        lhs.name == rhs.name && lhs.role == rhs.role && lhs.isReady == rhs.isReady && lhs.event == rhs.event
+        lhs.name == rhs.name && lhs.role == rhs.role && lhs.isReady == rhs.isReady && lhs.event == rhs.event && lhs.isSkipStory == rhs.isSkipStory
     }
     
     var id: UUID
@@ -17,6 +17,7 @@ struct Player: Codable, Identifiable, Equatable {
     var name: String
     var role: Role?
     var isReady: Bool = false
+    var isSkipStory: Bool = false
     var event = Event(duration: -1, instruction: "")
     
     func getStringRole() -> String {

@@ -12,7 +12,8 @@ struct BlacksmithView: View {
     @State private var partyProgress = 0.0
     @State private var instructionProgress = 100.0
     @State private var instructionProgressMax = 100.0
-    @State private var roleExplain = false
+    @State private var roleExplain = true
+    @State var showStory = true
     @State var timeExplain = 7.9
     let timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
     @State private var showPopUp: Bool = false
@@ -38,6 +39,7 @@ struct BlacksmithView: View {
                         if timeExplain <= 1.1 {
                             timeExplain = 0
                             roleExplain = true
+                            showStory = false
                         }
                     }
                     Text("Sailing In... \(String(String(timeExplain).first!))")
@@ -49,6 +51,8 @@ struct BlacksmithView: View {
                       
                 }
             }.ignoresSafeArea()
+        } else if showStory {
+            StoryView(showStory: $showStory, roleExplain: $roleExplain)
         }else{
             let gradientStyle = GradientProgressStyle(
                 stroke: .clear,
