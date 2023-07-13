@@ -168,9 +168,9 @@ struct HelmsmanView: View {
                                                         },
                                                         animation: .spring()
                                                     )
-//                                                    .onAppear{
-//                                                        knobValue = 1
-//                                                    }
+                                                    .onAppear{
+                                                        knobValue = 0.5
+                                                    }
                                                     .onChange(of: knobValue, perform: { newValue in
                                                         var value = "\(knobValue)"
                                                         
