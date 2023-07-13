@@ -20,6 +20,7 @@ struct HelmsmanView: View {
     @State private var lockSteer = false
     @EnvironmentObject var gameService: GameService
     @State var showSuccessOverlay = false
+    @State var isLookoutEventCompleted = false
     
     let timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
     
@@ -175,21 +176,23 @@ struct HelmsmanView: View {
                                                     .onChange(of: knobValue, perform: { newValue in
                                                         var value = "\(knobValue)"
                                                         
-                                                        if player.event.objective == Objective.turnLeft {
-                                                            if Double(value)! <= 0.5 {
-                                                                self.progress = (1 - Double(value)! - 0.5) * 200
-                                                                
-                                                                if self.progress >= 100 {
-                                                                    isTurnProgressCompleted = Objective.turnLeft
-                                                                    lockSteer = true
+                                                        if isLookoutEventCompleted {
+                                                            if player.event.objective == Objective.turnLeft {
+                                                                if Double(value)! <= 0.5 {
+                                                                    self.progress = (1 - Double(value)! - 0.5) * 200
+                                                                    
+                                                                    if self.progress >= 100 {
+                                                                        isTurnProgressCompleted = Objective.turnLeft
+                                                                        lockSteer = true
+                                                                    }
                                                                 }
-                                                            }
-                                                        } else {
-                                                            if Double(value)! >= 0.5 {
-                                                                self.progress = (Double(value)! - 0.5) * 200
-                                                                if self.progress >= 100 {
-                                                                    isTurnProgressCompleted = Objective.turnRight
-                                                                    lockSteer = true
+                                                            } else {
+                                                                if Double(value)! >= 0.5 {
+                                                                    self.progress = (Double(value)! - 0.5) * 200
+                                                                    if self.progress >= 100 {
+                                                                        isTurnProgressCompleted = Objective.turnRight
+                                                                        lockSteer = true
+                                                                    }
                                                                 }
                                                             }
                                                         }
@@ -338,6 +341,12 @@ struct HelmsmanView: View {
                 
                 var allEventsCompleted = true
                 for (index, player) in gameService.party.players.enumerated() {
+                    if player.role == Role.lookout {
+                        if gameService.party.players[index].event.isCompleted == true {
+                            isLookoutEventCompleted = true
+                        }
+                    }
+                    
                     if player.role == Role.blackSmith {
                         if gameService.party.players[index].event.isCompleted == true {
                             eventblacksmith = false
@@ -373,6 +382,7 @@ struct HelmsmanView: View {
                         lastAngle = 0
                         knobValue = 0.5
                         isTurnProgressCompleted = nil
+                        isLookoutEventCompleted = false
                     }
                 }
             })
@@ -428,6 +438,7 @@ struct HelmsmanView: View {
                         lastAngle = 0
                         knobValue = 0.5
                         isTurnProgressCompleted = nil
+                        isLookoutEventCompleted = false
                     }
                 }
             })
