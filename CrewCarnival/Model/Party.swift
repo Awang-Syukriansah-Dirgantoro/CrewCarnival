@@ -9,7 +9,7 @@ import Foundation
 
 struct Party: Codable, Identifiable, Equatable {
     static func == (lhs: Party, rhs: Party) -> Bool {
-        return lhs.players == rhs.players && lhs.isPlaying == rhs.isPlaying && lhs.lives == rhs.lives
+        return lhs.players == rhs.players && lhs.isPlaying == rhs.isPlaying && lhs.lives == rhs.lives && lhs.partyProg == rhs.partyProg && lhs.flashred == rhs.flashred && lhs.popup == rhs.popup
     }
     
     var id = UUID()
@@ -18,6 +18,7 @@ struct Party: Codable, Identifiable, Equatable {
     var lives = 3
     var partyProg = 0.0
     var flashred = false
+    var popup = false
     
     mutating func generateLHSEvent() {
         var randomInt = Int.random(in: 0...1)
@@ -211,7 +212,7 @@ struct Party: Codable, Identifiable, Equatable {
         
         self.lives = 3
         self.partyProg = 0.0
-        
+        self.popup = false
         assignRoles()
     }
 }
