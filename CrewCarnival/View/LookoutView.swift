@@ -63,10 +63,16 @@ struct LookoutView: View {
             ZStack{
                 GeometryReader {proxy in
                     let size = proxy.size
-                   
-                    PlayerView(look: $looks).frame(width: size.width * 3, height: size.height).offset(x: xOffset).onAppear{
-                        xOffset = -size.width
-                        xOffsettengah = -size.width
+                    if gameService.party.isSideEvent && gameService.party.broke == "binocular" {
+                        PlayerView(look: $looks).frame(width: size.width * 3, height: size.height).offset(x: xOffset).onAppear{
+                            xOffset = -size.width
+                            xOffsettengah = -size.width
+                        }.blur(radius: 0.5)
+                    } else{
+                        PlayerView(look: $looks).frame(width: size.width * 3, height: size.height).offset(x: xOffset).onAppear{
+                            xOffset = -size.width
+                            xOffsettengah = -size.width
+                        }
                     }
                 
                 VStack{
@@ -116,8 +122,8 @@ struct LookoutView: View {
                     VStack{
                         ForEach(Array(gameService.party.players.enumerated()), id: \.offset) { index, player in
                             if gameService.currentPlayer.id == player.id {
-                                if eventblacksmith == false {
-                                    Text("\(player.event.instruction)")
+                                if gameService.party.isSideEvent && gameService.party.broke == "binocular" {
+                                    Text("Your binocular is broken")
                                         .font(Font.custom("Gasoek One", size: 20))
                                         .multilineTextAlignment(.center)
                                         .frame(maxWidth: .infinity)
@@ -127,7 +133,7 @@ struct LookoutView: View {
                                             Rectangle()
                                                 .opacity(0.5))
                                 } else {
-                                    Text("Your binocular is broken")
+                                    Text("\(player.event.instruction)")
                                         .font(Font.custom("Gasoek One", size: 20))
                                         .multilineTextAlignment(.center)
                                         .frame(maxWidth: .infinity)
@@ -194,7 +200,7 @@ struct LookoutView: View {
                                         .frame(width: 125.5172348022461, height: 129.99998474121094)
                                         .clipped()
                                 )
-                        }.disabled(!isLeftAble).disabled(eventblacksmith)
+                        }.disabled(!isLeftAble).disabled(gameService.party.isSideEvent && gameService.party.broke == "binocular")
                         Spacer()
                         Button{
                             isMove = true
@@ -228,7 +234,7 @@ struct LookoutView: View {
                                         .frame(width: 125.5172348022461, height: 129.99998474121094)
                                         .clipped()
                                 )
-                        }.disabled(!isRightAble).disabled(eventblacksmith)
+                        }.disabled(!isRightAble).disabled(gameService.party.isSideEvent && gameService.party.broke == "binocular")
                         Spacer()
                     }.padding(.bottom, 50)
                 }
@@ -266,25 +272,49 @@ struct LookoutView: View {
                     .background(.red)
                 }
             })
-            .task{
+            .onAppear{
 //                self.views = listView.randomElement()!
 //                print("videoNamelook: \(self.views)")
+                eventblacksmith = false
+                if gameService.party.isSideEvent == true {
+                    for (index, player) in gameService.party.players.enumerated() {
+                        //                        print("Player Role", player.role)
+                        //                        print("Objective", gameService.party.players[index].event.objective)
+                        if player.role == Role.cabinBoy {
+                            if gameService.party.players[index].event.objective == Objective.binocular {
+                                eventblacksmith = true
+                            }
+                        }
+                    }
+                    //                    print("masuk sini loh \(eventblacksmith)")
+                } else {
+                    eventblacksmith = false
+                    //                                        print("masuk sini lih \(eventblacksmith)")
+                }
                 for (index, player) in gameService.party.players.enumerated() {
                     if player.role == Role.lookout {
                         instructionProgress = gameService.party.players[index].event.duration
                         instructionProgressMax = gameService.party.players[index].event.duration
                     }
-                }
-                for (index, player) in gameService.party.players.enumerated() {
-                    if player.role == Role.blackSmith {
-                        let obj = gameService.party.players[index].event.objective
-                        if obj == Objective.binocular{
+                    
+                    if player.role == Role.cabinBoy {
+                        if gameService.party.players[index].event.objective == Objective.binocular {
                             eventblacksmith = true
                         } else {
                             eventblacksmith = false
                         }
                     }
                 }
+//                for (index, player) in gameService.party.players.enumerated() {
+//                    if player.role == Role.blackSmith {
+//                        let obj = gameService.party.players[index].event.objective
+//                        if obj == Objective.binocular{
+//                            eventblacksmith = true
+//                        } else {
+//                            eventblacksmith = false
+//                        }
+//                    }
+//                }
 //                print(looks)
                 for (_, player) in gameService.party.players.enumerated() {
                     if player.role == Role.lookout {
@@ -300,12 +330,13 @@ struct LookoutView: View {
             }
             .onChange(of: gameService.party.isSideEvent, perform: {
                 newValue in
+                eventblacksmith = false
                 if gameService.party.isSideEvent == true {
                     for (index, player) in gameService.party.players.enumerated() {
                         //                        print("Player Role", player.role)
                         //                        print("Objective", gameService.party.players[index].event.objective)
                         if player.role == Role.cabinBoy {
-                            if gameService.party.players[index].event.objective == Objective.sail {
+                            if gameService.party.players[index].event.objective == Objective.binocular {
                                 eventblacksmith = true
                             }
                         }
@@ -317,6 +348,7 @@ struct LookoutView: View {
                 }
             })
             .onChange(of: gameService.party, perform: { newValue in
+                eventblacksmith = false
                 if gameService.party.lives == 0 {
                     gameService.send(party: gameService.party)
                     withAnimation(.linear(duration: 0.5)) {
@@ -330,10 +362,7 @@ struct LookoutView: View {
                 var allEventsCompleted = true
                 for (index, player) in gameService.party.players.enumerated() {
                     if player.role == Role.cabinBoy {
-                        if gameService.party.players[index].event.objective == Objective.sail {
-                            eventblacksmith = true
-                        }
-                        else {
+                        if gameService.party.players[index].event.isCompleted {
                             eventblacksmith = false
                         }
                     }
@@ -356,17 +385,24 @@ struct LookoutView: View {
                                 looks = "LookoutRight"
                             }
                         }
-                    }
-//                    for (index, player) in gameService.party.players.enumerated() {
-//                        if player.role == Role.blackSmith {
-//                            let obj = gameService.party.players[index].event.objective
-//                            if obj == Objective.binocular{
+//                        if player.role == Role.cabinBoy {
+//                            if gameService.party.players[index].event.objective == Objective.binocular {
 //                                eventblacksmith = true
 //                            } else {
 //                                eventblacksmith = false
 //                            }
 //                        }
-//                    }
+                    }
+                    for (index, player) in gameService.party.players.enumerated() {
+                        if player.role == Role.cabinBoy {
+                            let obj = gameService.party.players[index].event.objective
+                            if obj == Objective.binocular{
+                                eventblacksmith = true
+                            } else {
+                                eventblacksmith = false
+                            }
+                        }
+                    }
                     withAnimation(Animation.spring()) {
                         isMove = false
                         direction = "Forward"

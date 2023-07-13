@@ -35,12 +35,48 @@ struct CabinBoyView: View {
     @Binding var isStartGame: Bool
     @State var showSuccessOverlay = false
     
+    @State var isHaveBlackSmith = false
+    
     @State private var yOffsetChar: CGFloat = 0
     
     @State var timerSideEvent = Timer.publish(every: 1, on: .main, in: .default)
     @State private var counter = 0
     
     @State var timer = Timer.publish(every: 0.1, on: .main, in: .default)
+    
+    func changeCharActivated() {
+        for (index, player) in gameService.party.players.enumerated() {
+            if player.role == Role.cabinBoy {
+                instructionProgress = gameService.party.players[index].event.duration
+                instructionProgressMax = gameService.party.players[index].event.duration
+                let obj = gameService.party.players[index].event.objective
+                if obj == Objective.sail {
+                    available = "sailingmaster"
+                } else if obj == Objective.steer {
+                    available = "helmsman"
+                } else {
+                    available = "lookout"
+                }
+            }
+        }
+        gameService.send(party: gameService.party)
+        if available == "sailingmaster" {
+            isSailingMasterDeactive = false
+            isHelemsmanDeactive = true
+            isLookoutDeactive = true
+        }
+        if available == "helmsman" {
+            isSailingMasterDeactive = true
+            isHelemsmanDeactive = false
+            isLookoutDeactive = true
+        }
+        if available == "lookout" {
+            isSailingMasterDeactive = true
+            isHelemsmanDeactive = true
+            isLookoutDeactive = false
+        }
+    }
+    
     var body: some View {
         if roleExplain == false{
             GeometryReader{proxy in
@@ -246,6 +282,11 @@ struct CabinBoyView: View {
                             .font(.custom("Gasoek One", size: 40))
                     }
                     .onAppear {
+                        gameService.party.setEventCompleted(role: Role.cabinBoy)
+                        gameService.party.isSideEvent = true
+                        gameService.party.broke = ""
+                        gameService.send(party: gameService.party)
+                        changeCharActivated()
                         withAnimation(.easeOut(duration: 1)) {
                             gameService.party.flashred = false
                             gameService.send(party: gameService.party)
@@ -260,67 +301,16 @@ struct CabinBoyView: View {
                 withAnimation (Animation.easeInOut (duration: 1).repeatForever()){
                     yOffsetChar += 12
                 }
-                for (index, player) in gameService.party.players.enumerated() {
-                    if player.role == Role.cabinBoy {
-                        instructionProgress = gameService.party.players[index].event.duration
-                        instructionProgressMax = gameService.party.players[index].event.duration
-                        for (index2, player2) in gameService.party.players.enumerated() {
-                            if player2.role == Role.blackSmith {
-                                let obj = gameService.party.players[index2].event.objective
-                                if obj == Objective.sail {
-                                    gameService.party.players[index].event.instruction = "Talk to Sailing Master"
-                                    available = "sailingmaster"
-                                } else if obj == Objective.steer {
-                                    gameService.party.players[index].event.instruction = "Talk to Helmsman"
-                                    available = "helmsman"
-                                } else {
-                                    gameService.party.players[index].event.instruction = "Talk to Lookout"
-                                    available = "lookout"
-                                }
-                            }
-                        }
+                gameService.party.isSideEvent = true
+                for (_, player2) in gameService.party.players.enumerated() {
+                    if player2.role == Role.blackSmith {
+                        isHaveBlackSmith = true
                     }
                 }
-                gameService.send(party: gameService.party)
-                if available == "sailingmaster" {
-                    isSailingMasterDeactive = false
-                } else if available == "helmsman" {
-                    isHelemsmanDeactive = false
-                } else if available == "lookout" {
-                    isLookoutDeactive = false
-                }
-            }
-            .onReceive(timerSideEvent){ time in
-                //                print("Pos dede")
-                var allEventsCompleted = true
-                for (_, player) in gameService.party.players.enumerated() {
-                    if !player.event.isCompleted {
-                        allEventsCompleted = false
-                    }
-                }
-                if allEventsCompleted {
-                    showSuccessOverlay = true
-                }
-                
-                if !allEventsCompleted && !gameService.party.isSideEvent {
-                    if counter == 5 {
-                        gameService.party.generateSideEvent()
-//                        for (index, player) in gameService.party.players.enumerated() {
-//                            if player.role == Role.cabinBoy {
-//                                instructionProgress = gameService.party.players[index].event.duration
-//                                instructionProgressMax = gameService.party.players[index].event.duration
-//                            }
-//                        }
-                        gameService.party.isSideEvent = true
-                        gameService.send(party: gameService.party)
-                        counter = 0
-                        //                        print("")
-                    }
-                    print("masuk disini")
-                    counter += 1
-                }
+                changeCharActivated()
             }
             .onChange(of: gameService.party, perform: { newValue in
+                showingPopup = false
                 if gameService.party.lives == 0 {
                     withAnimation(.linear(duration: 0.5)) {
                         lives = gameService.party.lives
@@ -345,25 +335,12 @@ struct CabinBoyView: View {
                 }
                 
                 if allEventsCompleted {
-                    for (index, player) in gameService.party.players.enumerated() {
-                        if player.role == Role.cabinBoy {
-                            instructionProgress = gameService.party.players[index].event.duration
-                            instructionProgressMax = gameService.party.players[index].event.duration
-//                            for (index2, player2) in gameService.party.players.enumerated() {
-//                                if player2.role == Role.blackSmith {
-//                                    let obj = gameService.party.players[index2].event.objective
-//                                    if obj == Objective.sail {
-//                                        gameService.party.players[index].event.instruction = "Talk to Sailing Master"
-//                                    } else if obj == Objective.steer {
-//                                        gameService.party.players[index].event.instruction = "Talk to Helmsman"
-//                                    } else {
-//                                        gameService.party.players[index].event.instruction = "Talk to Lookout"
-//                                    }
-//                                }
-//                            }
-                        }
-                    }
+                    showSuccessOverlay = true
+                    gameService.party.generateSideEvent()
+                    gameService.party.isSideEvent = true
+                    gameService.party.broke = ""
                     gameService.send(party: gameService.party)
+                    changeCharActivated()
                 }
             })
             .onChange(of: instructionProgress, perform: { newValue in
@@ -385,8 +362,17 @@ struct CabinBoyView: View {
             switch choose {
             case "sailingmaster":
                 Button{
-                    gameService.party.chose = true
+                    print("statusnya nih ", gameService.party.isSideEvent)
+                    if isHaveBlackSmith {
+                        gameService.party.chose = true
+                    } else {
+                        print("masuk sini nih")
+                        gameService.party.setEventCompleted(role: Role.cabinBoy)
+                        gameService.party.isSideEvent = false
+                        gameService.party.broke = ""
+                    }
                     gameService.send(party: gameService.party)
+                    print("statusnya nih ", gameService.party.isSideEvent)
                 } label: {
                     ZStack{
                         Rectangle()
@@ -462,8 +448,17 @@ struct CabinBoyView: View {
                 
             case "helmsman":
                 Button{
-                    gameService.party.chose = true
+                    print("statusnya nih ", gameService.party.isSideEvent)
+                    if isHaveBlackSmith {
+                        gameService.party.chose = true
+                    } else {
+                        print("masuk sini nih")
+                        gameService.party.setEventCompleted(role: Role.cabinBoy)
+                        gameService.party.isSideEvent = false
+                        gameService.party.broke = ""
+                    }
                     gameService.send(party: gameService.party)
+                    print("statusnya nih ", gameService.party.isSideEvent)
                 } label: {
                     ZStack{
                         Rectangle()
@@ -605,8 +600,17 @@ struct CabinBoyView: View {
                 
             case "lookout":
                 Button{
-                    gameService.party.chose = true
+                    print("statusnya nih ", gameService.party.isSideEvent)
+                    if isHaveBlackSmith {
+                        gameService.party.chose = true
+                    } else {
+                        print("masuk sini nih")
+                        gameService.party.setEventCompleted(role: Role.cabinBoy)
+                        gameService.party.isSideEvent = false
+                        gameService.party.broke = ""
+                    }
                     gameService.send(party: gameService.party)
+                    print("statusnya nih ", gameService.party.isSideEvent)
                 } label: {
                     ZStack{
                         Rectangle()
