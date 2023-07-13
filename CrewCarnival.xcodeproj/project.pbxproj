@@ -22,6 +22,8 @@
 		0B4F5B132A4EB34800D55948 /* FirstView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4F5B122A4EB34800D55948 /* FirstView.swift */; };
 		0B6932C72A55495F00DA6321 /* Shake.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B6932C62A55495F00DA6321 /* Shake.swift */; };
 		0B6932D62A57A6B000DA6321 /* VideoWallpaper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B6932D52A57A6B000DA6321 /* VideoWallpaper.swift */; };
+		0B75DFF12A5F9DE400428B9B /* Krub-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0B75DFEF2A5F9D1000428B9B /* Krub-Bold.ttf */; };
+		0B75DFF22A5F9DE400428B9B /* Krub-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0B75DFF02A5F9D1000428B9B /* Krub-SemiBold.ttf */; };
 		0B9EFFF42A4AA20E00BEF546 /* Puzzle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9EFFF32A4AA20E00BEF546 /* Puzzle.swift */; };
 		0B9EFFF72A4AA25200BEF546 /* PuzzleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9EFFF62A4AA25200BEF546 /* PuzzleViewModel.swift */; };
 		0B9EFFFA2A4AA2B300BEF546 /* Drag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9EFFF92A4AA2B300BEF546 /* Drag.swift */; };
@@ -75,6 +77,8 @@
 		0B4F5B122A4EB34800D55948 /* FirstView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstView.swift; sourceTree = "<group>"; };
 		0B6932C62A55495F00DA6321 /* Shake.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shake.swift; sourceTree = "<group>"; };
 		0B6932D52A57A6B000DA6321 /* VideoWallpaper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoWallpaper.swift; sourceTree = "<group>"; };
+		0B75DFEF2A5F9D1000428B9B /* Krub-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Krub-Bold.ttf"; sourceTree = "<group>"; };
+		0B75DFF02A5F9D1000428B9B /* Krub-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Krub-SemiBold.ttf"; sourceTree = "<group>"; };
 		0B9EFFF32A4AA20E00BEF546 /* Puzzle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Puzzle.swift; sourceTree = "<group>"; };
 		0B9EFFF62A4AA25200BEF546 /* PuzzleViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuzzleViewModel.swift; sourceTree = "<group>"; };
 		0B9EFFF92A4AA2B300BEF546 /* Drag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Drag.swift; sourceTree = "<group>"; };
@@ -140,6 +144,8 @@
 		0B0B777C2A4542CF00B10F99 /* Font */ = {
 			isa = PBXGroup;
 			children = (
+				0B75DFEF2A5F9D1000428B9B /* Krub-Bold.ttf */,
+				0B75DFF02A5F9D1000428B9B /* Krub-SemiBold.ttf */,
 				59117DEF2A45397600701627 /* GasoekOne-Regular.ttf */,
 				0B0B77782A453A1700B10F99 /* Krub-Regular.ttf */,
 			);
@@ -343,6 +349,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0B75DFF12A5F9DE400428B9B /* Krub-Bold.ttf in Resources */,
+				0B75DFF22A5F9DE400428B9B /* Krub-SemiBold.ttf in Resources */,
 				0BFC5E382A5E668200FF3CD6 /* scene5.mp4 in Resources */,
 				0BFC5E392A5E668200FF3CD6 /* scene6.mp4 in Resources */,
 				0BFC5E352A5E60A400FF3CD6 /* scene4.mp4 in Resources */,
