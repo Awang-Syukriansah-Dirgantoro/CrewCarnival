@@ -13,17 +13,17 @@ class AudioViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
     var audioPlayer: AVAudioPlayer!
     
     func playSound(url: String){
-//        let resourcePath = Bundle.main.path(forResource: url, ofType: "mp3")
-//        do{
-//            self.audioPlayer = try! AVAudioPlayer(contentsOf: URL(fileURLWithPath: resourcePath!))
-//            print(url)
-//            if let audioPlayer = audioPlayer{
-//                audioPlayer.play()
-//            }
-//        }
-//        catch{
-//            print(error.localizedDescription)
-//        }
+        let resourcePath = Bundle.main.path(forResource: url, ofType: "mp3")
+        do{
+            self.audioPlayer = try! AVAudioPlayer(contentsOf: URL(fileURLWithPath: resourcePath!))
+            print(url)
+            if let audioPlayer = audioPlayer{
+                audioPlayer.play()
+            }
+        }
+        catch{
+            print(error.localizedDescription)
+        }
     }
     
     func stopSound(url: String){
