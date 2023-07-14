@@ -122,7 +122,7 @@ class PuzzleViewModel:NSObject, ObservableObject {
                 binoculars =  binoculars.shuffled()
             }
             shuffledRows =  generateGrid()
-        
+        self.objectWillChange.send()
     }
     
     func updateSuffledArray(character:Puzzle) {

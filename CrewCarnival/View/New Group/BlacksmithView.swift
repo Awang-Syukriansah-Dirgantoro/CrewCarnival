@@ -161,11 +161,27 @@ struct BlacksmithView: View {
                             .font(.custom("Gasoek One", size: 40))
                     }
                     .onAppear {
+                        isPuzzleCompleted = true
+                        Drop(vm: vm, isPuzzleCompleted: $isPuzzleCompleted)
+                        gameService.party.chose = false
+                        for (index, player) in gameService.party.players.enumerated() {
+                            if player.role == Role.cabinBoy {
+                                instructionProgress = gameService.party.players[index].event.duration
+                                instructionProgressMax = gameService.party.players[index].event.duration
+                            }
+                            
+                            if player.role == Role.cabinBoy {
+                                objct = gameService.party.players[index].event.objective
+                            }
+                        }
+                        vm.shuffleArray(objct: objct)
+                        isPuzzleCompleted = false
                         withAnimation(.easeOut(duration: 1)) {
                             gameService.party.flashred = false
-                            isPuzzleCompleted = true
                             gameService.send(party: gameService.party)
                         }
+                        self.gameService.objectWillChange.send()
+                        print("choose",gameService.party.chose)
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .background(.red)
@@ -173,7 +189,7 @@ struct BlacksmithView: View {
             })
             .onAppear {
                 for (index, player) in gameService.party.players.enumerated() {
-                    if player.role == Role.blackSmith {
+                    if player.role == Role.cabinBoy {
                         instructionProgress = gameService.party.players[index].event.duration
                         instructionProgressMax = gameService.party.players[index].event.duration
                     }

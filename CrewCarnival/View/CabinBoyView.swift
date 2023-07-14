@@ -283,14 +283,19 @@ struct CabinBoyView: View {
                     }
                     .onAppear {
                         gameService.party.setEventCompleted(role: Role.cabinBoy)
-                        gameService.party.isSideEvent = true
+                        gameService.party.isSideEvent = false
                         gameService.party.broke = ""
-                        gameService.send(party: gameService.party)
+                        gameService.party.chose = false
+//                        gameService.send(party: gameService.party)
+                        gameService.party.generateSideEvent()
+                        gameService.party.isSideEvent = true
+//                        gameService.send(party: gameService.party)
                         changeCharActivated()
                         withAnimation(.easeOut(duration: 1)) {
                             gameService.party.flashred = false
-                            gameService.send(party: gameService.party)
+//                            gameService.send(party: gameService.party)
                         }
+                        gameService.send(party: gameService.party)
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .background(.red)
@@ -338,7 +343,6 @@ struct CabinBoyView: View {
                     showSuccessOverlay = true
                     gameService.party.generateSideEvent()
                     gameService.party.isSideEvent = true
-                    gameService.party.broke = ""
                     gameService.send(party: gameService.party)
                     changeCharActivated()
                 }
