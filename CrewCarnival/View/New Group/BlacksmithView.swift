@@ -167,6 +167,7 @@ struct BlacksmithView: View {
                     .onAppear {
                         withAnimation(.easeOut(duration: 1)) {
                             gameService.party.flashred = false
+                            isPuzzleCompleted = true
                             gameService.send(party: gameService.party)
                         }
                     }
@@ -181,7 +182,7 @@ struct BlacksmithView: View {
                         instructionProgressMax = gameService.party.players[index].event.duration
                     }
                     
-                    if player.role == Role.blackSmith {
+                    if player.role == Role.cabinBoy {
                         objct = gameService.party.players[index].event.objective
                     }
                 }
@@ -241,9 +242,10 @@ struct BlacksmithView: View {
             })
             .onChange(of: isPuzzleCompleted) { newValue in
                 if isPuzzleCompleted == true {
-                    gameService.party.setEventCompleted(role: Role.blackSmith)
+//                    gameService.party.setEventCompleted(role: Role.blackSmith)
                     gameService.party.setEventCompleted(role: Role.cabinBoy)
                     gameService.party.isSideEvent = false
+                    gameService.party.broke = ""
 //                    isPuzzleCompleted = false
 //
 //                    gameService.party.generateLHSEvent()

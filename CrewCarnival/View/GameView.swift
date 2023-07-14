@@ -37,6 +37,8 @@ struct GameView: View {
         .onAppear {
             vm.playSound(url: "game")
             gameService.party.generateLHSEvent()
+            gameService.party.generateSideEvent()
+//            gameService.party.isSideEvent = true
             gameService.send(party: gameService.party)
         }
         .toolbar(.hidden)

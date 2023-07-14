@@ -21,6 +21,8 @@ struct Party: Codable, Identifiable, Equatable {
     var popup = false
     var chose = false
     var isSideEvent = false
+    var broke = ""
+    
     
     mutating func generateLHSEvent() {
         var randomInt = Int.random(in: 0...1)
@@ -73,26 +75,26 @@ struct Party: Codable, Identifiable, Equatable {
                 
                 players[index].event = Event(duration: 15, instruction: "There are obstacles nearby!", objective: objective)
             }
-            if player.role == Role.blackSmith {
-                randomInt = Int.random(in: 0...2)
-                var objective = Objective.steer
-                
-                switch randomInt {
-                case 0:
-                    objective = Objective.sail
-                    break
-                case 1:
-                    objective = Objective.binocular
-                    break
-                case 2:
-                    objective = Objective.steer
-                    break
-                default:
-                    objective = Objective.steer
-                }
-                
-                players[index].event = Event(duration: 15, instruction: "Drag and fix the object", objective: objective, isCompleted: false)
-            }
+//            if player.role == Role.blackSmith {
+//                randomInt = Int.random(in: 0...2)
+//                var objective = Objective.steer
+//                
+//                switch randomInt {
+//                case 0:
+//                    objective = Objective.sail
+//                    break
+//                case 1:
+//                    objective = Objective.binocular
+//                    break
+//                case 2:
+//                    objective = Objective.steer
+//                    break
+//                default:
+//                    objective = Objective.steer
+//                }
+//                
+//                players[index].event = Event(duration: 15, instruction: "Drag and fix the object", objective: objective, isCompleted: false)
+//            }
 //            if player.role == Role.cabinBoy {
 ////                let randomInt = Int.random(in: 0...2)
 //                var randomInt = 0
@@ -122,40 +124,45 @@ struct Party: Codable, Identifiable, Equatable {
             if player.role == Role.cabinBoy {
                 let randomInt = Int.random(in: 0...2)
 //                var randomInt = 0
+                isSideEvent = true
                 var objective = Objective.sail
                 
                 switch randomInt {
                 case 0:
                     objective = Objective.sail
+                    broke = "sail"
                     break
                 case 1:
                     objective = Objective.steer
+                    broke = "steer"
                     break
                 case 2:
                     objective = Objective.binocular
+                    broke = "binocular"
                     break
                     
                 default:
                     objective = Objective.sail
+                    broke = "sail"
                 }
                 players[index].event = Event(duration: 15, instruction: "Team mate need your help!", objective: objective)
             }
             
-            if player.role == Role.sailingMaster {
-//                let randomInt = Int.random(in: 0...2)
-                var randomInt = 0
-                var objective = Objective.sail
-                
-                switch randomInt {
-                case 0:
-                    objective = Objective.sail
-                    break
-                    
-                default:
-                    objective = Objective.sail
-                }
-                players[index].event = Event(duration: 15, instruction: "Ohh nooo, sail is broke!", objective: objective)
-            }
+//            if player.role == Role.sailingMaster {
+////                let randomInt = Int.random(in: 0...2)
+//                var randomInt = 0
+//                var objective = Objective.sail
+//
+//                switch randomInt {
+//                case 0:
+//                    objective = Objective.sail
+//                    break
+//
+//                default:
+//                    objective = Objective.sail
+//                }
+//                players[index].event = Event(duration: 15, instruction: "Ohh nooo, sail is broke!", objective: objective)
+//            }
         }
     }
     
