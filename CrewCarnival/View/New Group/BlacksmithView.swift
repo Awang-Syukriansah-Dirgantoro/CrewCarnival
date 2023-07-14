@@ -168,15 +168,15 @@ struct BlacksmithView: View {
                         isPuzzleCompleted = true
                         Drop(vm: vm, isPuzzleCompleted: $isPuzzleCompleted)
                         gameService.party.chose = false
-                        for (index, player) in gameService.party.players.enumerated() {
-                            if player.role == Role.cabinBoy {
-                                instructionProgress = gameService.party.players[index].event.duration
-                                instructionProgressMax = gameService.party.players[index].event.duration
-                            }
-                            
-                            if player.role == Role.cabinBoy {
-                                objct = gameService.party.players[index].event.objective
-                            }
+                        var objct: Objective
+                        if gameService.party.broke == "sail" {
+                            objct = Objective.sail
+                        } else if gameService.party.broke == "steer" {
+                            objct = Objective.steer
+                        } else if gameService.party.broke == "binocular" {
+                            objct = Objective.binocular
+                        } else {
+                            objct = Objective.sail
                         }
                         vm.shuffleArray(objct: objct)
                         isPuzzleCompleted = false
